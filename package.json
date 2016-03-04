@@ -8,7 +8,7 @@
   "scripts": {
     "build": "webpack",
     "dev": "webpack-dev-server",
-    "lint": "eslint . --ext .js --ext .jsx || true"
+    "lint": "eslint app/ --ext .js --ext .jsx || true"
   },
   "devDependencies": {
     "babel-core": "^6.6.4",
