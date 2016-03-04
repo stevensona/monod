@@ -23,7 +23,8 @@ const common = {
     // '' is needed to allow imports without an extension.
     // Note the .'s before extensions as it will fail to match without!!!
     resolve: {
-        extensions: ['', '.js', '.jsx']
+        extensions: ['', '.js', '.jsx'],
+        modulesDirectories: ['web_modules', 'node_modules', 'bower_components']
     },
     output: {
         path: PATHS.build,
@@ -43,6 +44,11 @@ const common = {
                 test: /\.css$/,
                 loaders: ['style', 'css'],
                 // Include accepts either a path or an array of paths.
+                include: PATHS.app
+            },
+            {
+                test: /\.scss$/,
+                loaders: ['style', 'css', 'sass'],
                 include: PATHS.app
             },
             {
@@ -110,7 +116,7 @@ if (TARGET === 'build') {
         plugins: [
             new CleanPlugin([ PATHS.build ]),
             // Setting DefinePlugin affects React library size!
-            // DefinePlugin replaces content "as is" so we need some extra
+            // DefinePlugin replaces content 'as is' so we need some extra
             // quotes for the generated code to make sense
             new webpack.DefinePlugin({
                 'process.env.NODE_ENV': '"production"'
