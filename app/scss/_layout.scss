@@ -1,0 +1,23 @@
+/**/
+
+.layout {
+    @include grid-row;
+
+    .page-header {
+    }
+
+    .content {
+        @include grid-row;
+
+        .editor {
+            @include grid-column(6);
+            min-height: 80vh;
+            background-color: #ccc;
+        }
+        .preview {
+            @include grid-column(6);
+            min-height: 80vh;
+            background-color: #e6e6e6;
+        }
+    }
+}
