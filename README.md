@@ -6,7 +6,9 @@ tdit
 ### For developers
 
 ```
+$ npm -g bower
 $ npm install
+$ bower install
 $ npm run dev
 ```
 
