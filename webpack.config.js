@@ -23,8 +23,7 @@ const common = {
     // '' is needed to allow imports without an extension.
     // Note the .'s before extensions as it will fail to match without!!!
     resolve: {
-        extensions: ['', '.js', '.jsx'],
-        modulesDirectories: ['web_modules', 'node_modules', 'bower_components']
+        extensions: ['', '.js', '.jsx']
     },
     output: {
         path: PATHS.build,
