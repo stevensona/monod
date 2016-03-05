@@ -26,6 +26,14 @@ Builds the project in `build/` (production ready).
 
 Runs [ESLint](http://eslint.org/).
 
+##### `npm run test`
+
+Runs the test suite.
+
+##### `npm run test:watch`
+
+Runs the test suite with `--watch` option.
+
 #### Tools
 
 ##### Babel
