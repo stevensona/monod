@@ -9,7 +9,8 @@
     "build": "webpack",
     "dev": "webpack-dev-server",
     "lint": "eslint app/ --ext .js --ext .jsx || true",
-    "test": "mocha --compilers jsx?:babel-register app/**/*-test.js"
+    "test": "mocha --compilers jsx?:babel-register app/**/*-test.js",
+    "test:watch": "npm run test -- --watch"
   },
   "devDependencies": {
     "babel-core": "^6.6.4",
