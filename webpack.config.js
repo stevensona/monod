@@ -5,6 +5,7 @@ const webpack = require('webpack');
 // Webpack plugins
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanPlugin = require('clean-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 // Read `package.json` file
 const pkg = require('./package.json');
@@ -53,12 +54,6 @@ const common = {
         // an application
         loaders: [
             {
-                test: /\.scss$/,
-                // Loaders are applied from right to left
-                loaders: ['style', 'css', 'sass'],
-                include: PATHS.app
-            },
-            {
                 test: /\.jsx?$/,
                 // Enable caching for improved performance during development
                 // It uses default OS directory by default. Future webpack
@@ -86,7 +81,8 @@ const common = {
             title: pkg.name,
             // Main "div" `id`
             appMountId: 'app',
-            // ???
+            // No need to inject assets in the given template as it is handled
+            // by the template itself
             inject: false
         })
     ]
@@ -108,13 +104,23 @@ if (TARGET === 'dev' || !TARGET) {
             // Let Webpack generate the client portion used to connect the
             // generated bundle running in-memory to the development server
             inline: true,
-            // ???
+            // Display some kind of progress bar
             progress: true,
             // Display only errors to reduce the amount of output.
             stats: 'errors-only',
             // Development server settings
             host: process.env.HOST || '127.0.0.1',
             port: process.env.PORT || 8080
+        },
+        module: {
+            loaders: [
+                {
+                    test: /\.scss$/,
+                    // Loaders are applied from right to left
+                    loaders: ['style', 'css', 'sass'],
+                    include: PATHS.app
+                }
+            ]
         },
         plugins: [
             new webpack.HotModuleReplacementPlugin()
@@ -139,6 +145,16 @@ if (TARGET === 'build') {
             // The filename of non-entry chunks
             chunkFilename: '[chunkhash].js'
         },
+        module: {
+            loaders: [
+                // Extract CSS during build
+                {
+                    test: /\.scss$/,
+                    loader: ExtractTextPlugin.extract('style', 'css!sass'),
+                    include: PATHS.app
+                }
+            ]
+        },
         plugins: [
             // `rm -rf`
             new CleanPlugin([ PATHS.build ]),
@@ -148,6 +164,8 @@ if (TARGET === 'build') {
             new webpack.DefinePlugin({
                 'process.env.NODE_ENV': '"production"'
             }),
+            // Output extracted CSS to a file
+            new ExtractTextPlugin('[name].[chunkhash].css'),
             // Allow to extract the code we need for the `vendor` bundle,
             // otherwise `app.js` will still contains `vendor` dependencies
             new webpack.optimize.CommonsChunkPlugin({
