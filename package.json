@@ -8,7 +8,8 @@
   "scripts": {
     "build": "webpack",
     "dev": "webpack-dev-server",
-    "lint": "eslint app/ --ext .js --ext .jsx || true",
+    "lint": "eslint app/ --ext .js --ext .jsx",
+    "lint:fix": "npm run lint -- --fix",
     "test": "mocha --compilers jsx?:babel-register app/**/*-test.js",
     "test:watch": "npm run test -- --watch"
   },

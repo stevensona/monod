@@ -26,6 +26,10 @@ Builds the project in `build/` (production ready).
 
 Runs [ESLint](http://eslint.org/).
 
+##### `npm run lint:fix`
+
+Fix all ESLint problems.
+
 ##### `npm run test`
 
 Runs the test suite.
