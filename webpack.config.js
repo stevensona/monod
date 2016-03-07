@@ -65,6 +65,12 @@ const common = {
                 // project. In addition to being slow, that will most likely
                 // result in an error.
                 include: PATHS.app
+            },
+            // Copy fonts
+            {
+                test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+                loaders: ['file?name=[path][name].[ext]&context=./app'],
+                include: PATHS.app
             }
         ]
     },
