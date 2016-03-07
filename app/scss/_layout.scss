@@ -4,7 +4,7 @@
 
 /* -- variables -- */
 $main-header-height: 70px;
-$main-footer-height: 55px;
+$main-footer-height: 35px;
 
 /* -- mixins -- */
 @function header-height($breakpoint){
@@ -16,7 +16,7 @@ $main-footer-height: 55px;
 
 @function footer-height($breakpoint){
     @if $breakpoint == small {
-        @return $main-footer-height * .7;
+        @return $main-footer-height * .9;
     }
     @return $main-footer-height;
 };
