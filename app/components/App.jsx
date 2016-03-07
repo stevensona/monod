@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import Header from './Header.jsx';
-import Editor from './Editor.jsx';
-import Footer from './Footer.jsx';
+import Header from './Header';
+import Editor from './Editor';
+import Footer from './Footer';
 
 
 export default class App extends Component {

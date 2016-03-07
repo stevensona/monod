@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
-import Markdown from './Markdown.jsx';
-import Preview from './Preview.jsx';
+import Markdown from './Markdown';
+import Preview from './Preview';
 
 
 export default class Editor extends Component {
