@@ -1,11 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-export default class Header extends Component {
-  render() {
-    return (
-      <header className="main">
-        <h1>TDit <small>TailorDev Markdown Editor</small></h1>
-      </header>
-    );
-  }
-}
+export default () => (
+  <header className="main">
+    <h1>TDit <small>TailorDev Markdown Editor</small></h1>
+  </header>
+);
