@@ -1,24 +1,35 @@
-/**/
+/*
+ * TDit Layout
+ */
+
+$main-header-height: 55px;
+$main-footer-height: 55px;
 
 .layout {
-    @include grid-row;
 
-    header.main {}
+    header.main {
+        width: 100%;
+        height: $main-header-height;
+    }
 
     .editor {
-        @include grid-row;
+        width: 100%;
+        height: calc(100vh - #{$main-header-height + $main-footer-height});
 
         .markdown {
-            @include grid-column(6);
-            min-height: 80vh;
-            background-color: #ccc;
+            width: 50%;
+            height: 100%;
+            float: left;
         }
+
         .preview {
-            @include grid-column(6);
-            min-height: 80vh;
-            background-color: #e6e6e6;
+            width: 50%;
+            height: 100%;
+            float: left;
         }
     }
 
-    footer.main {}
+    footer.main {
+        height: $main-footer-height;
+    }
 }
