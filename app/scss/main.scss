@@ -1,7 +1,13 @@
-@import '~foundation-sites/scss/foundation';
+@charset 'utf-8';
 
+// Overridden settings
+@import 'settings';
+
+// Foundation stuffs
+@import '~foundation-sites/scss/foundation';
 @include foundation-global-styles;
 @include foundation-grid;
 @include foundation-typography;
 
-@import "layout";
+// Custom rules
+@import 'layout';
