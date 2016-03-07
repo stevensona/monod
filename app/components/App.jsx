@@ -1,20 +1,17 @@
 import React, { Component } from 'react';
 
+import Header from './Header.jsx';
+import Editor from './Editor.jsx';
+import Footer from './Footer.jsx';
+
+
 export default class App extends Component {
   render() {
     return (
       <div className="layout">
-        <header className="page-header">
-          <h1>TDit <small>TailorDev Markdown Editor</small></h1>
-        </header>
-        <div className="content">
-          <div className="editor">
-            Edit here.
-          </div>
-          <div className="preview">
-            Preview here.
-          </div>
-        </div>
+        <Header />
+        <Editor />
+        <Footer />
       </div>
     );
   }

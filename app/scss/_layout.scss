@@ -3,13 +3,12 @@
 .layout {
     @include grid-row;
 
-    .page-header {
-    }
+    header.main {}
 
-    .content {
+    .editor {
         @include grid-row;
 
-        .editor {
+        .markdown {
             @include grid-column(6);
             min-height: 80vh;
             background-color: #ccc;
@@ -20,4 +19,6 @@
             background-color: #e6e6e6;
         }
     }
+
+    footer.main {}
 }
