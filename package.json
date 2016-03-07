@@ -12,7 +12,9 @@
     "lint:fix": "npm run lint -- --fix",
     "test": "mocha --compilers jsx?:babel-register app/**/*-test.js",
     "test:watch": "npm run test -- --watch",
-    "test:ci": "npm run test -- --reporter mocha-circleci-reporter"
+    "test:ci": "npm run test -- --reporter mocha-circleci-reporter",
+    "postinstall": "npm run build",
+    "start": "NODE_ENV=production node app/server.js"
   },
   "devDependencies": {
     "babel-core": "^6.6.4",
@@ -43,6 +45,7 @@
     "webpack-merge": "^0.8.3"
   },
   "dependencies": {
+    "express": "^4.13.4",
     "foundation-sites": "^6.2.0",
     "react": "^0.14.7",
     "react-dom": "^0.14.7"
