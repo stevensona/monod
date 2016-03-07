@@ -10,7 +10,12 @@ const { func, string } = PropTypes;
 export default class Markdown extends Component {
   render() {
     var options = {
-      mode: 'gfm'
+      autofocus: true,
+      lineNumbers: true,
+      lineWrapping: true,
+      mode: 'gfm',
+      scrollbarStyle: null,
+      value: 'Type your *markdown* content here'
     };
 
     return (
