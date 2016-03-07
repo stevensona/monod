@@ -1,7 +1,21 @@
-@import '~foundation-sites/scss/foundation';
+@charset 'utf-8';
 
+/* -- Foundation stuffs -- */
+@import '~foundation-sites/scss/foundation';
 @include foundation-global-styles;
 @include foundation-grid;
 @include foundation-typography;
 
-@import "layout";
+/* -- TDIt styles -- */
+// Overridde foundation settings
+@import 'settings';
+
+// Application layout
+@import 'layout';
+
+// Components
+@import 'components/header';
+@import 'components/editor';
+@import 'components/markdown';
+@import 'components/preview';
+@import 'components/footer';
