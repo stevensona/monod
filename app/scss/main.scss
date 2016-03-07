@@ -1,16 +1,19 @@
 @charset 'utf-8';
 
-// Overridden settings
-@import 'settings';
-
-// Foundation stuffs
+/* -- Foundation stuffs -- */
 @import '~foundation-sites/scss/foundation';
 @include foundation-global-styles;
 @include foundation-grid;
 @include foundation-typography;
 
-// Custom rules
+/* -- TDIt styles -- */
+// Overridde foundation settings
+@import 'settings';
+
+// Application layout
 @import 'layout';
+
+// Components
 @import 'components/header';
 @import 'components/editor';
 @import 'components/markdown';

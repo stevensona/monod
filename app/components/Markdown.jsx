@@ -4,7 +4,7 @@ export default class Markdown extends Component {
   render() {
     return (
       <div className="markdown">
-        Markdown here.
+        <textarea/>
       </div>
     );
   }

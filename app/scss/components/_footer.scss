@@ -2,4 +2,9 @@
  * Footer component
  */
 
-footer.main {}
+footer.main {
+    padding: 1rem;
+    background-color: $secondary-color;
+    color: #444;
+    font-size: 0.8rem;
+}

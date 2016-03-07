@@ -4,7 +4,9 @@ export default class Preview extends Component {
   render() {
     return (
       <div className="preview">
-        Preview here.
+        <div className="rendered">
+            This is rendered.
+        </div>
       </div>
     );
   }
