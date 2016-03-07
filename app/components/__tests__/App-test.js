@@ -11,18 +11,18 @@ import Footer from '../Footer';
 
 describe('<App />', () => {
 
-    it('renders Header component', () => {
-        const wrapper = shallow(<App />);
-        expect(wrapper.find(Header)).to.have.length(1);
-    });
+  it('renders Header component', () => {
+    const wrapper = shallow(<App />);
+    expect(wrapper.find(Header)).to.have.length(1);
+  });
 
-    it('renders Editor component', () => {
-        const wrapper = shallow(<App />);
-        expect(wrapper.find(Editor)).to.have.length(1);
-    });
+  it('renders Editor component', () => {
+    const wrapper = shallow(<App />);
+    expect(wrapper.find(Editor)).to.have.length(1);
+  });
 
-    it('renders Footer component', () => {
-        const wrapper = shallow(<App />);
-        expect(wrapper.find(Footer)).to.have.length(1);
-    });
+  it('renders Footer component', () => {
+    const wrapper = shallow(<App />);
+    expect(wrapper.find(Footer)).to.have.length(1);
+  });
 });
