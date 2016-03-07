@@ -135,7 +135,9 @@ if (TARGET === 'build') {
         // `vendor` level dependencies
         entry: {
             // From npm's `package.json` file
-            vendor: Object.keys(pkg.dependencies)
+            vendor: Object.keys(pkg.dependencies).filter(function(dep) {
+                return dep !== 'express';
+            })
         },
         output: {
             path: PATHS.build,
