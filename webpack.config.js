@@ -42,6 +42,9 @@ const common = {
         filename: '[name].js'
     },
     module: {
+        // see: https://github.com/isagalaev/highlight.js/issues/895 and
+        // https://github.com/webpack/webpack/issues/1721
+        noParse: [ /autoit\.js$/ ],
         // Loaders that run *before* others loaders
         preLoaders: [
             {
