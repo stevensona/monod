@@ -1,8 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import Codemirror from 'react-codemirror';
 
-// vendor styles
+// vendor code mirror requirements
 import 'codemirror/lib/codemirror.css';
+import 'codemirror/mode/gfm/gfm.js';
+import 'codemirror/mode/python/python.js';
+import 'codemirror/mode/javascript/javascript.js';
 
 const { func, string } = PropTypes;
 
