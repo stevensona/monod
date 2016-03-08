@@ -3,7 +3,7 @@ import Codemirror from 'react-codemirror';
 import 'codemirror/mode/gfm/gfm';
 
 // vendor styles
-// import 'codemirror/lib/codemirror.css';
+import 'codemirror/lib/codemirror.css';
 
 const { func, string } = PropTypes;
 
