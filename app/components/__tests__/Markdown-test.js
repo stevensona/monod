@@ -36,8 +36,8 @@ describe('<Markdown />', () => {
     const spy = sinon.spy();
     const wrapper = mount(<Markdown raw={""} onChange={() => {}} doUpdatePosition={spy} />);
 
-    wrapper.simulate('scroll');
-
-    // TODO: expect(spy.called).to.be.true;
+    (new Promise(() => { wrapper.simulate('scroll') })).then(() => {
+      expect(spy.called).to.be.true;
+    });
   });
 });

@@ -15,7 +15,7 @@ export default class Markdown extends Component {
   }
 
   componentWillMount() {
-    this.onScroll = _.debounce(this.onScroll, 50);
+    this.onScroll = _.debounce(this.onScroll, 40);
   }
 
   componentWillUnmount() {
@@ -27,15 +27,13 @@ export default class Markdown extends Component {
   }
 
   onScroll() {
-    window.requestAnimationFrame(() => {
-      const { top, height, clientHeight } = this.getCodeMirror().getScrollInfo();
+    const { top, height, clientHeight } = this.getCodeMirror().getScrollInfo();
 
-      if (top === 0) {
-        this.props.doUpdatePosition(top / height);
-      } else {
-        this.props.doUpdatePosition((top + clientHeight) / height);
-      }
-    });
+    if (top === 0) {
+      this.props.doUpdatePosition(top / height);
+    } else {
+      this.props.doUpdatePosition((top + clientHeight) / height);
+    }
   }
 
   render() {

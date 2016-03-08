@@ -13,13 +13,11 @@ export default class Editor extends Component {
   }
 
   doUpdatePosition(newPos) {
-    window.requestAnimationFrame(() => {
-      this.setState(function(previousState) {
-        return {
-          raw: previousState.raw,
-          pos: newPos
-        };
-      });
+    this.setState(function(previousState) {
+      return {
+        raw: previousState.raw,
+        pos: newPos
+      };
     });
   }
 

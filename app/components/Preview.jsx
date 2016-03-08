@@ -22,6 +22,8 @@ export default class Preview extends Component {
     emojify.setConfig({
       img_dir: 'https://github.global.ssl.fastly.net/images/icons/emoji/'
     });
+
+    this.requestAnimationId = false;
   }
 
   componentDidMount() {
@@ -29,13 +31,24 @@ export default class Preview extends Component {
     this.scroller  = zenscroll.createScroller(this.$rendered);
   }
 
-  componentDidUpdate() {
-    window.requestAnimationFrame(() => {
-      const previewHeight = this.$rendered.scrollHeight - this.$rendered.offsetHeight;
-      const previewScroll = parseInt(previewHeight * this.props.pos, 10);
+  componentWillReceiveProps(nextProps) {
+    if (this.props.pos !== nextProps.pos) {
+      if (this.requestAnimationId) {
+        window.cancelAnimationFrame(this.requestAnimationId);
+        this.requestAnimationId = false;
+      }
 
-      this.scroller.toY(previewScroll, 200);
-    });
+      this.requestAnimationId = window.requestAnimationFrame(() => {
+        const previewHeight = this.$rendered.scrollHeight - this.$rendered.offsetHeight;
+        const previewScroll = parseInt(previewHeight * this.props.pos, 10);
+
+        this.scroller.toY(previewScroll, 110);
+      });
+    }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.props.raw !== nextProps.raw;
   }
 
   getHTML() {
