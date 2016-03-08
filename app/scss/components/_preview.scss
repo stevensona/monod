@@ -7,4 +7,12 @@
     .rendered {
         padding: 10px;
     }
+
+    .emoji {
+        width: 1.5em;
+        height: 1.5em;
+        display: inline-block;
+        margin-bottom: 0.2em;
+        background-size: contain;
+    }
 }
