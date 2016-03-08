@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import Codemirror from 'react-codemirror';
-import 'codemirror/mode/gfm/gfm';
 
 // vendor styles
 import 'codemirror/lib/codemirror.css';
