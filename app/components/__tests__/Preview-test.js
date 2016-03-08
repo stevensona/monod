@@ -28,7 +28,14 @@ describe('<Preview />', () => {
   it('converts Emoji', () => {
     const wrapper = render(<Preview raw={" :)"} />);
     expect(wrapper.find('.rendered').html()).to.contain(
-      '<img align="absmiddle" alt=":smile:" class="emoji" src="https://github.global.ssl.fastly.net/images/icons/emoji//smile.png" title=":smile:"></p>'
+      '<img align="absmiddle" alt=":smile:" class="emoji" src="https://github.global.ssl.fastly.net/images/icons/emoji//smile.png" title=":smile:">'
+    );
+  });
+
+  it('highlights code blocks', () => {
+    const wrapper = render(<Preview raw={"```python\nprint()```"} />);
+    expect(wrapper.find('.rendered').html()).to.contain(
+      '<pre><code class="lang-python"><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">()</span></span>\n</code></pre>'
     );
   });
 });
