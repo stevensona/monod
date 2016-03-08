@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
@@ -12,16 +12,13 @@ import Markdown from '../Markdown';
 describe('<Markdown />', () => {
 
   it('renders a block with markdown css class', () => {
-    const wrapper = shallow(<Markdown raw={""} onChange={() => {}} />);
+    const wrapper = mount(<Markdown raw={""} onChange={() => {}} />);
     expect(wrapper.find('.markdown')).to.have.length(1);
   });
 
-  it('calls onChange when text is entered', () => {
+  it('calls onChange when a default value is provided', () => {
     const spy = sinon.spy();
-    const wrapper = shallow(<Markdown raw={""} onChange={spy} />);
-    const content = 'Hello, World';
-
-    wrapper.find('textarea').simulate('change', { value: content });
+    const wrapper = mount(<Markdown raw={"foo"} onChange={spy} />);
 
     expect(spy.calledOnce).to.be.true;
   });

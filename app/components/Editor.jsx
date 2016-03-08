@@ -9,8 +9,8 @@ export default class Editor extends Component {
     this.state = { raw: '' };
   }
 
-  onChange(e) {
-    this.setState({ 'raw': e.target.value });
+  onChange(newRaw) {
+    this.setState({ 'raw': newRaw });
   }
 
   render() {

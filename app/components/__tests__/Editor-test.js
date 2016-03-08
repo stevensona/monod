@@ -26,9 +26,8 @@ describe('<Editor />', () => {
   it('updates its state when text is entered in Markdown component', () => {
     const wrapper = shallow(<Editor />);
     const content = 'Hello, World';
-    const event = { target: { value: content } };
 
-    wrapper.find('Markdown').simulate('change', event);
+    wrapper.find('Markdown').simulate('change', content);
 
     expect(wrapper.state('raw')).to.equal(content);
   });
