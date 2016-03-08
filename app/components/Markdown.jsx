@@ -17,8 +17,7 @@ export default class Markdown extends Component {
       lineWrapping: true,
       mode: 'gfm',
       scrollbarStyle: null,
-      theme: 'tdit',
-      value: 'Type your *markdown* content here'
+      theme: 'tdit'
     };
 
     return (
