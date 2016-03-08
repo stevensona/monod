@@ -178,6 +178,10 @@ if (TARGET === 'build') {
             new webpack.DefinePlugin({
                 'process.env.NODE_ENV': '"production"'
             }),
+            new webpack.ProvidePlugin({
+              jQuery: "jquery",
+              "window.jQuery": "jquery"
+            }),
             // Output extracted CSS to a file
             new ExtractTextPlugin('[name].[chunkhash].css'),
             // Allow to extract the code we need for the `vendor` bundle,
