@@ -43,7 +43,7 @@ export default class Markdown extends Component {
       lineWrapping: true,
       mode: 'gfm',
       scrollbarStyle: null,
-      theme: 'tdit'
+      theme: 'monod'
     };
 
     return (
