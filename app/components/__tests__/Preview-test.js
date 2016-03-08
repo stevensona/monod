@@ -24,4 +24,11 @@ describe('<Preview />', () => {
     const wrapper = render(<Preview raw={"*italic*"} />);
     expect(wrapper.find('.rendered').html()).to.contain('<em>italic</em>');
   });
+
+  it('converts Emoji', () => {
+    const wrapper = render(<Preview raw={" :)"} />);
+    expect(wrapper.find('.rendered').html()).to.contain(
+      '<img align="absmiddle" alt=":smile:" class="emoji" src="https://github.global.ssl.fastly.net/images/icons/emoji//smile.png" title=":smile:"></p>'
+    );
+  });
 });

@@ -125,6 +125,10 @@ if (TARGET === 'dev' || !TARGET) {
                     // Loaders are applied from right to left
                     loaders: ['style', 'css', 'sass'],
                     include: PATHS.app
+                },
+                {
+                    test: /\.css$/,
+                    loaders: ['style', 'css']
                 }
             ]
         },
@@ -157,9 +161,8 @@ if (TARGET === 'build') {
             loaders: [
                 // Extract CSS during build
                 {
-                    test: /\.scss$/,
-                    loader: ExtractTextPlugin.extract('style', 'css!sass'),
-                    include: PATHS.app
+                    test: /\.(css|scss)$/,
+                    loader: ExtractTextPlugin.extract('style', 'css!sass')
                 }
             ]
         },
