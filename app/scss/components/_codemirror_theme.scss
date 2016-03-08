@@ -21,8 +21,13 @@
         background: rgba(lighten($td-blue, 40%), 0.2);
     }
 
+    span.cm-builtin { color: $emperor }
     span.cm-comment { color: $silver }
     span.cm-header { color: $mine-shaft }
+    span.cm-keyword {
+        color: $mine-shaft;
+        font-weight: bold;
+    }
     span.cm-link {
         color: $primary-color;
         text-decoration: none;
