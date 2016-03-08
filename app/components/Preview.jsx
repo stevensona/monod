@@ -1,11 +1,12 @@
 import React, { PropTypes, Component } from 'react';
+import ReactDOM from 'react-dom';
 import marked from 'marked';
 import emojify from 'emojify.js';
 import hljs from 'highlight.js';
+import zenscroll from 'zenscroll';
 
-const { string } = PropTypes;
+const { number, string } = PropTypes;
 
-// Code syntax highlighting
 import 'highlight.js/styles/zenburn.css';
 
 export default class Preview extends Component {
@@ -23,7 +24,21 @@ export default class Preview extends Component {
     });
   }
 
-  update() {
+  componentDidMount() {
+    this.$rendered = ReactDOM.findDOMNode(this.refs.rendered);
+    this.scroller  = zenscroll.createScroller(this.$rendered);
+  }
+
+  componentDidUpdate() {
+    window.requestAnimationFrame(() => {
+      const previewHeight = this.$rendered.scrollHeight - this.$rendered.offsetHeight;
+      const previewScroll = parseInt(previewHeight * this.props.pos, 10);
+
+      this.scroller.toY(previewScroll, 200);
+    });
+  }
+
+  getHTML() {
     var html = marked(this.props.raw.toString(), { sanitize: true });
 
     html = emojify.replace(html);
@@ -37,13 +52,15 @@ export default class Preview extends Component {
     return (
       <div className="preview">
         <div
+          ref="rendered"
           className="rendered"
-          dangerouslySetInnerHTML={this.update()} />
+          dangerouslySetInnerHTML={this.getHTML()} />
       </div>
     );
   }
 }
 
 Preview.propTypes = {
-  raw: string.isRequired
+  raw: string.isRequired,
+  pos: number.isRequired
 }
