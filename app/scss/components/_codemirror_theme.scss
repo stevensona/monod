@@ -4,12 +4,12 @@
 
 .cm-s-tdit {
     background: lighten($secondary-color, 7%) !important;
-    color: #555;
+    color: $emperor;
     font-size: 1.2rem !important;
     font-family: $font-family-monospace !important;
 
     .CodeMirror-cursor {
-        border-left: 1px solid #333;
+        border-left: 1px solid $mine-shaft;
     }
 
     .CodeMirror-gutters {
@@ -18,15 +18,18 @@
 
     .CodeMirror-focused div.CodeMirror-selected,
     div.CodeMirror-selected {
-        background: rgba($primary-color, 0.3);
+        background: rgba(lighten($td-blue, 40%), 0.2);
     }
 
-    span.cm-comment { color: #ccc }
-    span.cm-header { color: #333 }
-    span.cm-string { color: #888 }
-    span.cm-tag,
+    span.cm-comment { color: $silver }
+    span.cm-header { color: $mine-shaft }
     span.cm-link {
         color: $primary-color;
         text-decoration: none;
+    }
+    span.cm-quote { color: $gray }
+    span.cm-string { color: $gray }
+    span.cm-tag {
+        color: $primary-color;
     }
 }
