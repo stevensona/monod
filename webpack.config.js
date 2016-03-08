@@ -71,6 +71,10 @@ const common = {
                 test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
                 loaders: ['file?name=[path][name].[ext]&context=./app'],
                 include: PATHS.app
+            },
+            {
+                test: /.png$/,
+                loaders: ['file?name=[path][name].[ext]&context=./node_modules']
             }
         ]
     },
@@ -125,6 +129,10 @@ if (TARGET === 'dev' || !TARGET) {
                     // Loaders are applied from right to left
                     loaders: ['style', 'css', 'sass'],
                     include: PATHS.app
+                },
+                {
+                    test: /\.css$/,
+                    loaders: ['style', 'css']
                 }
             ]
         },
@@ -157,9 +165,8 @@ if (TARGET === 'build') {
             loaders: [
                 // Extract CSS during build
                 {
-                    test: /\.scss$/,
-                    loader: ExtractTextPlugin.extract('style', 'css!sass'),
-                    include: PATHS.app
+                    test: /\.(css|scss)$/,
+                    loader: ExtractTextPlugin.extract('style', 'css!sass')
                 }
             ]
         },
