@@ -1,8 +1,7 @@
-tdit
-====
+Monod
+=====
 
-[![Circle
-CI](https://circleci.com/gh/TailorDev/tdit/tree/master.svg?style=svg&circle-token=6aa578e2ce718d2dc620f37ba077da016c76f876)](https://circleci.com/gh/TailorDev/tdit/tree/master)
+[![Circle CI](https://circleci.com/gh/TailorDev/monod.svg?style=svg&circle-token=6aa578e2ce718d2dc620f37ba077da016c76f876)](https://circleci.com/gh/TailorDev/monod)
 
 ## Getting started
 
