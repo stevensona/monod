@@ -58,7 +58,8 @@
     "marked": "^0.3.5",
     "react": "^0.14.7",
     "react-codemirror": "^0.2.5",
-    "react-dom": "^0.14.7"
+    "react-dom": "^0.14.7",
+    "react-loader": "willdurand/react-loader#tailordev"
   },
   "engines": {
     "node": "^5.7"

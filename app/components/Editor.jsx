@@ -1,4 +1,5 @@
 import React, { PropTypes, Component } from 'react';
+import Loader from 'react-loader';
 
 import Markdown from './Markdown';
 import Preview from './Preview';
@@ -11,7 +12,8 @@ export default class Editor extends Component {
     super(props, context);
     this.state = {
       raw: '',
-      pos: 0
+      pos: 0,
+      loaded: false
     };
   }
 
@@ -25,7 +27,8 @@ export default class Editor extends Component {
     this.setState(function(previousState) {
       return {
         raw: previousState.raw,
-        pos: newPos
+        pos: newPos,
+        loaded: previousState.loaded
       };
     });
   }
@@ -34,7 +37,8 @@ export default class Editor extends Component {
     this.setState(function(previousState) {
       return {
         raw: newRaw,
-        pos: previousState.pos
+        pos: previousState.pos,
+        loaded: true
       };
     });
 
@@ -43,14 +47,14 @@ export default class Editor extends Component {
 
   render() {
     return (
-      <div className="editor">
+      <Loader loaded={this.state.loaded} loadedClassName={"editor"}>
         <Markdown
           raw={this.state.raw}
           onChange={this.onChange.bind(this)}
           doUpdatePosition={this.doUpdatePosition.bind(this)}
         />
         <Preview {...this.state} />
-      </div>
+      </Loader>
     );
   }
 }

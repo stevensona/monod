@@ -39,6 +39,15 @@ $main-footer-height: 35px;
         }
     }
 
+    .loader {
+        width: 100%;
+        height: editor-height(small);
+
+        @include breakpoint(medium) {
+            height: editor-height(medium);
+        }
+    }
+
     .editor {
         width: 100%;
         height: editor-height(small);
