@@ -5,6 +5,7 @@
 /* -- variables -- */
 $main-header-height: 70px;
 $main-footer-height: 35px;
+$vertical-handler-width: 40px;
 
 /* -- mixins -- */
 @function header-height($breakpoint){
@@ -49,6 +50,7 @@ $main-footer-height: 35px;
     }
 
     .editor {
+        display: flex;
         width: 100%;
         height: editor-height(small);
 
@@ -57,23 +59,27 @@ $main-footer-height: 35px;
         }
 
         .markdown {
-            width: 100%;
             height: 100%;
-            float: left;
+            overflow: auto;
+            width: 100%;
+            resize: horizontal;
+            transition: width 1s;
 
             @include breakpoint(medium) {
-                width: 50%;
+                width: calc(50% - #{$vertical-handler-width / 2});
             }
+        }
+
+        .vertical-handler {
+            width: $vertical-handler-width;
         }
 
         .preview {
             @include show-for(medium);
-            width: 0;
             height: 100%;
-            float: left;
 
             @include breakpoint(medium) {
-                width: 50%;
+                flex: 1 1 0;
             }
         }
     }

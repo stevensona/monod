@@ -3,9 +3,9 @@ import Loader from 'react-loader';
 
 import Markdown from './Markdown';
 import Preview from './Preview';
+import VerticalHandler from './VerticalHandler';
 
 const { objectOf, func } = PropTypes;
-
 
 export default class Editor extends Component {
   constructor(props, context) {
@@ -57,6 +57,30 @@ export default class Editor extends Component {
     this.props.onSave(newRaw);
   }
 
+  toggleMarkdown() {
+    var md = document.getElementsByClassName('markdown')[0];
+    var pv = document.getElementsByClassName('preview')[0];
+
+    if (md.style.width === '100vw') {
+      md.style.width = 'calc(50% - 20px)';
+      pv.style.display = 'block';
+    } else {
+      md.style.width = '0px';
+    }
+  }
+
+  togglePreview() {
+    var md = document.getElementsByClassName('markdown')[0];
+    var pv = document.getElementsByClassName('preview')[0];
+
+    if (md.style.width === '0px') {
+      md.style.width = 'calc(50% - 20px)';
+    } else {
+      md.style.width = '100vw';
+      pv.style.display = 'none';
+    }
+  }
+
   render() {
     return (
       <Loader loaded={this.state.loaded} loadedClassName={"editor"}>
@@ -64,6 +88,10 @@ export default class Editor extends Component {
           raw={this.state.raw}
           onChange={this.onChange.bind(this)}
           doUpdatePosition={this.doUpdatePosition.bind(this)}
+        />
+        <VerticalHandler
+          onLeftClick={this.toggleMarkdown.bind(this)}
+          onRightClick={this.togglePreview.bind(this)}
         />
         <Preview {...this.state} />
       </Loader>
