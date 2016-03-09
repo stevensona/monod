@@ -1,6 +1,9 @@
-import React, { Component } from 'react';
+import React, { PropTypes, Component } from 'react';
+
 import Markdown from './Markdown';
 import Preview from './Preview';
+
+const { object, func } = PropTypes;
 
 
 export default class Editor extends Component {
@@ -10,6 +13,12 @@ export default class Editor extends Component {
       raw: '',
       pos: 0
     };
+  }
+
+  componentDidMount() {
+    this.props.loadRaw.then((raw) => {
+      this.onChange(raw);
+    });
   }
 
   doUpdatePosition(newPos) {
@@ -28,6 +37,8 @@ export default class Editor extends Component {
         pos: previousState.pos
       };
     });
+
+    this.props.onSave(newRaw);
   }
 
   render() {
@@ -42,4 +53,9 @@ export default class Editor extends Component {
       </div>
     );
   }
+}
+
+Editor.propTypes = {
+  loadRaw: object.isRequired,
+  onSave: func.isRequired
 }

@@ -9,9 +9,6 @@ import 'codemirror/lib/codemirror.css';
 const { func, string } = PropTypes;
 
 export default class Markdown extends Component {
-  constructor(props, context) {
-    super(props, context);
-  }
 
   shouldComponentUpdate(nextProps) {
     return this.props.raw !== nextProps.raw;
