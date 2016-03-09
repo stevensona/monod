@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import marked from 'marked';
 import emojify from 'emojify.js';
 import hljs from 'highlight.js';
-import zenscroll from 'zenscroll';
 
 const { number, string } = PropTypes;
 
@@ -28,7 +27,6 @@ export default class Preview extends Component {
 
   componentDidMount() {
     this.$rendered = ReactDOM.findDOMNode(this.refs.rendered);
-    this.scroller  = zenscroll.createScroller(this.$rendered);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -42,7 +40,7 @@ export default class Preview extends Component {
         const previewHeight = this.$rendered.scrollHeight - this.$rendered.offsetHeight;
         const previewScroll = parseInt(previewHeight * this.props.pos, 10);
 
-        this.scroller.toY(previewScroll, 110);
+        this.$rendered.scrollTop = previewScroll;
       });
     }
   }

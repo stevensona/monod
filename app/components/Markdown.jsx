@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import Codemirror from 'react-codemirror';
-import _ from 'underscore';
 
 import 'codemirror/mode/gfm/gfm';
 import 'codemirror/mode/python/python';
@@ -14,12 +13,8 @@ export default class Markdown extends Component {
     super(props, context);
   }
 
-  componentWillMount() {
-    this.onScroll = _.debounce(this.onScroll, 40);
-  }
-
-  componentWillUnmount() {
-    this.onScroll.cancel();
+  shouldComponentUpdate(nextProps) {
+    return this.props.raw !== nextProps.raw;
   }
 
   getCodeMirror() {
