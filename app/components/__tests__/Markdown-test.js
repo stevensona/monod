@@ -18,7 +18,7 @@ describe('<Markdown />', () => {
 
   it('calls onChange when a default value is provided', () => {
     const spy = sinon.spy();
-    const wrapper = mount(<Markdown raw={"foo"} onChange={spy} doUpdatePosition={() => {}} />);
+    mount(<Markdown raw={"foo"} onChange={spy} doUpdatePosition={() => {}} />);
 
     expect(spy.calledOnce).to.be.true;
   });
