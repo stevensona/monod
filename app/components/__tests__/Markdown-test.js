@@ -32,16 +32,12 @@ describe('<Markdown />', () => {
     expect(spy.calledOnce).to.be.true;
   });
 
-  it('calls doUpdatePosition when scrolling', (done) => {
+  it('calls doUpdatePosition when scrolling', () => {
     const spy = sinon.spy();
     const wrapper = mount(<Markdown raw={""} onChange={() => {}} doUpdatePosition={spy} />);
 
     wrapper.simulate('scroll');
 
-    // scroll takes time
-    setTimeout(() => {
-      expect(spy.called).to.be.true;
-      done();
-    }, 50);
+    expect(spy.called).to.be.true;
   });
 });

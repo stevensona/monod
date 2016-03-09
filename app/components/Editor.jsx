@@ -4,7 +4,7 @@ import Loader from 'react-loader';
 import Markdown from './Markdown';
 import Preview from './Preview';
 
-const { object, func } = PropTypes;
+const { objectOf, func } = PropTypes;
 
 
 export default class Editor extends Component {
@@ -18,9 +18,21 @@ export default class Editor extends Component {
   }
 
   componentDidMount() {
-    this.props.loadRaw.then((raw) => {
-      this.onChange(raw);
-    });
+    this.props.loadRaw
+      .then((raw) => {
+        this.setState({
+          raw: raw,
+          pos: 0,
+          loaded: true
+        });
+      })
+      .catch(() => {
+        this.setState({
+          raw: '',
+          pos: 0,
+          loaded: true
+        });
+      });
   }
 
   doUpdatePosition(newPos) {
@@ -38,7 +50,7 @@ export default class Editor extends Component {
       return {
         raw: newRaw,
         pos: previousState.pos,
-        loaded: true
+        loaded: previousState.loaded
       };
     });
 
@@ -60,6 +72,10 @@ export default class Editor extends Component {
 }
 
 Editor.propTypes = {
-  loadRaw: object.isRequired,
+  // Promise
+  loadRaw: objectOf({
+    then: func.isRequired,
+    catch: func.isRequired
+  }).isRequired,
   onSave: func.isRequired
 }

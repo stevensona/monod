@@ -1,6 +1,8 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
+import sinon from 'sinon';
+import localforage from 'localforage';
 
 // see: https://github.com/mochajs/mocha/issues/1847
 const { describe, it } = global;
@@ -26,5 +28,13 @@ describe('<App />', () => {
   it('renders Footer component', () => {
     const wrapper = shallow(<App />);
     expect(wrapper.find(Footer)).to.have.length(1);
+  });
+
+  it('calls doLoad() when mounted', () => {
+    sinon.spy(App.prototype, 'doLoad');
+    const wrapper = mount(<App />);
+
+    expect(App.prototype.doLoad.calledOnce).to.be.true;
+    App.prototype.doLoad.restore();
   });
 });
