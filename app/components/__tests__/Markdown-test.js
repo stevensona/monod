@@ -12,14 +12,36 @@ import Markdown from '../Markdown';
 describe('<Markdown />', () => {
 
   it('renders a block with markdown css class', () => {
-    const wrapper = mount(<Markdown raw={""} onChange={() => {}} />);
+    const wrapper = mount(<Markdown raw={""} onChange={() => {}} doUpdatePosition={() => {}} />);
     expect(wrapper.find('.markdown')).to.have.length(1);
   });
 
   it('calls onChange when a default value is provided', () => {
     const spy = sinon.spy();
-    const wrapper = mount(<Markdown raw={"foo"} onChange={spy} />);
+    const wrapper = mount(<Markdown raw={"foo"} onChange={spy} doUpdatePosition={() => {}} />);
 
     expect(spy.calledOnce).to.be.true;
+  });
+
+  it('calls onChange when a text is entered', () => {
+    const spy = sinon.spy();
+    const wrapper = mount(<Markdown raw={""} onChange={spy} doUpdatePosition={() => {}} />);
+
+    wrapper.instance().getCodeMirror().getDoc().setValue('hello');
+
+    expect(spy.calledOnce).to.be.true;
+  });
+
+  it('calls doUpdatePosition when scrolling', (done) => {
+    const spy = sinon.spy();
+    const wrapper = mount(<Markdown raw={""} onChange={() => {}} doUpdatePosition={spy} />);
+
+    wrapper.simulate('scroll');
+
+    // scroll takes time
+    setTimeout(() => {
+      expect(spy.called).to.be.true;
+      done();
+    }, 50);
   });
 });

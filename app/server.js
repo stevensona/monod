@@ -14,5 +14,5 @@ app.get('/', function (req, res) {
 });
 
 app.listen(app.get('port'), function () {
-  console.log("Running at localhost:" + app.get('port'));
+  console.log('Running at localhost:' + app.get('port'));
 });

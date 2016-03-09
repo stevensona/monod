@@ -42,6 +42,9 @@ const common = {
         filename: '[name].js'
     },
     module: {
+        // see: https://github.com/isagalaev/highlight.js/issues/895 and
+        // https://github.com/webpack/webpack/issues/1721
+        noParse: [ /autoit\.js$/ ],
         // Loaders that run *before* others loaders
         preLoaders: [
             {
@@ -174,6 +177,10 @@ if (TARGET === 'build') {
             // quotes for the generated code to make sense
             new webpack.DefinePlugin({
                 'process.env.NODE_ENV': '"production"'
+            }),
+            new webpack.ProvidePlugin({
+              jQuery: "jquery",
+              "window.jQuery": "jquery"
             }),
             // Output extracted CSS to a file
             new ExtractTextPlugin('[name].[chunkhash].css'),
