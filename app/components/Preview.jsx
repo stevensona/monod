@@ -47,7 +47,7 @@ export default class Preview extends Component {
     }
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     return this.props.raw !== nextProps.raw;
   }
 
