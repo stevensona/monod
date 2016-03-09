@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import Codemirror from 'react-codemirror';
-import _ from 'underscore';
 
 import 'codemirror/mode/gfm/gfm';
 import 'codemirror/mode/python/python';
@@ -14,12 +13,8 @@ export default class Markdown extends Component {
     super(props, context);
   }
 
-  componentWillMount() {
-    this.onScroll = _.debounce(this.onScroll, 40);
-  }
-
-  componentWillUnmount() {
-    this.onScroll.cancel();
+  shouldComponentUpdate(nextProps) {
+    return this.props.raw !== nextProps.raw;
   }
 
   getCodeMirror() {
@@ -29,7 +24,7 @@ export default class Markdown extends Component {
   onScroll() {
     const { top, height, clientHeight } = this.getCodeMirror().getScrollInfo();
 
-    if (top === 0) {
+    if (top <= clientHeight / 2) {
       this.props.doUpdatePosition(top / height);
     } else {
       this.props.doUpdatePosition((top + clientHeight) / height);
