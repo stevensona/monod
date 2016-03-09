@@ -91,7 +91,7 @@ const common = {
         // Generate the final HTML5 file, nd include all your webpack bundles
         new HtmlWebpackPlugin({
             // Here, we use the `html-webpack-template` npm package
-            template: 'node_modules/html-webpack-template/index.ejs',
+            template: 'lib/webpack-template.ejs',
             // The page's title is read from npm's `package.json` file
             title: pkg.name,
             // Main "div" `id`
