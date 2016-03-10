@@ -31,7 +31,7 @@ export default class Editor extends Component {
           raw: raw,
           pos: 0,
           loaded: true,
-          mode: 'preview'
+          mode: EditorModes.PREVIEW
         });
       })
       .catch(() => {
@@ -39,7 +39,7 @@ export default class Editor extends Component {
           raw: '',
           pos: 0,
           loaded: true,
-          mode: 'preview'
+          mode: EditorModes.PREVIEW
         });
       });
     this.setMode(this.state.mode);
@@ -69,7 +69,7 @@ export default class Editor extends Component {
     this.props.onSave(newRaw);
   }
 
-  setMode(mode){
+  setMode(mode) {
     this.setState({
         raw: this.state.raw,
         pos: this.state.pos,
@@ -79,14 +79,13 @@ export default class Editor extends Component {
   }
 
   updateMode(e) {
-
-    var hasClickedLeft = e.target.className == 'left' || false;
+    const hasClickedLeft = e.target.className == 'left' || false;
     var newMode = EditorModes.PREVIEW;
 
-    if( hasClickedLeft && this.state.mode !== 'focus'){
+    if(hasClickedLeft && this.state.mode !== EditorModes.FOCUS){
       newMode = EditorModes.READING;
     }
-    if( !hasClickedLeft && this.state.mode !== 'reading'){
+    if(!hasClickedLeft && this.state.mode !== EditorModes.READING){
       newMode = EditorModes.FOCUS;
     }
 
