@@ -60,9 +60,7 @@ $vertical-handler-width: 40px;
 
         .markdown {
             height: 100%;
-            overflow: auto;
             width: 100%;
-            resize: horizontal;
             transition: width 1s;
 
             @include breakpoint(medium) {
