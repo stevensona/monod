@@ -2,8 +2,25 @@ import React, { Component, PropTypes } from 'react';
 import Codemirror from 'react-codemirror';
 
 import 'codemirror/mode/gfm/gfm';
-import 'codemirror/mode/python/python';
+import 'codemirror/mode/css/css';
+import 'codemirror/mode/dockerfile/dockerfile';
+import 'codemirror/mode/elm/elm';
+import 'codemirror/mode/gherkin/gherkin';
+import 'codemirror/mode/go/go';
 import 'codemirror/mode/javascript/javascript';
+import 'codemirror/mode/jinja2/jinja2';
+import 'codemirror/mode/jsx/jsx';
+import 'codemirror/mode/perl/perl';
+import 'codemirror/mode/php/php';
+import 'codemirror/mode/properties/properties';
+import 'codemirror/mode/python/python';
+import 'codemirror/mode/ruby/ruby';
+import 'codemirror/mode/sass/sass';
+import 'codemirror/mode/shell/shell';
+import 'codemirror/mode/sql/sql';
+import 'codemirror/mode/twig/twig';
+import 'codemirror/mode/xml/xml';
+import 'codemirror/mode/yaml/yaml';
 import 'codemirror/lib/codemirror.css';
 
 const { func, string } = PropTypes;

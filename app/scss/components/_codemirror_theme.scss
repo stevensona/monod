@@ -22,7 +22,7 @@
     }
 
     span.cm-builtin { color: $emperor }
-    span.cm-comment { color: $silver }
+    span.cm-comment { color: lighten($td-blue, 20%) }
     span.cm-header { color: $mine-shaft }
     span.cm-keyword {
         color: $mine-shaft;
