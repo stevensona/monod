@@ -1,11 +1,15 @@
 var express = require('express');
-var path    = require('path');
-var app     = express();
+var path = require('path');
+var compression = require('compression');
+
+var app = express();
 
 var static_path = path.join(__dirname, '/../build');
 
 app.set('port', process.env.PORT || 3000);
-app.use(express.static(static_path));
+
+app.use(compression());
+app.use(express.static(static_path, { maxAge: '1y' }));
 
 app.get('/', function (req, res) {
   res.sendFile('index.html', {

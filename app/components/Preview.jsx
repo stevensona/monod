@@ -50,7 +50,7 @@ export default class Preview extends Component {
   }
 
   getHTML() {
-    var html = marked(this.props.raw.toString(), { sanitize: true });
+    var html = marked(this.props.raw.toString(), { sanitize: false });
 
     html = emojify.replace(html);
 

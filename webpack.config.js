@@ -69,7 +69,13 @@ const common = {
                 // result in an error.
                 include: PATHS.app
             },
-            // Copy fonts
+            // FontAwesome
+            {
+                test: /\.(ttf|eot|svg|woff(2)?)(\?v=.+)?$/,
+                loaders: ['file?name=[path][name].[ext]&context=./node_modules'],
+                exclude: PATHS.app
+            },
+            // Monod fonts
             {
                 test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
                 loaders: ['file?name=[path][name].[ext]&context=./app'],
