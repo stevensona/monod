@@ -153,11 +153,16 @@ if (TARGET === 'dev' || !TARGET) {
 if (TARGET === 'build') {
     module.exports = merge(common, {
         // Tell Webpack that we want a separate entry chunk for our project
-        // `vendor` level dependencies
+        // `vendor` level dependencies, but filter non-frontend packages
         entry: {
             // From npm's `package.json` file
             vendor: Object.keys(pkg.dependencies).filter(function(dep) {
-                return dep !== 'express';
+              return -1 === [
+                'compression',
+                'express',
+                'font-awesome',
+                'foundation-sites'
+              ].indexOf(dep);
             })
         },
         output: {
