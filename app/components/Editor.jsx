@@ -9,7 +9,7 @@ const { objectOf, func } = PropTypes;
 
 export const EditorModes = {
   FOCUS: 'focus',
-  PREVIEW: 'preview',
+  PREVIEW: 'edit-preview',
   READING: 'reading'
 }
 
