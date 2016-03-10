@@ -44,7 +44,20 @@ export default class Editor extends Component {
       });
   }
 
-  doUpdatePosition(newPos) {
+  updateRaw(newRaw) {
+    this.setState(function(previousState) {
+      return {
+        raw: newRaw,
+        pos: previousState.pos,
+        loaded: previousState.loaded,
+        mode: previousState.mode
+      };
+    });
+
+    this.props.onUpdateRaw(newRaw);
+  }
+
+  updatePosition(newPos) {
     this.setState(function(previousState) {
       return {
         raw: previousState.raw,
@@ -55,40 +68,30 @@ export default class Editor extends Component {
     });
   }
 
-  onChange(newRaw) {
+  updateMode(newMode) {
     this.setState(function(previousState) {
       return {
-        raw: newRaw,
+        raw: previousState.raw,
         pos: previousState.pos,
         loaded: previousState.loaded,
-        mode: previousState.mode
+        mode: newMode
       };
     });
-
-    this.props.onSave(newRaw);
   }
 
-  setMode(mode) {
-    this.setState({
-        raw: this.state.raw,
-        pos: this.state.pos,
-        loaded: this.state.loaded,
-        mode: mode
-    });
-  }
-
-  updateMode(e) {
+  handleOnClick(e) {
     const hasClickedLeft = e.target.className == 'left' || false;
-    var newMode = EditorModes.PREVIEW;
+    let newMode = EditorModes.PREVIEW;
 
     if (hasClickedLeft && this.state.mode !== EditorModes.FOCUS) {
       newMode = EditorModes.READING;
     }
+
     if (!hasClickedLeft && this.state.mode !== EditorModes.READING) {
       newMode = EditorModes.FOCUS;
     }
 
-    this.setMode(newMode)
+    this.updateMode(newMode);
   }
 
   render() {
@@ -96,12 +99,12 @@ export default class Editor extends Component {
       <Loader loaded={this.state.loaded} loadedClassName={'editor ' + this.state.mode}>
         <Markdown
           raw={this.state.raw}
-          onChange={this.onChange.bind(this)}
-          doUpdatePosition={this.doUpdatePosition.bind(this)}
+          onChange={this.updateRaw.bind(this)}
+          doUpdatePosition={this.updatePosition.bind(this)}
         />
         <VerticalHandler
-          onClickLeft={this.updateMode.bind(this)}
-          onClickRight={this.updateMode.bind(this)}
+          onClickLeft={this.handleOnClick.bind(this)}
+          onClickRight={this.handleOnClick.bind(this)}
         />
         <Preview {...this.state} />
       </Loader>
@@ -115,5 +118,5 @@ Editor.propTypes = {
     then: func.isRequired,
     catch: func.isRequired
   }).isRequired,
-  onSave: func.isRequired
+  onUpdateRaw: func.isRequired
 }

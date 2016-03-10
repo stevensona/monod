@@ -29,11 +29,11 @@ describe('<App />', () => {
     expect(wrapper.find(Footer)).to.have.length(1);
   });
 
-  it('calls doLoad() when mounted', () => {
-    sinon.spy(App.prototype, 'doLoad');
+  it('calls loadRaw() when mounted', () => {
+    sinon.spy(App.prototype, 'loadRaw');
     mount(<App />);
 
-    expect(App.prototype.doLoad.calledOnce).to.be.true;
-    App.prototype.doLoad.restore();
+    expect(App.prototype.loadRaw.calledOnce).to.be.true;
+    App.prototype.loadRaw.restore();
   });
 });

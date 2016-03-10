@@ -16,16 +16,16 @@ export default class App extends Component {
     });
 
     this.forageKey = 'raw';
-    this.doSave = debounce(this.doSave, 1000);
+    this.saveRaw = debounce(this.saveRaw, 1000);
   }
 
-  doLoad() {
+  loadRaw() {
     return localforage.getItem(this.forageKey).then((value) => {
       return null !== value ? value : '';
     });
   }
 
-  doSave(raw) {
+  saveRaw(raw) {
     localforage.setItem(this.forageKey, raw);
   }
 
@@ -33,7 +33,7 @@ export default class App extends Component {
     return (
       <div className="layout">
         <Header />
-        <Editor loadRaw={this.doLoad()} onSave={this.doSave.bind(this)} />
+        <Editor loadRaw={this.loadRaw()} onUpdateRaw={this.saveRaw.bind(this)} />
         <Footer />
       </div>
     );
