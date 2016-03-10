@@ -14,6 +14,10 @@
             text-align: justify;
         }
 
+        a {
+            text-decoration: underline;
+        }
+
         img:not(.emoji) {
             display: block;
             margin-left: auto;
@@ -27,6 +31,9 @@
                 display: block;
                 overflow: scroll;
                 margin: 1rem 0;
+                padding: 1rem;
+                color: $alto;
+                background: $mine-shaft;
             }
         }
     }

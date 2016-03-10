@@ -23,7 +23,7 @@ $body-font-family: 'LatoLatinLight', $common-font-family;
 $header-font-family: 'LatoLatin', $common-font-family;
 
 // Typography
-$code-background: $mine-shaft;
-$code-color: $alto;
+$code-font-family: Consolas, 'Liberation Mono', Courier, monospace;
+$code-background: transparent;
 $code-border: 0;
-$code-padding: 1rem;
+$code-padding: 0;
