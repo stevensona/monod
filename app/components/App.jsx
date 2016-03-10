@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import localforage from 'localforage';
+import debounce from 'lodash.debounce';
 
 import Header from './Header';
 import Editor from './Editor';
@@ -15,6 +16,7 @@ export default class App extends Component {
     });
 
     this.forageKey = 'raw';
+    this.doSave = debounce(this.doSave, 1000);
   }
 
   doLoad() {
