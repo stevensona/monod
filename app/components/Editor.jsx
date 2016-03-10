@@ -82,10 +82,10 @@ export default class Editor extends Component {
     const hasClickedLeft = e.target.className == 'left' || false;
     var newMode = EditorModes.PREVIEW;
 
-    if(hasClickedLeft && this.state.mode !== EditorModes.FOCUS){
+    if (hasClickedLeft && this.state.mode !== EditorModes.FOCUS) {
       newMode = EditorModes.READING;
     }
-    if(!hasClickedLeft && this.state.mode !== EditorModes.READING){
+    if (!hasClickedLeft && this.state.mode !== EditorModes.READING) {
       newMode = EditorModes.FOCUS;
     }
 
