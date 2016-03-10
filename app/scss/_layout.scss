@@ -104,13 +104,14 @@ $vertical-handler-width: 40px;
             }
         }
 
-        &.preview {
+        &.edit-preview {
             @include breakpoint(medium) {
                 .markdown {
-                    width: calc(50% - 20px);
+                    width: calc(50% - #{$vertical-handler-width / 2});
                 }
 
                 .preview {
+                    max-width: calc(50% - #{$vertical-handler-width / 2});
                     opacity: 1;
                     visibility: visible;
                 }
@@ -132,6 +133,7 @@ $vertical-handler-width: 40px;
                 }
 
                 .preview {
+                    width: calc(100% - #{$vertical-handler-width / 2});
                     opacity: 1;
                     visibility: visible;
                 }

@@ -6,8 +6,8 @@
 /* -- Foundation stuffs -- */
 @import '~foundation-sites/scss/foundation';
 @include foundation-global-styles;
-@include foundation-grid;
 @include foundation-typography;
+@include foundation-table;
 
 /* -- FontAwesome -- */
 $fa-font-path: '~font-awesome/fonts';
