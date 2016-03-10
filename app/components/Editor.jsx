@@ -7,7 +7,7 @@ import VerticalHandler from './VerticalHandler';
 
 const { objectOf, func } = PropTypes;
 
-const EditorModes = {
+export const EditorModes = {
   FOCUS: 'focus',
   PREVIEW: 'preview',
   READING: 'reading'
@@ -80,7 +80,7 @@ export default class Editor extends Component {
 
   updateMode(e) {
 
-    var hasClickedLeft = e.target.classList.contains('left') || false;
+    var hasClickedLeft = e.target.className == 'left' || false;
     var newMode = EditorModes.PREVIEW;
 
     if( hasClickedLeft && this.state.mode !== 'focus'){
