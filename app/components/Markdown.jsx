@@ -35,7 +35,7 @@ export default class Markdown extends Component {
     return this.refs.markdownTextarea.getCodeMirror();
   }
 
-  onScroll() {
+  handleOnScroll() {
     const { top, height, clientHeight } = this.getCodeMirror().getScrollInfo();
 
     if (top <= clientHeight / 10) {
@@ -56,7 +56,7 @@ export default class Markdown extends Component {
     };
 
     return (
-      <div className="markdown" onScroll={this.onScroll.bind(this)}>
+      <div className="markdown" onScroll={this.handleOnScroll.bind(this)}>
         <Codemirror
           ref="markdownTextarea"
           placeholder="Type your *markdown* content here"
