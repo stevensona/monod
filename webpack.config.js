@@ -152,19 +152,6 @@ if (TARGET === 'dev' || !TARGET) {
 // Build for production
 if (TARGET === 'build') {
     module.exports = merge(common, {
-        // Tell Webpack that we want a separate entry chunk for our project
-        // `vendor` level dependencies, but filter non-frontend packages
-        entry: {
-            // From npm's `package.json` file
-            vendor: Object.keys(pkg.dependencies).filter(function(dep) {
-              return -1 === [
-                'compression',
-                'express',
-                'font-awesome',
-                'foundation-sites'
-              ].indexOf(dep);
-            })
-        },
         output: {
             path: PATHS.build,
             // Set up caching by adding cache busting hashes to filenames
@@ -189,18 +176,14 @@ if (TARGET === 'build') {
             // DefinePlugin replaces content "as is" so we need some extra
             // quotes for the generated code to make sense
             new webpack.DefinePlugin({
-                'process.env.NODE_ENV': '"production"'
+                'process.env': { NODE_ENV: '"production"' }
             }),
             // Output extracted CSS to a file
             new ExtractTextPlugin('[name].[chunkhash].css'),
-            // Allow to extract the code we need for the `vendor` bundle,
-            // otherwise `app.js` will still contains `vendor` dependencies
-            new webpack.optimize.CommonsChunkPlugin({
-              // Extract vendor and print files
-                names: ['print', 'vendor']
-            }),
+            new webpack.optimize.DedupePlugin(),
             // Minification with Uglify
             new webpack.optimize.UglifyJsPlugin({
+                minimize: true,
                 compress: {
                     // Ignore warning messages are they are pretty useless
                     warnings: false

@@ -1,28 +1,31 @@
 import React, { PropTypes, Component } from 'react';
 import ReactDOM from 'react-dom';
-import marked from 'marked';
-import emojify from 'emojify.js';
-import hljs from 'highlight.js';
+import PreviewLoader from './loaders/Preview';
 
 const { number, string } = PropTypes;
-
-import 'highlight.js/styles/zenburn.css';
 
 export default class Preview extends Component {
   constructor(props, context) {
     super(props, context);
 
-    marked.setOptions({
-      highlight: function (code) {
-        return hljs.highlightAuto(code).value;
-      }
-    });
-
-    emojify.setConfig({
-      img_dir: 'https://github.global.ssl.fastly.net/images/icons/emoji/'
-    });
-
     this.requestAnimationId = false;
+  }
+
+  componentWillMount() {
+    PreviewLoader().then((deps) => {
+      this.marked = deps.marked.setOptions({
+        highlight: function (code) {
+          return deps.hljs.highlightAuto(code).value;
+        }
+      });
+
+      this.emojify = deps.emojify;
+      this.emojify.setConfig({
+        img_dir: 'https://github.global.ssl.fastly.net/images/icons/emoji/'
+      });
+
+      this.forceUpdate();
+    });
   }
 
   componentDidMount() {
@@ -50,9 +53,18 @@ export default class Preview extends Component {
   }
 
   getHTML() {
-    var html = marked(this.props.raw.toString(), { sanitize: false });
+    let html;
 
-    html = emojify.replace(html);
+    if (!this.marked) {
+      html = [
+        '<em>',
+        'We are processing your document...',
+        '</em>'
+      ].join('');
+    } else {
+      html = this.marked(this.props.raw.toString(), { sanitize: false });
+      html = this.emojify.replace(html);
+    }
 
     return {
       __html: html
