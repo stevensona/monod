@@ -14,7 +14,8 @@ const pkg = require('./package.json');
 const TARGET = process.env.npm_lifecycle_event;
 const PATHS  = {
     app: path.join(__dirname, 'app'),
-    build: path.join(__dirname, 'build')
+    build: path.join(__dirname, 'build'),
+    print: path.join(__dirname, 'app/scss/print.scss')
 };
 
 // Used to configure Babel (see: `.babelrc` file)
@@ -24,7 +25,8 @@ process.env.BABEL_ENV = TARGET;
 const common = {
     // Entry points are used to define "bundles"
     entry: {
-        app: PATHS.app
+        app: PATHS.app,
+        print: PATHS.print
     },
     // Extensions that should be used to resolve module
     //
@@ -91,7 +93,7 @@ const common = {
         // Generate the final HTML5 file, nd include all your webpack bundles
         new HtmlWebpackPlugin({
             // Here, we use the `html-webpack-template` npm package
-            template: 'node_modules/html-webpack-template/index.ejs',
+            template: 'lib/webpack-template.ejs',
             // The page's title is read from npm's `package.json` file
             title: pkg.name,
             // Main "div" `id`
@@ -151,11 +153,16 @@ if (TARGET === 'dev' || !TARGET) {
 if (TARGET === 'build') {
     module.exports = merge(common, {
         // Tell Webpack that we want a separate entry chunk for our project
-        // `vendor` level dependencies
+        // `vendor` level dependencies, but filter non-frontend packages
         entry: {
             // From npm's `package.json` file
             vendor: Object.keys(pkg.dependencies).filter(function(dep) {
-                return dep !== 'express';
+              return -1 === [
+                'compression',
+                'express',
+                'font-awesome',
+                'foundation-sites'
+              ].indexOf(dep);
             })
         },
         output: {
@@ -184,18 +191,13 @@ if (TARGET === 'build') {
             new webpack.DefinePlugin({
                 'process.env.NODE_ENV': '"production"'
             }),
-            new webpack.ProvidePlugin({
-              jQuery: "jquery",
-              "window.jQuery": "jquery"
-            }),
             // Output extracted CSS to a file
             new ExtractTextPlugin('[name].[chunkhash].css'),
             // Allow to extract the code we need for the `vendor` bundle,
             // otherwise `app.js` will still contains `vendor` dependencies
             new webpack.optimize.CommonsChunkPlugin({
-                // Extract vendor and manifest files, the latter being a file
-                // that tells Webpack how to map each module to each file
-                names: ['vendor', 'manifest']
+              // Extract vendor and print files
+                names: ['print', 'vendor']
             }),
             // Minification with Uglify
             new webpack.optimize.UglifyJsPlugin({
