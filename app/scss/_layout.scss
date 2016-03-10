@@ -78,7 +78,7 @@ $vertical-handler-width: 40px;
             transition: all 0.5s;
 
             @include breakpoint(medium) {
-                flex: 1 1 0;
+                flex: 1 1 auto;
             }
         }
 
