@@ -42,7 +42,6 @@ export default class Editor extends Component {
           mode: EditorModes.PREVIEW
         });
       });
-    this.setMode(this.state.mode);
   }
 
   doUpdatePosition(newPos) {
