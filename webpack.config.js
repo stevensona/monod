@@ -14,7 +14,8 @@ const pkg = require('./package.json');
 const TARGET = process.env.npm_lifecycle_event;
 const PATHS  = {
     app: path.join(__dirname, 'app'),
-    build: path.join(__dirname, 'build')
+    build: path.join(__dirname, 'build'),
+    print: path.join(__dirname, 'app/scss/print.scss')
 };
 
 // Used to configure Babel (see: `.babelrc` file)
@@ -24,7 +25,8 @@ process.env.BABEL_ENV = TARGET;
 const common = {
     // Entry points are used to define "bundles"
     entry: {
-        app: PATHS.app
+        app: PATHS.app,
+        print: PATHS.print
     },
     // Extensions that should be used to resolve module
     //
@@ -184,18 +186,13 @@ if (TARGET === 'build') {
             new webpack.DefinePlugin({
                 'process.env.NODE_ENV': '"production"'
             }),
-            new webpack.ProvidePlugin({
-              jQuery: "jquery",
-              "window.jQuery": "jquery"
-            }),
             // Output extracted CSS to a file
             new ExtractTextPlugin('[name].[chunkhash].css'),
             // Allow to extract the code we need for the `vendor` bundle,
             // otherwise `app.js` will still contains `vendor` dependencies
             new webpack.optimize.CommonsChunkPlugin({
-                // Extract vendor and manifest files, the latter being a file
-                // that tells Webpack how to map each module to each file
-                names: ['vendor', 'manifest']
+              // Extract vendor and print files
+                names: ['print', 'vendor']
             }),
             // Minification with Uglify
             new webpack.optimize.UglifyJsPlugin({

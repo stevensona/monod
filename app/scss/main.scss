@@ -11,14 +11,13 @@
 
 /* -- FontAwesome -- */
 $fa-font-path: '~font-awesome/fonts';
-@import '~font-awesome/scss/font-awesome';
+@import '~font-awesome/scss/font-awesome.scss';
 
 /* -- Monod styles -- */
 
 // Application layout
 @import 'layout';
 @import 'fonts';
-@import 'print';
 
 // Components
 @import 'components/header';
