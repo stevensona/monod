@@ -13,11 +13,11 @@ export default class VerticalHandler extends Component {
       <div className="vertical-handler">
           <div
             className="left"
-            onClick={this.props.onLeftClick}
+            onClick={this.props.onClickLeft}
           />
           <div
             className="right"
-            onClick={this.props.onRightClick}
+            onClick={this.props.onClickRight}
           />
       </div>
     );
@@ -25,6 +25,6 @@ export default class VerticalHandler extends Component {
 }
 
 VerticalHandler.PropTypes = {
-  onLeftClick: func.isRequired,
-  onRightClick: func.isRequired
+  onClickLeft: func.isRequired,
+  onClickRight: func.isRequired
 }

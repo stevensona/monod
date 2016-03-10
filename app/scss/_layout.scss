@@ -61,7 +61,7 @@ $vertical-handler-width: 40px;
         .markdown {
             height: 100%;
             width: 100%;
-            transition: width 1s;
+            transition: all 0.5s;
 
             @include breakpoint(medium) {
                 width: calc(50% - #{$vertical-handler-width / 2});
@@ -75,9 +75,41 @@ $vertical-handler-width: 40px;
         .preview {
             @include show-for(medium);
             height: 100%;
+            transition: all 0.5s;
 
             @include breakpoint(medium) {
                 flex: 1 1 0;
+            }
+        }
+
+        &.focus {
+            @include breakpoint(medium) {
+                .markdown { width: 100% }
+                .preview {
+                    opacity: 0;
+                    visibility: hidden;
+                    width: 0;
+                }
+            }
+        }
+
+        &.preview {
+            @include breakpoint(medium) {
+                .markdown { width: calc(50% - 20px) }
+                .preview {
+                    opacity: 1;
+                    visibility: visible;
+                }
+            }
+        }
+
+        &.reading {
+            @include breakpoint(medium) {
+                .markdown { width: 0 }
+                .preview {
+                    opacity: 1;
+                    visibility: visible;
+                }
             }
         }
     }

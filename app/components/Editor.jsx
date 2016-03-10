@@ -7,13 +7,20 @@ import VerticalHandler from './VerticalHandler';
 
 const { objectOf, func } = PropTypes;
 
+const EditorModes = {
+  FOCUS: 'focus',
+  PREVIEW: 'preview',
+  READING: 'reading'
+}
+
 export default class Editor extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
       raw: '',
       pos: 0,
-      loaded: false
+      loaded: false,
+      mode: EditorModes.PREVIEW
     };
   }
 
@@ -23,16 +30,19 @@ export default class Editor extends Component {
         this.setState({
           raw: raw,
           pos: 0,
-          loaded: true
+          loaded: true,
+          mode: 'preview'
         });
       })
       .catch(() => {
         this.setState({
           raw: '',
           pos: 0,
-          loaded: true
+          loaded: true,
+          mode: 'preview'
         });
       });
+    this.setMode(this.state.mode);
   }
 
   doUpdatePosition(newPos) {
@@ -40,7 +50,8 @@ export default class Editor extends Component {
       return {
         raw: previousState.raw,
         pos: newPos,
-        loaded: previousState.loaded
+        loaded: previousState.loaded,
+        mode: previousState.mode
       };
     });
   }
@@ -50,48 +61,49 @@ export default class Editor extends Component {
       return {
         raw: newRaw,
         pos: previousState.pos,
-        loaded: previousState.loaded
+        loaded: previousState.loaded,
+        mode: previousState.mode
       };
     });
 
     this.props.onSave(newRaw);
   }
 
-  toggleMarkdown() {
-    var md = document.getElementsByClassName('markdown')[0];
-    var pv = document.getElementsByClassName('preview')[0];
-
-    if (md.style.width === '100vw') {
-      md.style.width = 'calc(50% - 20px)';
-      pv.style.display = 'block';
-    } else {
-      md.style.width = '0px';
-    }
+  setMode(mode){
+    this.setState({
+        raw: this.state.raw,
+        pos: this.state.pos,
+        loaded: this.state.loaded,
+        mode: mode
+    });
   }
 
-  togglePreview() {
-    var md = document.getElementsByClassName('markdown')[0];
-    var pv = document.getElementsByClassName('preview')[0];
+  updateMode(e) {
 
-    if (md.style.width === '0px') {
-      md.style.width = 'calc(50% - 20px)';
-    } else {
-      md.style.width = '100vw';
-      pv.style.display = 'none';
+    var hasClickedLeft = e.target.classList.contains('left') || false;
+    var newMode = EditorModes.PREVIEW;
+
+    if( hasClickedLeft && this.state.mode !== 'focus'){
+      newMode = EditorModes.READING;
     }
+    if( !hasClickedLeft && this.state.mode !== 'reading'){
+      newMode = EditorModes.FOCUS;
+    }
+
+    this.setMode(newMode)
   }
 
   render() {
     return (
-      <Loader loaded={this.state.loaded} loadedClassName={"editor"}>
+      <Loader loaded={this.state.loaded} loadedClassName={'editor ' + this.state.mode}>
         <Markdown
           raw={this.state.raw}
           onChange={this.onChange.bind(this)}
           doUpdatePosition={this.doUpdatePosition.bind(this)}
         />
         <VerticalHandler
-          onLeftClick={this.toggleMarkdown.bind(this)}
-          onRightClick={this.togglePreview.bind(this)}
+          onClickLeft={this.updateMode.bind(this)}
+          onClickRight={this.updateMode.bind(this)}
         />
         <Preview {...this.state} />
       </Loader>
