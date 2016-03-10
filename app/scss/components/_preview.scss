@@ -20,9 +20,14 @@
             margin-right: auto;
         }
 
-        code {
-            display: block;
-            margin: 1rem 0;
+        pre {
+            max-width: 100%;
+
+            & > code {
+                display: block;
+                overflow: scroll;
+                margin: 1rem 0;
+            }
         }
     }
 
