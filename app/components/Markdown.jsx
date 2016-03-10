@@ -21,7 +21,7 @@ export default class Markdown extends Component {
   onScroll() {
     const { top, height, clientHeight } = this.getCodeMirror().getScrollInfo();
 
-    if (top <= clientHeight / 2) {
+    if (top <= clientHeight / 10) {
       this.props.doUpdatePosition(top / height);
     } else {
       this.props.doUpdatePosition((top + clientHeight) / height);
