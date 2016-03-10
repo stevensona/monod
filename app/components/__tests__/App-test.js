@@ -2,7 +2,6 @@ import React from 'react';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import sinon from 'sinon';
-import localforage from 'localforage';
 
 // see: https://github.com/mochajs/mocha/issues/1847
 const { describe, it } = global;
@@ -32,7 +31,7 @@ describe('<App />', () => {
 
   it('calls doLoad() when mounted', () => {
     sinon.spy(App.prototype, 'doLoad');
-    const wrapper = mount(<App />);
+    mount(<App />);
 
     expect(App.prototype.doLoad.calledOnce).to.be.true;
     App.prototype.doLoad.restore();
