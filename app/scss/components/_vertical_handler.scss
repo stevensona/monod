@@ -3,18 +3,29 @@
  */
 
 .vertical-handler {
-    background-color: $mercury;
+    background-color: rgba($mercury, 0.7);
     height: 100%;
     display: flex;
 
     .left,
     .right {
         width: 20px;
-        height: 100%;
         cursor: pointer;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        i.fa {
+            color: $silver;
+        }
 
         &:hover {
             background-color: rgba($td-blue, 0.8);
+
+            i.fa {
+                color: $white;
+            }
         }
     }
 }

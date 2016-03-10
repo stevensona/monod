@@ -13,12 +13,16 @@ export default class VerticalHandler extends Component {
       <div className="vertical-handler">
           <div
             className="left"
-            onClick={this.props.onClickLeft}
-          />
+            title="Reduce markdown editor"
+            onClick={this.props.onClickLeft}>
+            <i className="fa fa-chevron-left"></i>
+          </div>
           <div
             className="right"
-            onClick={this.props.onClickRight}
-          />
+            title="Reduce preview"
+            onClick={this.props.onClickRight}>
+            <i className="fa fa-chevron-right"></i>
+          </div>
       </div>
     );
   }

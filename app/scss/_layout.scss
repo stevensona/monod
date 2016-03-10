@@ -84,7 +84,18 @@ $vertical-handler-width: 40px;
 
         &.focus {
             @include breakpoint(medium) {
-                .markdown { width: 100% }
+                .markdown {
+                    width: 100%;
+                }
+
+                .vertical-handler {
+                    width: $vertical-handler-width / 2;
+
+                    .right {
+                        display: none
+                    }
+                }
+
                 .preview {
                     opacity: 0;
                     visibility: hidden;
@@ -95,7 +106,10 @@ $vertical-handler-width: 40px;
 
         &.preview {
             @include breakpoint(medium) {
-                .markdown { width: calc(50% - 20px) }
+                .markdown {
+                    width: calc(50% - 20px);
+                }
+
                 .preview {
                     opacity: 1;
                     visibility: visible;
@@ -105,7 +119,18 @@ $vertical-handler-width: 40px;
 
         &.reading {
             @include breakpoint(medium) {
-                .markdown { width: 0 }
+                .markdown {
+                    width: 0;
+                }
+
+                .vertical-handler {
+                    width: $vertical-handler-width / 2;
+
+                    .left {
+                        display: none
+                    }
+                }
+
                 .preview {
                     opacity: 1;
                     visibility: visible;
