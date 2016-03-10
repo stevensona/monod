@@ -7,7 +7,7 @@ import sinon from 'sinon';
 // see: https://github.com/mochajs/mocha/issues/1847
 const { describe, it, Promise } = global;
 
-import Editor from '../Editor';
+import Editor, {EditorModes} from '../Editor';
 import Markdown from '../Markdown';
 import Preview from '../Preview';
 
@@ -77,5 +77,65 @@ describe('<Editor />', () => {
     wrapper.find('Markdown').simulate('change');
 
     expect(spy.called).to.be.true;
+  });
+
+  it('switches from preview to reading mode', () => {
+    const wrapper = shallow(<Editor loadRaw={dummyLoadRaw} onSave={() => {}} />);
+    const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();
+
+    // Mock the click event
+    verticalHandlerWrapper
+      .find('.left')
+      .simulate('click', {target: {className: 'left'}});
+
+    expect(wrapper.state('mode')).to.be.equal(EditorModes.READING);
+  });
+
+  it('switches from preview to reading mode and then back to preview mode', () => {
+    const wrapper = shallow(<Editor loadRaw={dummyLoadRaw} onSave={() => {}} />);
+    const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();
+
+    // Mock the click event
+    verticalHandlerWrapper
+      .find('.left')
+      .simulate('click', {target: {className: 'left'}});
+
+    expect(wrapper.state('mode')).to.be.equal(EditorModes.READING);
+
+    verticalHandlerWrapper
+      .find('.right')
+      .simulate('click', {target: {className: 'right'}});
+
+    expect(wrapper.state('mode')).to.be.equal(EditorModes.PREVIEW);
+  });
+
+  it('switches from preview to focus mode', () => {
+    const wrapper = shallow(<Editor loadRaw={dummyLoadRaw} onSave={() => {}} />);
+    const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();
+
+    // Mock the click event
+    verticalHandlerWrapper
+      .find('.right')
+      .simulate('click', {target: {className: 'right'}});
+
+    expect(wrapper.state('mode')).to.be.equal(EditorModes.FOCUS);
+  });
+
+  it('switches from preview to focus mode and then back to preview mode', () => {
+    const wrapper = shallow(<Editor loadRaw={dummyLoadRaw} onSave={() => {}} />);
+    const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();
+
+    // Mock the click event
+    verticalHandlerWrapper
+      .find('.right')
+      .simulate('click', {target: {className: 'right'}});
+
+    expect(wrapper.state('mode')).to.be.equal(EditorModes.FOCUS);
+
+    verticalHandlerWrapper
+      .find('.left')
+      .simulate('click', {target: {className: 'left'}});
+
+    expect(wrapper.state('mode')).to.be.equal(EditorModes.PREVIEW);
   });
 });
