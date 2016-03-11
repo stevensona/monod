@@ -13,15 +13,6 @@ import Preview from '../Preview';
 
 describe('<Preview />', () => {
 
-  before(() => {
-    marked.setOptions({
-      sanitize: false,
-      highlight: function (code) {
-        return hljs.highlightAuto(code).value;
-      }
-    });
-  });
-
   it('renders a block with preview css class', () => {
     const wrapper = shallow(<Preview raw={""} pos={0} />);
     expect(wrapper.find('.preview')).to.have.length(1);
@@ -35,32 +26,34 @@ describe('<Preview />', () => {
 
   it('renders content', () => {
     const wrapper = shallow(<Preview raw={"foo"} pos={0} />);
-    const html = wrapper.instance().getHTML(marked, emojione).__html;
+    wrapper.instance().injectDependencies(marked, hljs, emojione);
 
-    expect(html).to.contain('foo');
+    expect(wrapper.instance().getHTML().__html).to.contain('foo');
   });
 
   it('converts markdown into HTML', () => {
     const wrapper = shallow(<Preview raw={"*italic*"} pos={0} />);
-    const html = wrapper.instance().getHTML(marked, emojione).__html;
+    wrapper.instance().injectDependencies(marked, hljs, emojione);
 
-    expect(html).to.contain('<em>italic</em>');
+    expect(wrapper.instance().getHTML().__html).to.contain('<em>italic</em>');
   });
 
   it('converts Emoji', () => {
     const wrapper = shallow(<Preview raw={":smile:"} pos={0} />);
-    const html = wrapper.instance().getHTML(marked, emojione).__html;
 
-    expect(html).to.contain(
+    wrapper.instance().injectDependencies(marked, hljs, emojione);
+
+    expect(wrapper.instance().getHTML().__html).to.contain(
       '<img class="emojione" alt="😄" src="//cdn.jsdelivr.net/emojione/assets/png/1f604.png?v=2.1.1"/>'
     );
   });
 
   it('highlights code blocks', () => {
     const wrapper = shallow(<Preview raw={"```python\nprint()```"} pos={0} />);
-    const html = wrapper.instance().getHTML(marked, emojione).__html;
 
-    expect(html).to.contain(
+    wrapper.instance().injectDependencies(marked, hljs, emojione);
+
+    expect(wrapper.instance().getHTML().__html).to.contain(
       [
         '<pre><code class="lang-python">',
         '<span class="hljs-function">',

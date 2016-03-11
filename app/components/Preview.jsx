@@ -9,20 +9,24 @@ export default class Preview extends Component {
     super(props, context);
 
     this.requestAnimationId = false;
+    this.injectDependencies = this.injectDependencies.bind(this);
+  }
+
+  injectDependencies(marked, hljs, emojione) {
+    this.marked = marked.setOptions({
+      sanitize: false,
+      highlight: function (code) {
+        return hljs.highlightAuto(code).value;
+      }
+    });
+
+    this.emojione = emojione;
+    this.emojione.ascii = true;
   }
 
   componentWillMount() {
     PreviewLoader().then((deps) => {
-      this.marked = deps.marked.setOptions({
-        sanitize: false,
-        highlight: function (code) {
-          return deps.hljs.highlightAuto(code).value;
-        }
-      });
-
-      this.emojione = deps.emojione;
-      this.emojione.ascii = true;
-
+      this.injectDependencies(deps.marked, deps.hljs, deps.emojione);
       this.forceUpdate();
     });
   }
@@ -51,10 +55,10 @@ export default class Preview extends Component {
     return this.props.raw !== nextProps.raw;
   }
 
-  getHTML(marked, emojione) {
+  getHTML() {
     let html;
 
-    if (!marked) {
+    if (!this.marked) {
       html = [
         '<div class="preview-loader">',
         '<p>Loading all the rendering stuff...</p>',
@@ -62,8 +66,8 @@ export default class Preview extends Component {
         '</div>'
       ].join('');
     } else {
-      html = marked(this.props.raw.toString());
-      html = emojione.toImage(html);
+      html = this.marked(this.props.raw.toString());
+      html = this.emojione.toImage(html);
     }
 
     return {
@@ -77,7 +81,7 @@ export default class Preview extends Component {
         <div
           ref="rendered"
           className="rendered"
-          dangerouslySetInnerHTML={this.getHTML(this.marked, this.emojione)} />
+          dangerouslySetInnerHTML={this.getHTML()} />
       </div>
     );
   }
