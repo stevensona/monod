@@ -53,10 +53,10 @@ export default class Preview extends Component {
     return this.props.raw !== nextProps.raw;
   }
 
-  getHTML() {
+  getHTML(marked, emojify) {
     let html;
 
-    if (!this.marked) {
+    if (!marked) {
       html = [
         '<div class="preview-loader">',
         '<p>Loading all the rendering stuff...</p>',
@@ -64,8 +64,8 @@ export default class Preview extends Component {
         '</div>'
       ].join('');
     } else {
-      html = this.marked(this.props.raw.toString(), { sanitize: false });
-      html = this.emojify.replace(html);
+      html = marked(this.props.raw.toString(), { sanitize: false });
+      html = emojify.replace(html);
     }
 
     return {
@@ -79,7 +79,7 @@ export default class Preview extends Component {
         <div
           ref="rendered"
           className="rendered"
-          dangerouslySetInnerHTML={this.getHTML()} />
+          dangerouslySetInnerHTML={this.getHTML(this.marked, this.emojify)} />
       </div>
     );
   }
