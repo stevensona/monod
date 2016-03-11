@@ -14,6 +14,7 @@ export default class Preview extends Component {
   componentWillMount() {
     PreviewLoader().then((deps) => {
       this.marked = deps.marked.setOptions({
+        sanitize: false,
         highlight: function (code) {
           return deps.hljs.highlightAuto(code).value;
         }
@@ -21,7 +22,7 @@ export default class Preview extends Component {
 
       this.emojify = deps.emojify;
       this.emojify.setConfig({
-        img_dir: 'https://github.global.ssl.fastly.net/images/icons/emoji/'
+        img_dir: 'https://github.global.ssl.fastly.net/images/icons/emoji'
       });
 
       this.forceUpdate();
@@ -57,9 +58,10 @@ export default class Preview extends Component {
 
     if (!this.marked) {
       html = [
-        '<em>',
-        'We are processing your document...',
-        '</em>'
+        '<div class="preview-loader">',
+        '<p>Loading all the rendering stuff...</p>',
+        '<i class="fa fa-spinner fa-spin"></i>',
+        '</div>'
       ].join('');
     } else {
       html = this.marked(this.props.raw.toString(), { sanitize: false });

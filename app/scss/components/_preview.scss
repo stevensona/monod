@@ -36,7 +36,23 @@
                 background: $mine-shaft;
             }
         }
-    }
+
+        .preview-loader {
+            text-align: center;
+            margin-top: 20vh;
+            font-size: 1.6rem;
+            color: $silver;
+
+            p {
+                text-align: center !important;
+            }
+
+            i {
+                font-size: 2.5rem;
+                margin-top: 1.6rem;
+            }
+        }
+      }
 
     .emoji {
         width: 1.5em;
