@@ -1,28 +1,32 @@
 import React, { PropTypes, Component } from 'react';
 import ReactDOM from 'react-dom';
-import marked from 'marked';
-import emojify from 'emojify.js';
-import hljs from 'highlight.js';
+import PreviewLoader from './loaders/Preview';
 
 const { number, string } = PropTypes;
-
-import 'highlight.js/styles/zenburn.css';
 
 export default class Preview extends Component {
   constructor(props, context) {
     super(props, context);
 
-    marked.setOptions({
-      highlight: function (code) {
-        return hljs.highlightAuto(code).value;
-      }
-    });
-
-    emojify.setConfig({
-      img_dir: 'https://github.global.ssl.fastly.net/images/icons/emoji/'
-    });
-
     this.requestAnimationId = false;
+  }
+
+  componentWillMount() {
+    PreviewLoader().then((deps) => {
+      this.marked = deps.marked.setOptions({
+        sanitize: false,
+        highlight: function (code) {
+          return deps.hljs.highlightAuto(code).value;
+        }
+      });
+
+      this.emojify = deps.emojify;
+      this.emojify.setConfig({
+        img_dir: 'https://github.global.ssl.fastly.net/images/icons/emoji'
+      });
+
+      this.forceUpdate();
+    });
   }
 
   componentDidMount() {
@@ -49,10 +53,20 @@ export default class Preview extends Component {
     return this.props.raw !== nextProps.raw;
   }
 
-  getHTML() {
-    var html = marked(this.props.raw.toString(), { sanitize: false });
+  getHTML(marked, emojify) {
+    let html;
 
-    html = emojify.replace(html);
+    if (!marked) {
+      html = [
+        '<div class="preview-loader">',
+        '<p>Loading all the rendering stuff...</p>',
+        '<i class="fa fa-spinner fa-spin"></i>',
+        '</div>'
+      ].join('');
+    } else {
+      html = marked(this.props.raw.toString(), { sanitize: false });
+      html = emojify.replace(html);
+    }
 
     return {
       __html: html
@@ -65,7 +79,7 @@ export default class Preview extends Component {
         <div
           ref="rendered"
           className="rendered"
-          dangerouslySetInnerHTML={this.getHTML()} />
+          dangerouslySetInnerHTML={this.getHTML(this.marked, this.emojify)} />
       </div>
     );
   }

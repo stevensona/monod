@@ -96,7 +96,9 @@ export default class Editor extends Component {
 
   render() {
     return (
-      <Loader loaded={this.state.loaded} loadedClassName={'editor ' + this.state.mode}>
+      <Loader
+        loaded={this.state.loaded}
+        loadedClassName={'editor ' + this.state.mode}>
         <Markdown
           raw={this.state.raw}
           onChange={this.updateRaw.bind(this)}
