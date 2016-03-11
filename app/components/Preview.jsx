@@ -62,7 +62,7 @@ export default class Preview extends Component {
         '</div>'
       ].join('');
     } else {
-      html = marked(this.props.raw.toString(), { sanitize: false });
+      html = marked(this.props.raw.toString());
       html = emojione.toImage(html);
     }
 

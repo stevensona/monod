@@ -14,8 +14,8 @@ export default class Markdown extends Component {
     });
   }
 
-  shouldComponentUpdate(nextProps) {
-    return this.props.raw !== nextProps.raw;
+  shouldComponentUpdate() {
+    return false;
   }
 
   getCodeMirror() {
