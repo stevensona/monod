@@ -20,10 +20,8 @@ export default class Preview extends Component {
         }
       });
 
-      this.emojify = deps.emojify;
-      this.emojify.setConfig({
-        img_dir: 'https://github.global.ssl.fastly.net/images/icons/emoji'
-      });
+      this.emojione = deps.emojione;
+      this.emojione.ascii = true;
 
       this.forceUpdate();
     });
@@ -53,7 +51,7 @@ export default class Preview extends Component {
     return this.props.raw !== nextProps.raw;
   }
 
-  getHTML(marked, emojify) {
+  getHTML(marked, emojione) {
     let html;
 
     if (!marked) {
@@ -65,7 +63,7 @@ export default class Preview extends Component {
       ].join('');
     } else {
       html = marked(this.props.raw.toString(), { sanitize: false });
-      html = emojify.replace(html);
+      html = emojione.toImage(html);
     }
 
     return {
@@ -79,7 +77,7 @@ export default class Preview extends Component {
         <div
           ref="rendered"
           className="rendered"
-          dangerouslySetInnerHTML={this.getHTML(this.marked, this.emojify)} />
+          dangerouslySetInnerHTML={this.getHTML(this.marked, this.emojione)} />
       </div>
     );
   }

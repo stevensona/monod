@@ -18,7 +18,7 @@
             border-bottom: 1px solid lighten($primary-color, 40%);
         }
 
-        img:not(.emoji) {
+        img:not(.emojione) {
             display: block;
             margin-left: auto;
             margin-right: auto;
@@ -54,11 +54,20 @@
         }
       }
 
-    .emoji {
-        width: 1.5em;
-        height: 1.5em;
-        display: inline-block;
-        margin-bottom: 0.2em;
-        background-size: contain;
-    }
+      .emojione {
+          font-size: inherit;
+          height: 3ex;
+          width: 3.1ex;
+          min-height: 20px;
+          min-width: 20px;
+
+          display: inline-block;
+          margin: -.2ex .15em .2ex;
+          line-height: normal;
+          vertical-align: middle;
+      }
+
+      img.emojione {
+          width: auto;
+      }
 }

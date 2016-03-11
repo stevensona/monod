@@ -8,7 +8,7 @@ export default () => {
       resolve({
         hljs: require('highlight.js'),
         marked: require('marked'),
-        emojify: require('emojify.js')
+        emojione: require('emojione')
       });
     });
   });
