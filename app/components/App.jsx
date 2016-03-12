@@ -29,16 +29,14 @@ export default class App extends Component {
         '',
         'Read more about how and why we build Monod at: https://tailordev.fr/blog/.',
         '',
-        '### Markdown syntax',
-        '',
-        'This note demonstrates some of what [Markdown][1] is capable of doing.',
+        'See: we have code & Emoji support, yay! :clap:',
         '',
         '``` python',
         'def hello():',
         '    print("Have fun with Monod!")',
         '```',
         '',
-        '*Play with this page and [give us feedback](mailto:hello@tailordev.fr). We would :heart: to ear from you!*'
+        '*Play with this page and [give us feedback](mailto:hello@tailordev.fr?subject=About Monod). We would :heart: to ear from you!*'
       ].join('\n');
     })
   }
