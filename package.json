@@ -15,7 +15,8 @@
     "test:watch": "npm run test -- --watch --reporter min",
     "test:ci": "npm run test -- --reporter mocha-circleci-reporter",
     "postinstall": "npm run build",
-    "start": "NODE_ENV=production node app/server.js"
+    "start": "NODE_ENV=production node app/server.js",
+    "cov": "nyc --extension .jsx npm run test"
   },
   "devDependencies": {
     "babel-core": "^6.6.4",
@@ -41,6 +42,7 @@
     "mocha": "^2.4.5",
     "mocha-circleci-reporter": "0.0.1",
     "node-sass": "^3.4.2",
+    "nyc": "^6.0.0",
     "react-addons-test-utils": "^0.14.7",
     "sass-loader": "^3.1.2",
     "sinon": "^1.17.3",
@@ -68,5 +70,8 @@
   },
   "engines": {
     "node": "^5.7"
+  },
+  "nyc": {
+    "exclude": [ "app/**/*-test.js", "lib" ]
   }
 }
