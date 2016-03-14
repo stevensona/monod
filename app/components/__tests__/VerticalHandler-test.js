@@ -11,12 +11,22 @@ import VerticalHandler from '../VerticalHandler';
 describe('<VerticalHandler />', () => {
 
   it('renders a block with vertical-handler css class', () => {
-    const wrapper = shallow(<VerticalHandler />);
+    const wrapper = shallow(
+      <VerticalHandler
+        onClickLeft={() => {}}
+        onClickRight={() => {}}
+      />
+    );
     expect(wrapper.find('.vertical-handler')).to.have.length(1);
   });
 
   it('renders children blocks with left/right css class', () => {
-    const wrapper = shallow(<VerticalHandler />);
+    const wrapper = shallow(
+      <VerticalHandler
+        onClickLeft={() => {}}
+        onClickRight={() => {}}
+      />
+    );
     expect(wrapper.find('.left')).to.have.length(1);
     expect(wrapper.find('.right')).to.have.length(1);
   });
