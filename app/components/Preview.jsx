@@ -2,31 +2,27 @@ import React, { PropTypes, Component } from 'react';
 import ReactDOM from 'react-dom';
 import PreviewLoader from './loaders/Preview';
 
-const { number, string } = PropTypes;
+const { func, number, string } = PropTypes;
 
 export default class Preview extends Component {
   constructor(props, context) {
     super(props, context);
 
     this.requestAnimationId = false;
-    this.injectDependencies = this.injectDependencies.bind(this);
-  }
-
-  injectDependencies(marked, hljs, emojione) {
-    this.marked = marked.setOptions({
-      sanitize: false,
-      highlight: function (code) {
-        return hljs.highlightAuto(code).value;
-      }
-    });
-
-    this.emojione = emojione;
-    this.emojione.ascii = true;
   }
 
   componentWillMount() {
-    PreviewLoader().then((deps) => {
-      this.injectDependencies(deps.marked, deps.hljs, deps.emojione);
+    this.props.previewLoader().then((deps) => {
+      this.marked = deps.marked.setOptions({
+        sanitize: false,
+        highlight: function (code) {
+          return deps.hljs.highlightAuto(code).value;
+        }
+      });
+
+      this.emojione = deps.emojione;
+      this.emojione.ascii = true;
+
       this.forceUpdate();
     });
   }
@@ -89,5 +85,10 @@ export default class Preview extends Component {
 
 Preview.propTypes = {
   raw: string.isRequired,
-  pos: number.isRequired
+  pos: number.isRequired,
+  previewLoader: func.isRequired
+}
+
+Preview.defaultProps = {
+  previewLoader: PreviewLoader
 }
