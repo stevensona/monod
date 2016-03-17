@@ -1,30 +1,29 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 
 const { func } = PropTypes;
 
-export default class VerticalHandler extends Component {
-  render() {
+const VerticalHandler = (props) => (
+  <div className="vertical-handler">
+    <div
+      className="left"
+      title="Reduce markdown editor"
+      onClick={props.onClickLeft}
+    >
+      <i className="fa fa-chevron-left"></i>
+    </div>
+    <div
+      className="right"
+      title="Reduce preview"
+      onClick={props.onClickRight}
+    >
+      <i className="fa fa-chevron-right"></i>
+    </div>
+  </div>
+);
 
-    return (
-      <div className="vertical-handler">
-          <div
-            className="left"
-            title="Reduce markdown editor"
-            onClick={this.props.onClickLeft}>
-            <i className="fa fa-chevron-left"></i>
-          </div>
-          <div
-            className="right"
-            title="Reduce preview"
-            onClick={this.props.onClickRight}>
-            <i className="fa fa-chevron-right"></i>
-          </div>
-      </div>
-    );
-  }
-}
-
-VerticalHandler.PropTypes = {
+VerticalHandler.propTypes = {
   onClickLeft: func.isRequired,
-  onClickRight: func.isRequired
-}
+  onClickRight: func.isRequired,
+};
+
+export default VerticalHandler;

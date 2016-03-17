@@ -47,7 +47,7 @@ export default class Editor extends Component {
   updateRaw(newRaw) {
     this.setState(function(previousState) {
       return {
-        raw: newRaw,
+        raw: newRaw ? newRaw : '',
         pos: previousState.pos,
         loaded: previousState.loaded,
         mode: previousState.mode
