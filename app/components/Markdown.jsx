@@ -30,6 +30,7 @@ export default class Markdown extends Component {
 
     // Bind CodeMirror events
     this.codeMirror.on('change', this.handleOnChange.bind(this));
+    this.codeMirror.on('scroll', this.handleScroll.bind(this));
 
     // Set default value
     const defaultValue = this.props.raw || '';
@@ -49,7 +50,7 @@ export default class Markdown extends Component {
     this.props.onChange && this.props.onChange(newValue);
   }
 
-  handleOnScroll() {
+  handleScroll() {
     const { top, height, clientHeight } = this.getCodeMirror().getScrollInfo();
     this.props.doUpdatePosition(top / (height - clientHeight));
   }
@@ -57,7 +58,7 @@ export default class Markdown extends Component {
   render() {
 
     return (
-      <div className="markdown" onScroll={this.handleOnScroll.bind(this)}>
+      <div className="markdown">
         <textarea
           ref="markdownTextarea"
           placeholder="Type your *markdown* content here"
