@@ -5,7 +5,7 @@ import PreviewLoader from './loaders/Preview';
 const { func, number, object, string } = PropTypes;
 
 
-class PreviewChunk extends Component {
+export class PreviewChunk extends Component {
 
   shouldComponentUpdate(nextProps) {
     return this.props.raw !== nextProps.raw || this.props.key !== nextProps.key;

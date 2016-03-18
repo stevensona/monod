@@ -8,7 +8,23 @@ import hljs from 'highlight.js';
 // see: https://github.com/mochajs/mocha/issues/1847
 const { before, describe, it, Promise } = global;
 
-import Preview from '../Preview';
+import Preview, {PreviewChunk} from '../Preview';
+
+
+describe('<PreviewChunk />', () => {
+
+  it('renders content', () => {
+    const wrapper = mount(
+      <PreviewChunk
+        raw={'foo'}
+        marked={marked}
+        emojione={emojione}
+      />
+    );
+    expect(wrapper.html()).to.contain('foo');
+  });
+
+});
 
 
 describe('<Preview />', () => {
@@ -56,7 +72,7 @@ describe('<Preview />', () => {
   it('converts markdown into HTML', (done) => {
     const wrapper = mount(
       <Preview
-        raw={"*italic*"}
+        raw={'*italic*'}
         pos={0}
         previewLoader={previewLoader}
       />
@@ -64,6 +80,28 @@ describe('<Preview />', () => {
 
     setTimeout(() => {
       expect(wrapper.html()).to.contain('<em>italic</em>');
+
+      done();
+    }, 5);
+  });
+
+  it('converts markdown blocks into HTML chunks', (done) => {
+    const wrapper = mount(
+      <Preview
+        raw={['*italic*', '**bold**'].join('\n\n')}
+        pos={0}
+        previewLoader={previewLoader}
+      />
+    );
+
+    setTimeout(() => {
+      expect(wrapper.html()).to.contain(
+        '<div class="chunk"><span><p><em>italic</em></p>\n</span></div>'
+      );
+
+      expect(wrapper.html()).to.contain(
+        '<div class="chunk"><span><p><strong>bold</strong></p>\n</span></div>'
+      );
 
       done();
     }, 5);
