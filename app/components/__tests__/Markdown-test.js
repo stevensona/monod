@@ -16,6 +16,11 @@ describe('<Markdown />', () => {
     expect(wrapper.find('.markdown')).to.have.length(1);
   });
 
+  it('renders a CodeMirror block', () => {
+    const wrapper = mount(<Markdown raw={""} onChange={() => {}} doUpdatePosition={() => {}} />);
+    expect(wrapper.render().find('.CodeMirror')).to.have.length(1);
+  });
+
   it('calls onChange when a default value is provided', () => {
     const spy = sinon.spy();
     mount(<Markdown raw={"foo"} onChange={spy} doUpdatePosition={() => {}} />);
@@ -35,8 +40,11 @@ describe('<Markdown />', () => {
   it('calls doUpdatePosition when scrolling', () => {
     const spy = sinon.spy();
     const wrapper = mount(<Markdown raw={""} onChange={() => {}} doUpdatePosition={spy} />);
+    const codeMirror = wrapper.instance().getCodeMirror();
 
-    wrapper.simulate('scroll');
+    // CodeMirror won't scroll if it has no value
+    codeMirror.getDoc().setValue('hello world!');
+    codeMirror.scrollTo(0, 10);
 
     expect(spy.called).to.be.true;
   });
