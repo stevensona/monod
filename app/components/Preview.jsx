@@ -85,12 +85,12 @@ export default class Preview extends Component {
   }
 
   render() {
-    var preview = [
-      '<div class="preview-loader">',
-      '<p>Loading all the rendering stuff...</p>',
-      '<i class="fa fa-spinner fa-spin"></i>',
-      '</div>'
-    ].join('');
+    var preview = (
+      <div className="preview-loader">
+        <p>Loading all the rendering stuff...</p>
+        <i className="fa fa-spinner fa-spin"></i>
+      </div>
+    );
 
     if (this.marked) {
       preview = this.props.raw.split('\n\n').map((chunk, key) => {
