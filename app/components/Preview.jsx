@@ -2,7 +2,40 @@ import React, { PropTypes, Component } from 'react';
 import ReactDOM from 'react-dom';
 import PreviewLoader from './loaders/Preview';
 
-const { func, number, string } = PropTypes;
+const { func, number, object, string } = PropTypes;
+
+
+export class PreviewChunk extends Component {
+
+  shouldComponentUpdate(nextProps) {
+    return this.props.raw !== nextProps.raw || this.props.key !== nextProps.key;
+  }
+
+  getHTML() {
+    let html;
+
+    html = this.props.marked(this.props.raw.toString());
+    html = this.props.emojione.toImage(html);
+
+    return {
+      __html: html
+    };
+  }
+
+  render() {
+    return (
+      <div className="chunk">
+        <span dangerouslySetInnerHTML={this.getHTML()} />
+      </div>
+    );
+  }
+}
+
+PreviewChunk.propTypes = {
+  marked: func.isRequired,
+  emojione: object.isRequired,
+  raw: string.isRequired
+}
 
 export default class Preview extends Component {
   constructor(props, context) {
@@ -51,33 +84,36 @@ export default class Preview extends Component {
     return this.props.raw !== nextProps.raw;
   }
 
-  getHTML() {
-    let html;
+  render() {
+    var preview = [
+      '<div class="preview-loader">',
+      '<p>Loading all the rendering stuff...</p>',
+      '<i class="fa fa-spinner fa-spin"></i>',
+      '</div>'
+    ].join('');
 
-    if (!this.marked) {
-      html = [
-        '<div class="preview-loader">',
-        '<p>Loading all the rendering stuff...</p>',
-        '<i class="fa fa-spinner fa-spin"></i>',
-        '</div>'
-      ].join('');
-    } else {
-      html = this.marked(this.props.raw.toString());
-      html = this.emojione.toImage(html);
+    if (this.marked) {
+      preview = this.props.raw.split('\n\n').map((chunk, key) => {
+        if(!chunk) {
+          return null;
+        }
+
+        return (
+          <PreviewChunk
+            key={'ck-' + key.toString()}
+            raw={chunk}
+            marked={this.marked}
+            emojione={this.emojione}
+          />
+        )
+      }, this);
     }
 
-    return {
-      __html: html
-    };
-  }
-
-  render() {
     return (
       <div className="preview">
-        <div
-          ref="rendered"
-          className="rendered"
-          dangerouslySetInnerHTML={this.getHTML()} />
+        <div ref="rendered" className="rendered">
+          {preview}
+        </div>
       </div>
     );
   }
