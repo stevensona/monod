@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import MarkdownLoader from './loaders/Markdown';
-import Codemirror from 'react-codemirror';
+import CodeMirror from 'codemirror';
 
 import 'codemirror/lib/codemirror.css';
 
@@ -14,26 +14,10 @@ export default class Markdown extends Component {
     });
   }
 
-  shouldComponentUpdate() {
-    return false;
-  }
-
-  getCodeMirror() {
-    return this.refs.markdownTextarea.getCodeMirror();
-  }
-
-  handleOnScroll() {
-    const { top, height, clientHeight } = this.getCodeMirror().getScrollInfo();
-
-    if (top == 0) {
-      this.props.doUpdatePosition(top / height);
-    } else {
-      this.props.doUpdatePosition((top + clientHeight) / height);
-    }
-  }
-
-  render() {
-    var options = {
+  componentDidMount() {
+    const defaultValue = this.props.raw || '';
+    const textareaNode = this.refs.markdownTextarea;
+    const options = {
       autofocus: true,
       lineNumbers: true,
       lineWrapping: true,
@@ -42,14 +26,50 @@ export default class Markdown extends Component {
       theme: 'monod'
     };
 
+    // CodeMirror main instance
+    this.codeMirror = CodeMirror.fromTextArea(textareaNode, options);
+
+    // Bind CodeMirror events
+    this.codeMirror.on('change', this.handleOnChange.bind(this));
+    this.codeMirror.on('scroll', this.handleScroll.bind(this));
+
+    // Set default value
+    this.codeMirror.setValue(defaultValue);
+  }
+
+  shouldComponentUpdate() {
+    return false;
+  }
+
+  getCodeMirror() {
+    return this.codeMirror;
+  }
+
+  handleOnChange() {
+    const newValue = this.getCodeMirror().getDoc().getValue();
+
+    // Update the value -> rendering
+    this.props.onChange && this.props.onChange(newValue);
+
+    // Update scrolling position (ensure rendering is visible)
+    this.handleScroll();
+  }
+
+  handleScroll() {
+    const { top, height, clientHeight } = this.getCodeMirror().getScrollInfo();
+    this.props.doUpdatePosition(top / (height - clientHeight));
+  }
+
+  render() {
+
     return (
-      <div className="markdown" onScroll={this.handleOnScroll.bind(this)}>
-        <Codemirror
+      <div className="markdown">
+        <textarea
           ref="markdownTextarea"
           placeholder="Type your *markdown* content here"
           onChange={this.props.onChange}
           value={this.props.raw}
-          options={options}
+          autoComplete="off"
         />
       </div>
     );
