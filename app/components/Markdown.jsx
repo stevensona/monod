@@ -15,6 +15,7 @@ export default class Markdown extends Component {
   }
 
   componentDidMount() {
+    const defaultValue = this.props.raw || '';
     const textareaNode = this.refs.markdownTextarea;
     const options = {
       autofocus: true,
@@ -33,7 +34,6 @@ export default class Markdown extends Component {
     this.codeMirror.on('scroll', this.handleScroll.bind(this));
 
     // Set default value
-    const defaultValue = this.props.raw || '';
     this.codeMirror.setValue(defaultValue);
   }
 
