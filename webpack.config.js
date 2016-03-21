@@ -18,7 +18,7 @@ const PATHS  = {
     build: path.join(__dirname, 'build'),
     print: path.join(__dirname, 'app/scss/print.scss')
 };
-const VERSION = childProcess.execSync('git rev-parse HEAD').toString().substring(0, 7);
+const VERSION = process.env.SOURCE_VERSION || process.env.SHA || childProcess.execSync('git rev-parse HEAD').toString().substring(0, 7);
 
 // Used to configure Babel (see: `.babelrc` file)
 process.env.BABEL_ENV = TARGET;
