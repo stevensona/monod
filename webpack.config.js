@@ -1,6 +1,7 @@
-const path    = require('path');
-const merge   = require('webpack-merge');
+const path = require('path');
+const merge = require('webpack-merge');
 const webpack = require('webpack');
+const childProcess = require('child_process');
 
 // Webpack plugins
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -17,6 +18,7 @@ const PATHS  = {
     build: path.join(__dirname, 'build'),
     print: path.join(__dirname, 'app/scss/print.scss')
 };
+const VERSION = childProcess.execSync('git rev-parse HEAD').toString().substring(0, 7);
 
 // Used to configure Babel (see: `.babelrc` file)
 process.env.BABEL_ENV = TARGET;
@@ -96,6 +98,7 @@ const common = {
             template: 'lib/webpack-template.ejs',
             // The page's title is read from npm's `package.json` file
             title: pkg.name,
+            version: VERSION,
             // Main "div" `id`
             appMountId: 'app',
             // No need to inject assets in the given template as it is handled
