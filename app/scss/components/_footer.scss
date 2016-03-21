@@ -6,6 +6,6 @@ footer.main {
     padding: 0.5rem 1rem;
     background-color: $td-blue;
     color: $white;
-    font-size: 0.8rem;
-    font-weight: bold;
+    font-family: $footer-font-family;
+    font-size: $footer-font-size;
 }
