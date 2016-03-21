@@ -18,7 +18,7 @@ const PATHS  = {
     build: path.join(__dirname, 'build'),
     print: path.join(__dirname, 'app/scss/print.scss')
 };
-const VERSION = process.env.SOURCE_VERSION || process.env.SHA || childProcess.execSync('git rev-parse HEAD').toString().substring(0, 7);
+const VERSION = process.env.SOURCE_VERSION || process.env.SHA || childProcess.execSync('git rev-parse HEAD').toString();
 
 // Used to configure Babel (see: `.babelrc` file)
 process.env.BABEL_ENV = TARGET;
@@ -98,7 +98,7 @@ const common = {
             template: 'lib/webpack-template.ejs',
             // The page's title is read from npm's `package.json` file
             title: pkg.name,
-            version: VERSION,
+            version: VERSION.substring(0, 7),
             // Main "div" `id`
             appMountId: 'app',
             // No need to inject assets in the given template as it is handled
