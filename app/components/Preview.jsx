@@ -53,7 +53,7 @@ export default class Preview extends Component {
         highlight: (str, lang) => {
           if (lang && deps.hljs.getLanguage(lang)) {
             try {
-              return deps.hljs.highlight(lang, str).value;
+              return deps.hljs.highlightAuto(str).value;
             } catch (e) {
               // pass
             }

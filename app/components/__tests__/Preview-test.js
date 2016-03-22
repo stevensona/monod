@@ -1,7 +1,7 @@
 import React from 'react';
 import { mount, shallow, render } from 'enzyme';
 import { expect } from 'chai';
-import marked from 'marked';
+import md from 'markdown-it';
 import emojione from 'emojione';
 import hljs from 'highlight.js';
 
@@ -17,7 +17,7 @@ describe('<PreviewChunk />', () => {
     const wrapper = mount(
       <PreviewChunk
         raw={'foo'}
-        marked={marked}
+        md={md()}
         emojione={emojione}
       />
     );
@@ -34,7 +34,7 @@ describe('<Preview />', () => {
   before(() => {
     previewLoader = () => {
       return Promise.resolve({
-        marked: marked,
+        md: md,
         hljs: hljs,
         emojione: emojione
       })
@@ -128,7 +128,7 @@ describe('<Preview />', () => {
   it('highlights code blocks', (done) => {
     const wrapper = mount(
       <Preview
-        raw={"```python\nprint()```"}
+        raw={"```python\nprint()\n```"}
         pos={0}
         previewLoader={previewLoader}
       />
@@ -137,7 +137,7 @@ describe('<Preview />', () => {
     setTimeout(() => {
       expect(wrapper.html()).to.contain(
         [
-          '<pre><code class="lang-python">',
+          '<pre><code class="language-python">',
           '<span class="hljs-function">',
           '<span class="hljs-title">print</span>',
           '<span class="hljs-params">()</span>',
