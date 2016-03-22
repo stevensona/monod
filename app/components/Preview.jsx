@@ -14,7 +14,7 @@ export class PreviewChunk extends Component {
   getHTML() {
     let html;
 
-    html = this.props.marked(this.props.raw.toString());
+    html = this.props.md.render(this.props.raw.toString());
     html = this.props.emojione.toImage(html);
 
     return {
@@ -32,7 +32,7 @@ export class PreviewChunk extends Component {
 }
 
 PreviewChunk.propTypes = {
-  marked: func.isRequired,
+  md: object.isRequired,
   emojione: object.isRequired,
   raw: string.isRequired
 }
@@ -46,10 +46,20 @@ export default class Preview extends Component {
 
   componentWillMount() {
     this.props.previewLoader().then((deps) => {
-      this.marked = deps.marked.setOptions({
-        sanitize: false,
-        highlight: function (code) {
-          return deps.hljs.highlightAuto(code).value;
+      this.md = deps.md({
+        html: true,
+        linkify: true,
+        typographer: true,
+        highlight: (str, lang) => {
+          if (lang && deps.hljs.getLanguage(lang)) {
+            try {
+              return deps.hljs.highlight(lang, str).value;
+            } catch (e) {
+              // pass
+            }
+          }
+
+          return ''; // use external default escaping
         }
       });
 
@@ -92,7 +102,7 @@ export default class Preview extends Component {
       </div>
     );
 
-    if (this.marked) {
+    if (this.md) {
       preview = this.props.raw.split('\n\n').map((chunk, key) => {
         if(!chunk) {
           return null;
@@ -102,7 +112,7 @@ export default class Preview extends Component {
           <PreviewChunk
             key={'ck-' + key.toString()}
             raw={chunk}
-            marked={this.marked}
+            md={this.md}
             emojione={this.emojione}
           />
         )

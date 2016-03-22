@@ -7,7 +7,7 @@ export default () => {
 
       resolve({
         hljs: require('highlight.js'),
-        marked: require('marked'),
+        md: require('markdown-it'),
         emojione: require('emojione')
       });
     });
