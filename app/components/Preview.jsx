@@ -121,13 +121,15 @@ export default class Preview extends Component {
 
       // Build chunks from tokens level and nesting
       for (i = 0 ; i < tokens.length ; i++) {
-
         if (
             // we are starting tokens walk or in a chunk
             i < start ||
-            // we are NOT closing a nested block
-            !(tokens[i].level === 0 && tokens[i].nesting === -1)
-          ) {
+            !(
+              // we are NOT closing a nested block
+              (tokens[i].level === 0 && tokens[i].nesting === -1) ||
+              // we are NOT in a root block
+              (tokens[i].level === 0 && tokens[i].nesting === 0)
+            )) {
           continue;
         }
         stop = i+1;
