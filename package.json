@@ -62,6 +62,7 @@
     "foundation-sites": "^6.2.0",
     "highlight.js": "^9.2.0",
     "localforage": "^1.4.0",
+    "lodash": "^4.6.1",
     "lodash.debounce": "^4.0.3",
     "markdown-it": "^6.0.0",
     "react": "^0.14.7",

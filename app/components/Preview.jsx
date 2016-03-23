@@ -1,20 +1,25 @@
 import React, { PropTypes, Component } from 'react';
 import ReactDOM from 'react-dom';
 import PreviewLoader from './loaders/Preview';
+import isEqual from 'lodash/isEqual';
 
-const { func, number, object, string } = PropTypes;
+const { array, func, number, object, string } = PropTypes;
 
 
 export class PreviewChunk extends Component {
 
   shouldComponentUpdate(nextProps) {
-    return this.props.raw !== nextProps.raw || this.props.key !== nextProps.key;
+    return !isEqual(this.props.chunk, nextProps.chunk) || this.props.key !== nextProps.key;
   }
 
   getHTML() {
     let html;
 
-    html = this.props.md.render(this.props.raw.toString());
+    html = this.props.md.renderer.render(
+      this.props.chunk,
+      this.props.md.options,
+      this.props.env
+    );
     html = this.props.emojione.toImage(html);
 
     return {
@@ -34,7 +39,8 @@ export class PreviewChunk extends Component {
 PreviewChunk.propTypes = {
   md: object.isRequired,
   emojione: object.isRequired,
-  raw: string.isRequired
+  chunk: array.isRequired,
+  env: object.isRequired
 }
 
 export default class Preview extends Component {
@@ -103,17 +109,41 @@ export default class Preview extends Component {
     );
 
     if (this.md) {
-      preview = this.props.raw.split('\n\n').map((chunk, key) => {
-        if(!chunk) {
-          return null;
+
+      var env = {}, // Markdown document environment (links references, footnotes, etc.)
+          chunks = [], // A chunk is a logical group of tokens
+          start = 0,
+          stop = 0,
+          i = 0;
+
+      // Parse the whole markdown document and get tokens
+      const tokens = this.md.parse(this.props.raw, env);
+
+      // Build chunks from tokens level and nesting
+      for (i = 0 ; i < tokens.length ; i++) {
+
+        if (
+            // we are starting tokens walk or in a chunk
+            i < start ||
+            // we are NOT closing a nested block
+            !(tokens[i].level === 0 && tokens[i].nesting === -1)
+          ) {
+          continue;
         }
+        stop = i+1;
+        chunks.push(tokens.slice(start, stop));
+        start = stop;
+      }
+
+      preview = chunks.map((chunk, key) => {
 
         return (
           <PreviewChunk
             key={'ck-' + key.toString()}
-            raw={chunk}
             md={this.md}
             emojione={this.emojione}
+            chunk={chunk}
+            env={env}
           />
         )
       }, this);
