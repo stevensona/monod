@@ -4,4 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/App.jsx';
 
-ReactDOM.render(<App />, document.getElementById('app'));
+let appElement = document.getElementById('app');
+const appVersion = appElement.getAttribute('data-app-version');
+
+ReactDOM.render(<App version={appVersion} />, appElement);
