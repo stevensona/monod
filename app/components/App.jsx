@@ -1,10 +1,12 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import localforage from 'localforage';
 import debounce from 'lodash.debounce';
 
 import Header from './Header';
 import Editor from './Editor';
 import Footer from './Footer';
+
+const { string } = PropTypes;
 
 
 export default class App extends Component {
@@ -50,8 +52,12 @@ export default class App extends Component {
       <div className="layout">
         <Header />
         <Editor loadRaw={this.loadRaw()} onUpdateRaw={this.saveRaw.bind(this)} />
-        <Footer />
+        <Footer version={this.props.version} />
       </div>
     );
   }
+}
+
+App.propTypes = {
+  version: string.isRequired
 }
