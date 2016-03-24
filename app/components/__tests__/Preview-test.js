@@ -137,7 +137,6 @@ describe('<Preview />', () => {
 
   it('generates paragraph chunks', (done) => {
     let chunks;
-    const env = {};
     const wrapper = shallow(
       <Preview
         raw={''}
@@ -148,18 +147,19 @@ describe('<Preview />', () => {
 
     setTimeout(() => {
       const preview = wrapper.instance();
-      chunks = preview.getChunks('foo\n\nbar', env);
 
-      // Should generate two chunks (1 per paragraph)
+      chunks = preview.getChunks('foo', {});
+      expect(chunks).to.have.lengthOf(1);
+      expect(chunks[0]).to.have.lengthOf(3);
+
+      chunks = preview.getChunks('foo\n\nbar', {});
       expect(chunks).to.have.lengthOf(2);
 
-      // Foo paragraph chunk
       expect(chunks[0][0]).to.have.property('type', 'paragraph_open');
       expect(chunks[0][1]).to.have.property('type', 'inline');
       expect(chunks[0][1]).to.have.property('content', 'foo');
       expect(chunks[0][2]).to.have.property('type', 'paragraph_close');
 
-      // Bar paragraph chunk
       expect(chunks[1][0]).to.have.property('type', 'paragraph_open');
       expect(chunks[1][1]).to.have.property('type', 'inline');
       expect(chunks[1][1]).to.have.property('content', 'bar');
@@ -169,6 +169,31 @@ describe('<Preview />', () => {
   });
 
   it('generates code block chunks', (done) => {
+    let chunks;
+    const wrapper = shallow(
+      <Preview
+        raw={''}
+        pos={0}
+        previewLoader={previewLoader}
+      />
+    );
+
+    setTimeout(() => {
+      const preview = wrapper.instance();
+
+      // A code block is one single chunk
+      chunks = preview.getChunks('```python\nprint()\nfoo()\n```', {});
+      expect(chunks).to.have.lengthOf(1);
+
+      // A code block with empty rows is still one single chunk
+      chunks = preview.getChunks('```python\nprint()\n\nfoo()\n```', {});
+      expect(chunks).to.have.lengthOf(1);
+
+      done();
+    }, 5);
+  });
+
+  it('generates nested block chunks', (done) => {
     let chunks;
     const env = {};
     const wrapper = shallow(
@@ -182,13 +207,13 @@ describe('<Preview />', () => {
     setTimeout(() => {
       const preview = wrapper.instance();
 
-      // Should generate one single chunk
-      chunks = preview.getChunks('```python\nprint()\nfoo()\n```', env);
+      chunks = preview.getChunks('> this is **bold** content', {});
       expect(chunks).to.have.lengthOf(1);
+      expect(chunks[0]).to.have.lengthOf(5);
 
-      // Should generate one single chunk even with empty rows
-      chunks = preview.getChunks('```python\nprint()\n\nfoo()\n```', env);
+      chunks = preview.getChunks('* foo\n* bar\n', {});
       expect(chunks).to.have.lengthOf(1);
+      expect(chunks[0]).to.have.lengthOf(12);
 
       done();
     }, 5);
