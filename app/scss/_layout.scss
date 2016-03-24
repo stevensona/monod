@@ -29,22 +29,6 @@ $vertical-handler-width: 40px;
 };
 
 /* -- styles -- */
-#version {
-    position: fixed;
-    bottom: 0.4rem;
-    right: 0;
-    font-family: $footer-font-family;
-    font-size: $footer-font-size;
-
-    .git-ref {
-        margin-right: 1rem;
-        padding: 0.4rem 0.5rem 0.3rem;
-        border-radius: $global-radius;
-        background-color: darken($td-blue, 10%);
-        color: $white;
-    }
-}
-
 .layout {
 
     header.main {
