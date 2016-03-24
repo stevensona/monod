@@ -17,6 +17,7 @@ describe('<Preview />', () => {
 
   before(() => {
     previewLoader = () => {
+
       return Promise.resolve({
         markdownIt: mdit,
         hljs: hljs,
