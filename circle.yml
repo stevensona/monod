@@ -7,9 +7,3 @@ machine:
 test:
   override:
     - npm run test:ci
-
-deployment:
-  staging:
-    branch: master
-    heroku:
-      appname: tailordev-monod
