@@ -101,7 +101,7 @@ export default class Preview extends Component {
   }
 
   render() {
-    var preview = (
+    let preview = (
       <div className="preview-loader">
         <p>Loading all the rendering stuff...</p>
         <i className="fa fa-spinner fa-spin"></i>
@@ -110,11 +110,11 @@ export default class Preview extends Component {
 
     if (this.md) {
 
-      var env = {}, // Markdown document environment (links references, footnotes, etc.)
-          chunks = [], // A chunk is a logical group of tokens
+      let chunks = [], // A chunk is a logical group of tokens
           start = 0,
           stop = 0,
           i = 0;
+      const env = {}; // Markdown document environment (links references, footnotes, etc.)
 
       // Parse the whole markdown document and get tokens
       const tokens = this.md.parse(this.props.raw, env);
