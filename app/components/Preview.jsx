@@ -6,7 +6,7 @@ import isEqual from 'lodash/isEqual';
 const { array, func, number, object, string } = PropTypes;
 
 
-export class PreviewChunk extends Component {
+class PreviewChunk extends Component {
 
   shouldComponentUpdate(nextProps) {
     return !isEqual(this.props.chunk, nextProps.chunk) || this.props.key !== nextProps.key;
@@ -44,26 +44,6 @@ PreviewChunk.propTypes = {
 }
 
 
-export function makeMarkdownItOptions(hljs) {
-  return {
-    html: true,
-    linkify: true,
-    typographer: true,
-    highlight: (str, lang) => {
-      if (lang && hljs.getLanguage(lang)) {
-        try {
-          return hljs.highlightAuto(str).value;
-        } catch (e) {
-          // pass
-        }
-      }
-
-      return ''; // use external default escaping
-    }
-  }
-}
-
-
 export default class Preview extends Component {
   constructor(props, context) {
     super(props, context);
@@ -73,7 +53,22 @@ export default class Preview extends Component {
 
   componentWillMount() {
     this.props.previewLoader().then((deps) => {
-      this.markdownIt = deps.markdownIt(makeMarkdownItOptions(deps.hljs));
+      this.markdownIt = deps.markdownIt({
+        html: true,
+        linkify: true,
+        typographer: true,
+        highlight: (str, lang) => {
+          if (lang && deps.hljs.getLanguage(lang)) {
+            try {
+              return deps.hljs.highlightAuto(str).value;
+            } catch (e) {
+              // pass
+            }
+          }
+
+          return ''; // use external default escaping
+        }
+      });
       this.emojione = deps.emojione;
       this.emojione.ascii = true;
 

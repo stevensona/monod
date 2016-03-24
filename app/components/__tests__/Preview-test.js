@@ -8,28 +8,7 @@ import hljs from 'highlight.js';
 // see: https://github.com/mochajs/mocha/issues/1847
 const { before, describe, it, Promise } = global;
 
-import Preview, {PreviewChunk, makeMarkdownItOptions} from '../Preview';
-
-
-describe('<PreviewChunk />', () => {
-
-  it('renders content', () => {
-    var env = {};
-    var markdownIt = mdit(makeMarkdownItOptions(hljs));
-    var chunk = markdownIt.parse('foo', env);
-
-    const wrapper = mount(
-      <PreviewChunk
-        markdownIt={markdownIt}
-        chunk={chunk}
-        emojione={emojione}
-        env={env}
-      />
-    );
-    expect(wrapper.html()).to.contain('foo');
-  });
-
-});
+import Preview from '../Preview';
 
 
 describe('<Preview />', () => {
