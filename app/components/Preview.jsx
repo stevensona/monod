@@ -29,6 +29,7 @@ class PreviewChunk extends Component {
   }
 
   render() {
+
     return (
       <div className="chunk">
         <span dangerouslySetInnerHTML={this.getHTML()} />
@@ -116,6 +117,7 @@ export default class Preview extends Component {
       if (token.type === 'html_block') {
         token.content = sanitizeHtml(token.content);
       }
+
       return token;
     });
 
@@ -152,7 +154,6 @@ export default class Preview extends Component {
     );
 
     if (this.markdownIt) {
-
       // Markdown document environment (links references, footnotes, etc.)
       const env = {};
 
