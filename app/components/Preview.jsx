@@ -1,20 +1,26 @@
 import React, { PropTypes, Component } from 'react';
 import ReactDOM from 'react-dom';
 import PreviewLoader from './loaders/Preview';
+import isEqual from 'lodash/isEqual';
+import sanitizeHtml from 'sanitize-html';
 
-const { func, number, object, string } = PropTypes;
+const { array, func, number, object, string } = PropTypes;
 
 
-export class PreviewChunk extends Component {
+class PreviewChunk extends Component {
 
   shouldComponentUpdate(nextProps) {
-    return this.props.raw !== nextProps.raw || this.props.key !== nextProps.key;
+    return !isEqual(this.props.chunk, nextProps.chunk) || this.props.key !== nextProps.key;
   }
 
   getHTML() {
     let html;
 
-    html = this.props.marked(this.props.raw.toString());
+    html = this.props.markdownIt.renderer.render(
+      this.props.chunk,
+      this.props.markdownIt.options,
+      this.props.env
+    );
     html = this.props.emojione.toImage(html);
 
     return {
@@ -32,10 +38,12 @@ export class PreviewChunk extends Component {
 }
 
 PreviewChunk.propTypes = {
-  marked: func.isRequired,
+  markdownIt: object.isRequired,
   emojione: object.isRequired,
-  raw: string.isRequired
+  chunk: array.isRequired,
+  env: object.isRequired
 }
+
 
 export default class Preview extends Component {
   constructor(props, context) {
@@ -46,13 +54,22 @@ export default class Preview extends Component {
 
   componentWillMount() {
     this.props.previewLoader().then((deps) => {
-      this.marked = deps.marked.setOptions({
-        sanitize: false,
-        highlight: function (code) {
-          return deps.hljs.highlightAuto(code).value;
+      this.markdownIt = deps.markdownIt({
+        html: true,
+        linkify: true,
+        typographer: true,
+        highlight: (str, lang) => {
+          if (lang && deps.hljs.getLanguage(lang)) {
+            try {
+              return deps.hljs.highlightAuto(str).value;
+            } catch (e) {
+              // pass
+            }
+          }
+
+          return ''; // use external default escaping
         }
       });
-
       this.emojione = deps.emojione;
       this.emojione.ascii = true;
 
@@ -84,26 +101,73 @@ export default class Preview extends Component {
     return this.props.raw !== nextProps.raw;
   }
 
+  /**
+   * A chunk is a logical group of tokens
+   * We build chunks from token's level and nesting properties
+   */
+  getChunks(raw, env) {
+
+    // Parse the whole markdown document and get tokens
+    let tokens = this.markdownIt.parse(raw, env);
+
+    // Sanitize html chunks to avoid browser DOM manipulation
+    // that could possibly crash the app (because of React)
+    tokens = tokens.map((token) => {
+      if (token.type === 'html_block') {
+        token.content = sanitizeHtml(token.content);
+      }
+      return token;
+    });
+
+    let chunks = [],
+        start = 0,
+        stop = 0;
+
+    for (let i = 0 ; i < tokens.length ; i++) {
+      if (
+          // We are starting tokens walk or in a chunk
+          i < start ||
+          !(
+            // We are (NOT) closing a nested block
+            (tokens[i].level === 0 && tokens[i].nesting === -1) ||
+            // We are (NOT) in a root block
+            (tokens[i].level === 0 && tokens[i].nesting === 0)
+          )) {
+        continue;
+      }
+      stop = i+1;
+      chunks.push(tokens.slice(start, stop));
+      start = stop;
+    }
+
+    return chunks;
+  }
+
   render() {
-    var preview = (
+    let preview = (
       <div className="preview-loader">
         <p>Loading all the rendering stuff...</p>
         <i className="fa fa-spinner fa-spin"></i>
       </div>
     );
 
-    if (this.marked) {
-      preview = this.props.raw.split('\n\n').map((chunk, key) => {
-        if(!chunk) {
-          return null;
-        }
+    if (this.markdownIt) {
+
+      // Markdown document environment (links references, footnotes, etc.)
+      const env = {};
+
+      // Get chunks to render from tokens
+      let chunks = this.getChunks(this.props.raw, env);
+
+      preview = chunks.map((chunk, key) => {
 
         return (
           <PreviewChunk
             key={'ck-' + key.toString()}
-            raw={chunk}
-            marked={this.marked}
+            markdownIt={this.markdownIt}
             emojione={this.emojione}
+            chunk={chunk}
+            env={env}
           />
         )
       }, this);
