@@ -195,7 +195,6 @@ describe('<Preview />', () => {
 
   it('generates nested block chunks', (done) => {
     let chunks;
-    const env = {};
     const wrapper = shallow(
       <Preview
         raw={''}
@@ -214,6 +213,44 @@ describe('<Preview />', () => {
       chunks = preview.getChunks('* foo\n* bar\n', {});
       expect(chunks).to.have.lengthOf(1);
       expect(chunks[0]).to.have.lengthOf(12);
+
+      done();
+    }, 5);
+  });
+
+
+  it('handles html block chunks', (done) => {
+    let chunks;
+    const wrapper = shallow(
+      <Preview
+        raw={''}
+        pos={0}
+        previewLoader={previewLoader}
+      />
+    );
+
+    let html = [
+      '<div class="foo">',
+      '  <h3>sub-section</h3>',
+      '  <p>lorem ipsum</p>',
+      '</div',
+    ];
+
+    setTimeout(() => {
+      const preview = wrapper.instance();
+
+      // raw html block
+      chunks = preview.getChunks(html.join('\n'), {});
+      expect(chunks).to.have.lengthOf(1);
+      expect(chunks[0]).to.have.lengthOf(1);
+      expect(chunks[0][0]).to.have.property('type', 'html_block');
+
+      // Insert an empty row
+      html.splice(2, 0, '\n');
+      chunks = preview.getChunks(html.join('\n'), {});
+      expect(chunks).to.have.lengthOf(1);
+      expect(chunks[0]).to.have.lengthOf(1);
+      expect(chunks[0][0]).to.have.property('type', 'html_block');
 
       done();
     }, 5);
