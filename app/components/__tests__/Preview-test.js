@@ -233,7 +233,7 @@ describe('<Preview />', () => {
       '<div class="foo">',
       '  <h3>sub-section</h3>',
       '  <p>lorem ipsum</p>',
-      '</div',
+      '</div>',
     ];
 
     setTimeout(() => {
@@ -248,9 +248,41 @@ describe('<Preview />', () => {
       // Insert an empty row
       html.splice(2, 0, '\n');
       chunks = preview.getChunks(html.join('\n'), {});
+      expect(chunks).to.have.lengthOf(2);
+      expect(chunks[0]).to.have.lengthOf(1);
+      expect(chunks[0][0]).to.have.property('type', 'html_block');
+      expect(chunks[1][0]).to.have.property('type', 'html_block');
+
+      done();
+    }, 5);
+  });
+
+  it('sanitizes incomplete html blocks', (done) => {
+    let chunks;
+    const wrapper = shallow(
+      <Preview
+        raw={''}
+        pos={0}
+        previewLoader={previewLoader}
+      />
+    );
+
+    let html;
+
+    setTimeout(() => {
+      const preview = wrapper.instance();
+
+      chunks = preview.getChunks('<div class="foo">', {});
       expect(chunks).to.have.lengthOf(1);
       expect(chunks[0]).to.have.lengthOf(1);
       expect(chunks[0][0]).to.have.property('type', 'html_block');
+      expect(chunks[0][0]).to.have.property('content', '<div></div>');
+
+      chunks = preview.getChunks('</div>', {});
+      expect(chunks).to.have.lengthOf(1);
+      expect(chunks[0]).to.have.lengthOf(1);
+      expect(chunks[0][0]).to.have.property('type', 'html_block');
+      expect(chunks[0][0]).to.have.property('content', '');
 
       done();
     }, 5);

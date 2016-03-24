@@ -2,6 +2,7 @@ import React, { PropTypes, Component } from 'react';
 import ReactDOM from 'react-dom';
 import PreviewLoader from './loaders/Preview';
 import isEqual from 'lodash/isEqual';
+import sanitizeHtml from 'sanitize-html';
 
 const { array, func, number, object, string } = PropTypes;
 
@@ -107,7 +108,16 @@ export default class Preview extends Component {
   getChunks(raw, env) {
 
     // Parse the whole markdown document and get tokens
-    const tokens = this.markdownIt.parse(raw, env);
+    let tokens = this.markdownIt.parse(raw, env);
+
+    // Sanitize html chunks to avoid browser DOM manipulation
+    // that could possibly crash the app (because of React)
+    tokens = tokens.map((token) => {
+      if (token.type === 'html_block') {
+        token.content = sanitizeHtml(token.content);
+      }
+      return token;
+    });
 
     let chunks = [],
         start = 0,
