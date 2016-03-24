@@ -43,6 +43,27 @@ PreviewChunk.propTypes = {
   env: object.isRequired
 }
 
+
+export function makeMarkdownItOptions(hljs) {
+  return {
+    html: true,
+    linkify: true,
+    typographer: true,
+    highlight: (str, lang) => {
+      if (lang && hljs.getLanguage(lang)) {
+        try {
+          return hljs.highlightAuto(str).value;
+        } catch (e) {
+          // pass
+        }
+      }
+
+      return ''; // use external default escaping
+    }
+  }
+}
+
+
 export default class Preview extends Component {
   constructor(props, context) {
     super(props, context);
@@ -52,23 +73,7 @@ export default class Preview extends Component {
 
   componentWillMount() {
     this.props.previewLoader().then((deps) => {
-      this.markdownIt = deps.markdownIt({
-        html: true,
-        linkify: true,
-        typographer: true,
-        highlight: (str, lang) => {
-          if (lang && deps.hljs.getLanguage(lang)) {
-            try {
-              return deps.hljs.highlightAuto(str).value;
-            } catch (e) {
-              // pass
-            }
-          }
-
-          return ''; // use external default escaping
-        }
-      });
-
+      this.markdownIt = deps.markdownIt(makeMarkdownItOptions(deps.hljs));
       this.emojione = deps.emojione;
       this.emojione.ascii = true;
 
@@ -100,6 +105,37 @@ export default class Preview extends Component {
     return this.props.raw !== nextProps.raw;
   }
 
+  /**
+   * A chunk is a logical group of tokens
+   * We build chunks from token's level and nesting properties
+   */
+  getChunks(tokens) {
+
+    let chunks = [],
+        start = 0,
+        stop = 0,
+        i = 0;
+
+    for (i = 0 ; i < tokens.length ; i++) {
+      if (
+          // We are starting tokens walk or in a chunk
+          i < start ||
+          !(
+            // We are (NOT) closing a nested block
+            (tokens[i].level === 0 && tokens[i].nesting === -1) ||
+            // We are (NOT) in a root block
+            (tokens[i].level === 0 && tokens[i].nesting === 0)
+          )) {
+        continue;
+      }
+      stop = i+1;
+      chunks.push(tokens.slice(start, stop));
+      start = stop;
+    }
+
+    return chunks;
+  }
+
   render() {
     let preview = (
       <div className="preview-loader">
@@ -110,32 +146,13 @@ export default class Preview extends Component {
 
     if (this.markdownIt) {
 
-      let chunks = [], // A chunk is a logical group of tokens
-          start = 0,
-          stop = 0,
-          i = 0;
-      const env = {}; // Markdown document environment (links references, footnotes, etc.)
-
+      // Markdown document environment (links references, footnotes, etc.)
+      const env = {};
       // Parse the whole markdown document and get tokens
       const tokens = this.markdownIt.parse(this.props.raw, env);
 
-      // Build chunks from tokens level and nesting
-      for (i = 0 ; i < tokens.length ; i++) {
-        if (
-            // we are starting tokens walk or in a chunk
-            i < start ||
-            !(
-              // we are NOT closing a nested block
-              (tokens[i].level === 0 && tokens[i].nesting === -1) ||
-              // we are NOT in a root block
-              (tokens[i].level === 0 && tokens[i].nesting === 0)
-            )) {
-          continue;
-        }
-        stop = i+1;
-        chunks.push(tokens.slice(start, stop));
-        start = stop;
-      }
+      // Get chunks to render from tokens
+      let chunks = this.getChunks(tokens);
 
       preview = chunks.map((chunk, key) => {
 
