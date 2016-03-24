@@ -15,9 +15,9 @@ export class PreviewChunk extends Component {
   getHTML() {
     let html;
 
-    html = this.props.md.renderer.render(
+    html = this.props.markdownIt.renderer.render(
       this.props.chunk,
-      this.props.md.options,
+      this.props.markdownIt.options,
       this.props.env
     );
     html = this.props.emojione.toImage(html);
@@ -37,7 +37,7 @@ export class PreviewChunk extends Component {
 }
 
 PreviewChunk.propTypes = {
-  md: object.isRequired,
+  markdownIt: object.isRequired,
   emojione: object.isRequired,
   chunk: array.isRequired,
   env: object.isRequired
@@ -52,7 +52,7 @@ export default class Preview extends Component {
 
   componentWillMount() {
     this.props.previewLoader().then((deps) => {
-      this.md = deps.md({
+      this.markdownIt = deps.markdownIt({
         html: true,
         linkify: true,
         typographer: true,
@@ -108,7 +108,7 @@ export default class Preview extends Component {
       </div>
     );
 
-    if (this.md) {
+    if (this.markdownIt) {
 
       let chunks = [], // A chunk is a logical group of tokens
           start = 0,
@@ -117,7 +117,7 @@ export default class Preview extends Component {
       const env = {}; // Markdown document environment (links references, footnotes, etc.)
 
       // Parse the whole markdown document and get tokens
-      const tokens = this.md.parse(this.props.raw, env);
+      const tokens = this.markdownIt.parse(this.props.raw, env);
 
       // Build chunks from tokens level and nesting
       for (i = 0 ; i < tokens.length ; i++) {
@@ -142,7 +142,7 @@ export default class Preview extends Component {
         return (
           <PreviewChunk
             key={'ck-' + key.toString()}
-            md={this.md}
+            markdownIt={this.markdownIt}
             emojione={this.emojione}
             chunk={chunk}
             env={env}
