@@ -109,14 +109,16 @@ export default class Preview extends Component {
    * A chunk is a logical group of tokens
    * We build chunks from token's level and nesting properties
    */
-  getChunks(tokens) {
+  getChunks(raw, env) {
+
+    // Parse the whole markdown document and get tokens
+    const tokens = this.markdownIt.parse(raw, env);
 
     let chunks = [],
         start = 0,
-        stop = 0,
-        i = 0;
+        stop = 0;
 
-    for (i = 0 ; i < tokens.length ; i++) {
+    for (let i = 0 ; i < tokens.length ; i++) {
       if (
           // We are starting tokens walk or in a chunk
           i < start ||
@@ -148,11 +150,9 @@ export default class Preview extends Component {
 
       // Markdown document environment (links references, footnotes, etc.)
       const env = {};
-      // Parse the whole markdown document and get tokens
-      const tokens = this.markdownIt.parse(this.props.raw, env);
 
       // Get chunks to render from tokens
-      let chunks = this.getChunks(tokens);
+      let chunks = this.getChunks(this.props.raw, env);
 
       preview = chunks.map((chunk, key) => {
 
