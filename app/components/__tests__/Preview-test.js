@@ -336,10 +336,9 @@ describe('<Preview />', () => {
     setTimeout(() => {
       const html = wrapper.html();
 
-      expect(html).to.contain('<h1 class="sample-title">Foo</h1>');
-      expect(html).to.contain('<div class="sample-author">John Doe</div>');
+      expect(html).to.contain('Foo</h1>');
+      expect(html).to.contain('John Doe</div>');
       expect(html).to.contain([
-          '<section class="sample-content">',
           '<div class="chunk">',
           '<span>',
           '<p>',
@@ -347,7 +346,6 @@ describe('<Preview />', () => {
           '</p>\n',
           '</span>',
           '</div>',
-          '</section>'
         ].join(''));
 
       done();
