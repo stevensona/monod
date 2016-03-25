@@ -58,12 +58,14 @@
     "codemirror": "^5.12.0",
     "font-awesome": "^4.5.0",
     "foundation-sites": "^6.2.0",
+    "gray-matter": "^2.0.2",
     "highlight.js": "^9.2.0",
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
     "react-loader": "^2.1.0",
     "sanitize-html": "^1.11.3",
-    "emojione": "^2.1.2"
+    "emojione": "^2.1.2",
+    "unlazy-loader": "^0.1.2"
   },
   "dependencies": {
     "express": "^4.13.4",
