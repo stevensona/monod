@@ -54,18 +54,15 @@ export default class App extends Component {
       return;
     }
 
+    const doc   = this.state.document;
+    doc.content = content;
+
     this.setState({
-      document: {
-        uuid: this.state.document.uuid,
-        content: content
-      },
+      document: doc,
       secret: this.state.secret
     });
 
-    localforage.setItem(
-      this.state.document.uuid,
-      this.state.document
-    );
+    localforage.setItem(doc.uuid, doc);
   }
 
   render() {

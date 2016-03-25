@@ -30,4 +30,9 @@ describe('<App />', () => {
     const wrapper = shallow(<App version={version} />);
     expect(wrapper.find(Footer)).to.have.length(1);
   });
+
+  it('should create a document object', () => {
+    const wrapper = shallow(<App version={version} />);
+    expect(wrapper.state('document')).to.be.an('object');
+  });
 });
