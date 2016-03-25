@@ -315,10 +315,10 @@ describe('<Preview />', () => {
     );
 
     setTimeout(() => {
-      const inst = wrapper.instance();
-      expect(inst.matter).to.have.property('content', '*italic*');
-      expect(inst.matter).to.have.property('data');
-      expect(inst.matter.data).to.deep.equal({toto:1});
+      const preview = wrapper.instance();
+      expect(preview.matter).to.have.property('content', '*italic*');
+      expect(preview.matter).to.have.property('data');
+      expect(preview.matter.data).to.deep.equal({toto:1});
 
       done();
     }, 5);

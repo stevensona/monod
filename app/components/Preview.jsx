@@ -62,7 +62,7 @@ export default class Preview extends Component {
   constructor(props, context) {
     super(props, context);
 
-    this.matter = undefined;
+    this.matter;
     this.requestAnimationId = false;
   }
 
