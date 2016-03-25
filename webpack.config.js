@@ -7,6 +7,7 @@ const childProcess = require('child_process');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const OfflinePlugin = require('offline-plugin');
 
 // Read `package.json` file
 const pkg = require('./package.json');
@@ -110,6 +111,12 @@ const common = {
             // No need to inject assets in the given template as it is handled
             // by the template itself
             inject: false
+        }),
+        new OfflinePlugin({
+          caches: 'all',
+          scope: '/',
+          updateStrategy: 'hash',
+          version: VERSION.substring(0, 7)
         })
     ]
 };
