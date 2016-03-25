@@ -62,6 +62,7 @@ export default class Preview extends Component {
   constructor(props, context) {
     super(props, context);
 
+    this.matter = undefined;
     this.requestAnimationId = false;
   }
 
@@ -172,10 +173,10 @@ export default class Preview extends Component {
       const markdownItEnv = {};
 
       // Get front-matter vars
-      const matter = grayMatter(this.props.raw);
+      this.matter = grayMatter(this.props.raw);
 
       // Get chunks to render from tokens
-      let chunks = this.getChunks(matter.content, markdownItEnv);
+      let chunks = this.getChunks(this.matter.content, markdownItEnv);
 
       preview = chunks.map((chunk, key) => {
 

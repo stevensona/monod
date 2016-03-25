@@ -304,4 +304,23 @@ describe('<Preview />', () => {
       done();
     }, 5);
   });
+
+  it('stores front-matter (YAML) values', (done) => {
+    const wrapper = mount(
+      <Preview
+        raw={'---\ntoto: 1\n---\n*italic*'}
+        pos={0}
+        previewLoader={previewLoader}
+      />
+    );
+
+    setTimeout(() => {
+      const inst = wrapper.instance();
+      expect(inst.matter).to.have.property('content', '*italic*');
+      expect(inst.matter).to.have.property('data');
+      expect(inst.matter.data).to.deep.equal({toto:1});
+
+      done();
+    }, 5);
+  });
 });
