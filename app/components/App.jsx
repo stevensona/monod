@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import localforage from 'localforage';
 import debounce from 'lodash.debounce';
-import uuid from 'node-uuid';
+import uuid from 'uuid';
 
 import Header from './Header';
 import Editor from './Editor';
@@ -20,7 +20,7 @@ export default class App extends Component {
 
     this.state = {
       document: {
-        uuid: uuid.v1(),
+        uuid: uuid.v4(),
         content: DEFAULT_CONTENT
       },
       secret: 'foo'
