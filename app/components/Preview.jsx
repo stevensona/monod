@@ -1,8 +1,10 @@
 import React, { PropTypes, Component } from 'react';
 import ReactDOM from 'react-dom';
 import PreviewLoader from './loaders/Preview';
-import isEqual from 'lodash.isequal';
+import grayMatter from 'gray-matter';
+import isEqual from 'lodash.isEqual';
 import sanitizeHtml from 'sanitize-html';
+
 
 const { array, func, number, object, string } = PropTypes;
 
@@ -29,7 +31,7 @@ class PreviewChunk extends Component {
     html = this.props.markdownIt.renderer.render(
       this.props.chunk,
       this.props.markdownIt.options,
-      this.props.env
+      this.props.markdownItEnv
     );
     html = this.props.emojione.toImage(html);
 
@@ -52,7 +54,7 @@ PreviewChunk.propTypes = {
   markdownIt: object.isRequired,
   emojione: object.isRequired,
   chunk: array.isRequired,
-  env: object.isRequired
+  markdownItEnv: object.isRequired
 }
 
 
@@ -167,10 +169,13 @@ export default class Preview extends Component {
 
     if (this.markdownIt) {
       // Markdown document environment (links references, footnotes, etc.)
-      const env = {};
+      const markdownItEnv = {};
+
+      // Get front-matter vars
+      const matter = grayMatter(this.props.raw);
 
       // Get chunks to render from tokens
-      let chunks = this.getChunks(this.props.raw, env);
+      let chunks = this.getChunks(matter.content, markdownItEnv);
 
       preview = chunks.map((chunk, key) => {
 
@@ -180,7 +185,7 @@ export default class Preview extends Component {
             markdownIt={this.markdownIt}
             emojione={this.emojione}
             chunk={chunk}
-            env={env}
+            markdownItEnv={markdownItEnv}
           />
         )
       }, this);
