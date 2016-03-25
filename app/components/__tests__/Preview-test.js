@@ -103,7 +103,7 @@ describe('<Preview />', () => {
 
     setTimeout(() => {
       expect(wrapper.html()).to.contain(
-        '<img class="emojione" alt="😄" src="//cdn.jsdelivr.net/emojione/assets/png/1f604.png'
+        '<span class="emojione emojione-1f604" title=":smile:">😄</span>'
       );
 
       done();

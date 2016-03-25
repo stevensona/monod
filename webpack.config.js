@@ -86,9 +86,15 @@ const common = {
                 loaders: ['file?name=[path][name].[ext]&context=./app'],
                 include: PATHS.app
             },
-            // Json files (required for markdown-it)
+            // JSON files (required for markdown-it)
             {
                 test: /\.json$/,
+                loaders: ['file?name=[path][name].[ext]&context=./node_modules'],
+                exclude: PATHS.app
+            },
+            // PNG files (required for emojione)
+            {
+                test: /\.png$/,
                 loaders: ['file?name=[path][name].[ext]&context=./node_modules'],
                 exclude: PATHS.app
             }

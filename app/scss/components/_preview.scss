@@ -55,19 +55,8 @@
       }
 
       .emojione {
-          font-size: inherit;
-          height: 3ex;
-          width: 3.1ex;
-          min-height: 20px;
-          min-width: 20px;
-
-          display: inline-block;
-          margin: -.2ex .15em .2ex;
-          line-height: normal;
-          vertical-align: middle;
-      }
-
-      img.emojione {
-          width: auto;
+          transform: scale(0.5, 0.5);
+          margin-left: -15px;
+          margin-right: -15px;
       }
 }

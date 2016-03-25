@@ -6,6 +6,7 @@ import sanitizeHtml from 'sanitize-html';
 
 const { array, func, number, object, string } = PropTypes;
 
+import 'emojione/assets/sprites/emojione.sprites.css'
 
 class PreviewChunk extends Component {
 
@@ -71,8 +72,10 @@ export default class Preview extends Component {
           return ''; // use external default escaping
         }
       });
+
       this.emojione = deps.emojione;
       this.emojione.ascii = true;
+      this.emojione.sprites = true;
 
       this.forceUpdate();
     });
