@@ -288,4 +288,20 @@ describe('<Preview />', () => {
       done();
     }, 5);
   });
+
+  it('removes front-matter YAML header from preview', (done) => {
+    const wrapper = mount(
+      <Preview
+        raw={'---\ntoto: 1\n---\n*italic*'}
+        pos={0}
+        previewLoader={previewLoader}
+      />
+    );
+
+    setTimeout(() => {
+      expect(wrapper.html()).to.contain('<em>italic</em>');
+
+      done();
+    }, 5);
+  });
 });
