@@ -323,4 +323,34 @@ describe('<Preview />', () => {
       done();
     }, 5);
   });
+
+  it('compiles a template given a context', (done) => {
+    const wrapper = mount(
+      <Preview
+        raw={'---\ntitle: Foo\nauthor: John Doe\n---\nThis is content'}
+        pos={0}
+        previewLoader={previewLoader}
+      />
+    );
+
+    setTimeout(() => {
+      const html = wrapper.html();
+
+      expect(html).to.contain('<h1 class="sample-title">Foo</h1>');
+      expect(html).to.contain('<div class="sample-author">John Doe</div>');
+      expect(html).to.contain([
+          '<section class="sample-content">',
+          '<div class="chunk">',
+          '<span>',
+          '<p>',
+          'This is content',
+          '</p>\n',
+          '</span>',
+          '</div>',
+          '</section>'
+        ].join(''));
+
+      done();
+    }, 5);
+  });
 });

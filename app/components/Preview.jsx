@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import ReactDOM from 'react-dom';
 import PreviewLoader from './loaders/Preview';
+import Sample from './templates/Sample';
 import grayMatter from 'gray-matter';
 import isEqual from 'lodash.isEqual';
 import sanitizeHtml from 'sanitize-html';
@@ -62,7 +63,7 @@ export default class Preview extends Component {
   constructor(props, context) {
     super(props, context);
 
-    this.matter;
+    this.matter = {};
     this.requestAnimationId = false;
   }
 
@@ -161,12 +162,13 @@ export default class Preview extends Component {
   }
 
   render() {
-    let preview = (
-      <div className="preview-loader">
+    let content = [(
+      <div className="preview-loader" key="preview-loader">
         <p>Loading all the rendering stuff...</p>
         <i className="fa fa-spinner fa-spin"></i>
       </div>
-    );
+    )];
+    let context = {};
 
     if (this.markdownIt) {
       // Markdown document environment (links references, footnotes, etc.)
@@ -174,11 +176,12 @@ export default class Preview extends Component {
 
       // Get front-matter vars
       this.matter = grayMatter(this.props.raw);
+      context = this.matter.data;
 
       // Get chunks to render from tokens
       let chunks = this.getChunks(this.matter.content, markdownItEnv);
 
-      preview = chunks.map((chunk, key) => {
+      content = chunks.map((chunk, key) => {
 
         return (
           <PreviewChunk
@@ -195,7 +198,7 @@ export default class Preview extends Component {
     return (
       <div className="preview">
         <div ref="rendered" className="rendered">
-          {preview}
+          <Sample content={content} context={context} />
         </div>
       </div>
     );
