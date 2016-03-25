@@ -6,13 +6,13 @@ import Preview from './Preview';
 import TemplateForm from './TemplateForm';
 import VerticalHandler from './VerticalHandler';
 
-const { objectOf, func } = PropTypes;
+const { func, string } = PropTypes;
 
 export const EditorModes = {
   FOCUS: 'focus',
   PREVIEW: 'edit-preview',
   READING: 'reading'
-}
+};
 
 export default class Editor extends Component {
   constructor(props, context) {
@@ -27,25 +27,13 @@ export default class Editor extends Component {
   }
 
   componentDidMount() {
-    this.props.loadRaw
-      .then((raw) => {
-        this.setState({
-          raw: raw,
-          template: '',
-          pos: 0,
-          loaded: true,
-          mode: EditorModes.PREVIEW
-        });
-      })
-      .catch(() => {
-        this.setState({
-          raw: '',
-          template: '',
-          pos: 0,
-          loaded: true,
-          mode: EditorModes.PREVIEW
-        });
-      });
+    this.setState({
+      raw: this.props.content,
+      pos: 0,
+      loaded: true,
+      template: '',
+      mode: EditorModes.PREVIEW
+    });
   }
 
   updateRaw(newRaw) {
@@ -59,7 +47,7 @@ export default class Editor extends Component {
       };
     });
 
-    this.props.onUpdateRaw(newRaw);
+    this.props.onContentUpdate(newRaw);
   }
 
   updatePosition(newPos) {
@@ -137,10 +125,6 @@ export default class Editor extends Component {
 }
 
 Editor.propTypes = {
-  // Promise
-  loadRaw: objectOf({
-    then: func.isRequired,
-    catch: func.isRequired
-  }).isRequired,
-  onUpdateRaw: func.isRequired
-}
+  content: string.isRequired,
+  onContentUpdate: func.isRequired
+};

@@ -61,7 +61,6 @@ export default class Markdown extends Component {
   }
 
   render() {
-
     return (
       <div className="markdown">
         <textarea
@@ -80,4 +79,4 @@ Markdown.propTypes = {
   raw: string.isRequired,
   onChange: func.isRequired,
   doUpdatePosition: func.isRequired
-}
+};
