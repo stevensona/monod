@@ -68,6 +68,9 @@ const common = {
                 // builds will attempt to read from the cache to avoid needing
                 // to run the potentially expensive Babel recompilation process
                 // on each run.
+                //
+                // Note that gray-matter uses lazy-cache, so we need to unlazy
+                // those files to make it compatible with webpack.
                 loaders: ['babel?cacheDirectory', 'unlazy'],
                 // Parse only app files! Without this it will go through entire
                 // project. In addition to being slow, that will most likely
