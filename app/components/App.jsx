@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import localforage from 'localforage';
 import debounce from 'lodash.debounce';
 import uuid from 'uuid';
+import sjcl from 'sjcl';
 
 import Header from './Header';
 import Editor from './Editor';
@@ -23,10 +24,11 @@ export default class App extends Component {
         uuid: uuid.v4(),
         content: DEFAULT_CONTENT
       },
-      secret: 'foo'
+      secret: sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 0), 0),
+      loaded: false
     };
 
-    this.updateContent = debounce(this.updateContent, 1000);
+    this.updateContent = debounce(this.updateContent, 500);
   }
 
   componentDidMount() {
@@ -36,17 +38,19 @@ export default class App extends Component {
     localforage
       .getItem(id)
       .then((document) => {
-        if (null !== document) {
+        if (secret && null !== document) {
+          document.content = sjcl.decrypt(secret, document.content);
+
           this.setState({
             document: document,
-            secret: secret
+            secret: secret,
+            loaded: true
           });
         }
+      })
+      .then(() => {
+        this.setState({ loaded: true });
       });
-  }
-
-  componentDidUpdate() {
-    window.history.pushState({}, '', '/' + this.state.document.uuid);
   }
 
   updateContent(content) {
@@ -54,15 +58,24 @@ export default class App extends Component {
       return;
     }
 
-    const doc   = this.state.document;
-    doc.content = content;
+    const doc    = this.state.document;
+    const secret = this.state.secret;
+    doc.content  = content;
 
-    this.setState({
-      document: doc,
-      secret: this.state.secret
+    this.setState((previousState) => {
+      return {
+        document: doc,
+        secret: secret,
+        loaded: previousState.loaded
+      };
     });
 
+    doc.content = sjcl.encrypt(secret, doc.content);
     localforage.setItem(doc.uuid, doc);
+
+    window.history.pushState(
+      {}, '', `/${this.state.document.uuid}#${this.state.secret}`
+    );
   }
 
   render() {
@@ -70,6 +83,7 @@ export default class App extends Component {
       <div className="layout">
         <Header />
         <Editor
+          loaded={this.state.loaded}
           content={this.state.document.content}
           onContentUpdate={this.updateContent.bind(this)}
         />

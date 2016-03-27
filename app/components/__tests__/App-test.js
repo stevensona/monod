@@ -1,7 +1,6 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import { expect } from 'chai';
-import sinon from 'sinon';
 
 // see: https://github.com/mochajs/mocha/issues/1847
 const { describe, it } = global;

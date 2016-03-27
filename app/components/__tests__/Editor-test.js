@@ -5,7 +5,7 @@ import Loader from 'react-loader';
 import sinon from 'sinon';
 
 // see: https://github.com/mochajs/mocha/issues/1847
-const { describe, it, Promise } = global;
+const { describe, it } = global;
 
 import Editor, {EditorModes} from '../Editor';
 import Markdown from '../Markdown';
@@ -34,13 +34,17 @@ describe('<Editor />', () => {
     expect(wrapper.find(Preview)).to.have.length(1);
   });
 
-  it('updates its state when text is entered in Markdown component', () => {
-    const wrapper = shallow(<Editor content={''} onContentUpdate={() => {}} />);
+  it('calls onContentUpdate() when text is entered in Markdown component', () => {
+    const spy = sinon.spy();
+
+    const wrapper = shallow(
+      <Editor loaded={true} content={''} onContentUpdate={spy} />
+    );
     const content = 'Hello, World';
 
     wrapper.find('Markdown').simulate('change', content);
 
-    expect(wrapper.state('raw')).to.equal(content);
+    expect(spy.calledOnce).to.be.true;
   });
 
   it('renders a Loader component', () => {
@@ -50,23 +54,27 @@ describe('<Editor />', () => {
   });
 
   it('does not display the editor until content is loaded', () => {
-    const wrapper = shallow(<Editor content={''} onContentUpdate={() => {}} />);
+    const wrapper = mount(
+      <Editor
+        loaded={false}
+        content={''}
+        onContentUpdate={() => {}}
+      />
+    );
 
-    expect(wrapper.state('loaded')).to.be.false;
     expect(wrapper.find('.editor')).to.have.length(0);
   });
 
   it('removes loader once content is loaded', () => {
-    const content = 'some content';
     const wrapper = mount(
       <Editor
-        content={content}
+        loaded={true}
+        content={''}
         onContentUpdate={() => {}}
       />
     );
 
     expect(wrapper.find('.editor')).to.have.length(1);
-    expect(wrapper.state('raw')).to.equal(content);
   });
 
   it('calls onContentUpdate prop on change', () => {

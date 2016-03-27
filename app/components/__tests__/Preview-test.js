@@ -234,7 +234,7 @@ describe('<Preview />', () => {
       '<div class="foo">',
       '  <h3>sub-section</h3>',
       '  <p>lorem ipsum</p>',
-      '</div>',
+      '</div>'
     ];
 
     setTimeout(() => {
@@ -267,8 +267,6 @@ describe('<Preview />', () => {
         previewLoader={previewLoader}
       />
     );
-
-    let html;
 
     setTimeout(() => {
       const preview = wrapper.instance();
