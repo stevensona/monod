@@ -126,7 +126,10 @@ const common = {
           caches: 'all',
           scope: '/',
           updateStrategy: 'hash',
-          version: VERSION.substring(0, 7)
+          version: VERSION.substring(0, 7),
+          AppCache: {
+            FALLBACK: { '/': '/' }
+          }
         })
     ]
 };
