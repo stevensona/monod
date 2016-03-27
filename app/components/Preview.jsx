@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import ReactDOM from 'react-dom';
 import PreviewLoader from './loaders/Preview';
-import isEqual from 'lodash/isEqual';
+import isEqual from 'lodash.isequal';
 import sanitizeHtml from 'sanitize-html';
 
 const { array, func, number, object, string } = PropTypes;
