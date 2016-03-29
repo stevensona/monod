@@ -10,21 +10,21 @@ export default class Letter extends Component {
 
   getDefaultData() {
     return {
-      date: '<date>',
-      location: '<location>',
+      date: '[date]',
+      location: '[location]',
       addressFrom: {
-        name: '<addressFrom/name>',
-        street: '<addressFrom/street>',
-        zipCode: '<addressFrom/zipcode>',
-        city: '<addressFrom/city>'
+        name: '[addressFrom/name]',
+        street: '[addressFrom/street]',
+        zipCode: '[addressFrom/zipcode]',
+        city: '[addressFrom/city]'
       },
       addressTo: {
-        name: '<addressTo/name>',
-        street: '<addressTo/street>',
-        zipCode: '<addressTo/zipcode>',
-        city: '<addressTo/city>'
+        name: '[addressTo/name]',
+        street: '[addressTo/street]',
+        zipCode: '[addressTo/zipcode]',
+        city: '[addressTo/city]'
       },
-      signature: '<signature>'
+      signature: '[signature]'
     }
   }
 
