@@ -327,8 +327,8 @@ describe('<Preview />', () => {
   it('compiles a template given a context', (done) => {
     const wrapper = mount(
       <Preview
-        raw={'---\ntitle: Foo\nauthor: John Doe\n---\nThis is content'}
-        template='sample'
+        raw={'---\nlocation: Foo\nsignature: John Doe\n---\nThis is content'}
+        template='letter'
         pos={0}
         previewLoader={previewLoader}
       />
@@ -337,8 +337,8 @@ describe('<Preview />', () => {
     setTimeout(() => {
       const html = wrapper.html();
 
-      expect(html).to.contain('Foo</h1>');
-      expect(html).to.contain('John Doe</div>');
+      expect(html).to.contain('<span>Foo</span>');
+      expect(html).to.contain('<div>John Doe</div>');
       expect(html).to.contain([
           '<div class="chunk">',
           '<span>',
