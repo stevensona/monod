@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from 'react';
+import Sample from './templates/Sample';
 
 const { func } = PropTypes;
 
 export const monodTemplates = [
-  {id: 'mail', 'name': 'Mail'},
-  {id: 'report', 'name': 'Report'},
-  {id: 'notebook', 'name': 'Notebook'}
+  {id: '', name: 'No template', component: {}},
+  {id: 'sample', name: 'Sample', component: Sample}
 ]
 
 export default class TemplateForm extends Component {
@@ -17,13 +17,12 @@ export default class TemplateForm extends Component {
   }
 
   handleTemplateChange(event) {
-    this.setState({template: event.target.value});
-    this.props.doUpdateTemplate(this.state.template);
+    const newTemplate = event.target.value;
+    this.setState({template: newTemplate});
+    this.props.doUpdateTemplate(newTemplate);
   }
 
   render() {
-    console.log('template form state', this.state);
-
     const optionNodes = monodTemplates.map((component, key) => {
       return (
         <option value={component.id} key={key}>{component.name}</option>
@@ -33,7 +32,6 @@ export default class TemplateForm extends Component {
     return (
       <form id="templateForm">
         <select name="template" onChange={this.handleTemplateChange.bind(this)}>
-          <option defaultValue>Select a template to render</option>
           {optionNodes}
         </select>
       </form>

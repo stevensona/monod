@@ -96,7 +96,6 @@ export default class Editor extends Component {
         mode: previousState.mode
       };
     });
-    console.log('app.state', this.state);
   }
 
   handleOnClick(e) {

@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import ReactDOM from 'react-dom';
 import PreviewLoader from './loaders/Preview';
-import Sample from './templates/Sample';
+import { monodTemplates } from './TemplateForm';
 import grayMatter from 'gray-matter';
 import isEqual from 'lodash.isequal';
 import sanitizeHtml from 'sanitize-html';
@@ -115,7 +115,7 @@ export default class Preview extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return this.props.raw !== nextProps.raw;
+    return this.props.raw !== nextProps.raw || this.props.template !== nextProps.template;
   }
 
   /**
@@ -195,10 +195,23 @@ export default class Preview extends Component {
       }, this);
     }
 
+    // Compile selected template with given context
+    if(this.props.template && this.props.template.length) {
+      // Get the template component
+      const Template = monodTemplates.find(
+        (template) => {
+          return template.id === this.props.template;
+        }).component;
+
+      content = (
+        <Template content={content} context={context} />
+      );
+    }
+
     return (
       <div className="preview">
         <div ref="rendered" className="rendered">
-          <Sample content={content} context={context} />
+          {content}
         </div>
       </div>
     );
@@ -207,6 +220,7 @@ export default class Preview extends Component {
 
 Preview.propTypes = {
   raw: string.isRequired,
+  template: string.isRequired,
   pos: number.isRequired,
   previewLoader: func.isRequired
 }
