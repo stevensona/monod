@@ -3,6 +3,7 @@ import Loader from 'react-loader';
 
 import Markdown from './Markdown';
 import Preview from './Preview';
+import TemplateForm from './TemplateForm';
 import VerticalHandler from './VerticalHandler';
 
 const { objectOf, func } = PropTypes;
@@ -18,6 +19,7 @@ export default class Editor extends Component {
     super(props, context);
     this.state = {
       raw: '',
+      template: '',
       pos: 0,
       loaded: false,
       mode: EditorModes.PREVIEW
@@ -29,6 +31,7 @@ export default class Editor extends Component {
       .then((raw) => {
         this.setState({
           raw: raw,
+          template: '',
           pos: 0,
           loaded: true,
           mode: EditorModes.PREVIEW
@@ -37,6 +40,7 @@ export default class Editor extends Component {
       .catch(() => {
         this.setState({
           raw: '',
+          template: '',
           pos: 0,
           loaded: true,
           mode: EditorModes.PREVIEW
@@ -48,6 +52,7 @@ export default class Editor extends Component {
     this.setState(function(previousState) {
       return {
         raw: newRaw ? newRaw : '',
+        template: previousState.template,
         pos: previousState.pos,
         loaded: previousState.loaded,
         mode: previousState.mode
@@ -61,6 +66,7 @@ export default class Editor extends Component {
     this.setState(function(previousState) {
       return {
         raw: previousState.raw,
+        template: previousState.template,
         pos: newPos,
         loaded: previousState.loaded,
         mode: previousState.mode
@@ -72,11 +78,25 @@ export default class Editor extends Component {
     this.setState(function(previousState) {
       return {
         raw: previousState.raw,
+        template: previousState.template,
         pos: previousState.pos,
         loaded: previousState.loaded,
         mode: newMode
       };
     });
+  }
+
+  updateTemplate(newTemplate) {
+    this.setState(function(previousState) {
+      return {
+        raw: previousState.raw,
+        template: newTemplate,
+        pos: previousState.pos,
+        loaded: previousState.loaded,
+        mode: previousState.mode
+      };
+    });
+    console.log('app.state', this.state);
   }
 
   handleOnClick(e) {
@@ -99,6 +119,9 @@ export default class Editor extends Component {
       <Loader
         loaded={this.state.loaded}
         loadedClassName={'editor ' + this.state.mode}>
+        <TemplateForm
+          doUpdateTemplate={this.updateTemplate.bind(this)}
+        />
         <Markdown
           raw={this.state.raw}
           onChange={this.updateRaw.bind(this)}
