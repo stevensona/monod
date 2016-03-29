@@ -125,7 +125,6 @@ const common = {
         new OfflinePlugin({
           caches: 'all',
           scope: '/',
-          updateStrategy: 'hash',
           version: VERSION.substring(0, 7),
           AppCache: {
             FALLBACK: { '/': '/' }
