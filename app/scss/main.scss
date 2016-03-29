@@ -7,6 +7,7 @@
 @import '~foundation-sites/scss/foundation';
 @include foundation-global-styles;
 @include foundation-typography;
+@include foundation-forms;
 @include foundation-table;
 
 /* -- FontAwesome -- */
@@ -21,6 +22,7 @@ $fa-font-path: '~font-awesome/fonts';
 
 // Components
 @import 'components/header';
+@import 'components/template_form';
 @import 'components/editor';
 @import 'components/markdown';
 @import 'components/codemirror_theme';
