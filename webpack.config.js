@@ -126,6 +126,9 @@ const common = {
           caches: 'all',
           scope: '/',
           version: VERSION.substring(0, 7),
+          ServiceWorker: {
+            cache_name: 'monod'
+          },
           AppCache: {
             FALLBACK: { '/': '/' }
           }
