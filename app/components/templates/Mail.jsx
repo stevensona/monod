@@ -1,15 +1,53 @@
 import React, { PropTypes, Component } from 'react';
+import merge from 'deepmerge';
 
 const { array, object } = PropTypes;
 
 /**
- * Basic template sample
+ * Mail template
  */
 export default class Mail extends Component {
 
-  render() {
+  getDefaultData() {
+    return {
+      date: '<date>',
+      location: '<location>',
+      addressFrom: {
+        name: '<from: name>',
+        street: '<from: street>',
+        zipCode: '<from: zipcode>',
+        city: '<from: city>'
+      },
+      addressTo: {
+        name: '<to: name>',
+        street: '<to: street>',
+        zipCode: '<to: zipcode>',
+        city: '<to: city>'
+      },
+      signature: '<signature>'
+    }
+  }
 
-    const context = this.props.context;
+  cleanData(data) {
+    // clean input data to avoid undefined or null object properties
+    // that could crash preview when trying to access null.<property>
+    for (let p in data) {
+      if (data.hasOwnProperty(p) && data[p] === null) {
+        delete data[p];
+      }
+    }
+    return data;
+  }
+
+  getData() {
+    return merge(
+      this.getDefaultData(),
+      this.cleanData(this.props.data)
+    );
+  }
+
+  render() {
+    const data = this.getData();
     const
       letterStyle = {
         fontSize: '12pt',
@@ -40,21 +78,21 @@ export default class Mail extends Component {
       <article style={letterStyle}>
         <header>
           <address style={addressFromStyle}>
-            <strong>{context.addressFrom.name}</strong><br/>
-            {context.addressFrom.street}<br/>
-            {context.addressFrom.zipCode}&nbsp;
-            {context.addressFrom.city}<br/>
-            {context.addressFrom.country}
+            <strong>{data.addressFrom.name}</strong><br/>
+            {data.addressFrom.street}<br/>
+            {data.addressFrom.zipCode}&nbsp;
+            {data.addressFrom.city}<br/>
+            {data.addressFrom.country}
           </address>
           <address style={addressToStyle}>
-            <strong>{context.addressTo.name}</strong><br/>
-            {context.addressTo.street}<br/>
-            {context.addressTo.zipCode}&nbsp;
-            {context.addressTo.city}<br/>
-            {context.addressTo.country}
+            <strong>{data.addressTo.name}</strong><br/>
+            {data.addressTo.street}<br/>
+            {data.addressTo.zipCode}&nbsp;
+            {data.addressTo.city}<br/>
+            {data.addressTo.country}
           </address>
           <div style={locationDateStyle}>
-            {context.date}, {context.location}
+            {data.date}, {data.location}
           </div>
         </header>
         <section style={contentStyle}>
@@ -62,7 +100,7 @@ export default class Mail extends Component {
         </section>
         <footer style={signatureStyle}>
           <div>
-            {context.signature}
+            {data.signature}
           </div>
         </footer>
       </article>
@@ -71,6 +109,6 @@ export default class Mail extends Component {
 }
 
 Mail.propTypes = {
-  context: object.isRequired,
+  data: object.isRequired,
   content: array.isRequired
 }
