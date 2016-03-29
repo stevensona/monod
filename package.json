@@ -6,7 +6,7 @@
   "description": "TailorDev Markdown Editor",
   "main": "index.js",
   "scripts": {
-    "build": "NODE_ENV=production webpack -p",
+    "build": "NODE_ENV=production webpack",
     "stats": "npm run build -- --profile --json > stats.json",
     "dev": "webpack-dev-server",
     "lint": "eslint app/ --ext .js --ext .jsx",

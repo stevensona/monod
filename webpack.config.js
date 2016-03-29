@@ -214,9 +214,11 @@ if (TARGET === 'build') {
             // Output extracted CSS to a file
             new ExtractTextPlugin('[name].[chunkhash].css'),
             new webpack.optimize.DedupePlugin(),
+            new webpack.optimize.OccurrenceOrderPlugin(),
             // Minification with Uglify
             new webpack.optimize.UglifyJsPlugin({
                 minimize: true,
+                sourceMap: false,
                 compress: {
                     // Ignore warning messages are they are pretty useless
                     warnings: false
