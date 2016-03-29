@@ -81,7 +81,7 @@ const common = {
             {
                 test: /\.(ttf|eot|svg|woff(2)?)(\?v=.+)?$/,
                 loaders: ['file?name=[path][name].[ext]&context=./node_modules'],
-                exclude: PATHS.app
+                include: path.join(__dirname, 'node_modules/font-awesome/')
             },
             // Monod fonts
             {
@@ -93,13 +93,13 @@ const common = {
             {
                 test: /\.json$/,
                 loaders: ['file?name=[path][name].[ext]&context=./node_modules'],
-                exclude: PATHS.app
+                include: path.join(__dirname, 'node_modules/entities/')
             },
             // PNG files (required for emojione)
             {
                 test: /\.png$/,
                 loaders: ['file?name=[path][name].[ext]&context=./node_modules'],
-                exclude: PATHS.app
+                include: path.join(__dirname, 'node_modules/emojione/')
             }
         ]
     },
@@ -109,8 +109,6 @@ const common = {
     // Plugins do not operate on individual source files: they influence the
     // build process as a whole
     plugins: [
-        // Add any given string to the top of the generated bundle file
-        new webpack.BannerPlugin('By the good folks at TailorDev SAS'),
         // Generate the final HTML5 file, nd include all your webpack bundles
         new HtmlWebpackPlugin({
             // Here, we use the `html-webpack-template` npm package
@@ -204,7 +202,9 @@ if (TARGET === 'build') {
             // DefinePlugin replaces content "as is" so we need some extra
             // quotes for the generated code to make sense
             new webpack.DefinePlugin({
-                'process.env': { NODE_ENV: '"production"' }
+                'process.env': {
+                    'NODE_ENV': JSON.stringify('production')
+                }
             }),
             // Output extracted CSS to a file
             new ExtractTextPlugin('[name].[chunkhash].css'),

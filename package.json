@@ -54,7 +54,7 @@
     "mocha-circleci-reporter": "0.0.1",
     "node-sass": "^3.4.2",
     "nyc": "^6.0.0",
-    "offline-plugin": "^2.0.4",
+    "offline-plugin": "github:willdurand/offline-plugin#monod",
     "react": "^0.14.7",
     "react-addons-test-utils": "^0.14.7",
     "react-dom": "^0.14.7",
