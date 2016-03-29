@@ -1,12 +1,10 @@
-import React, { PropTypes, Component } from 'react';
-import merge from 'deepmerge';
-
-const { array, object } = PropTypes;
+import React from 'react';
+import BaseTemplate from './Base';
 
 /**
  * Letter template
  */
-export default class Letter extends Component {
+export default class Letter extends BaseTemplate {
 
   getDefaultData() {
     return {
@@ -26,24 +24,6 @@ export default class Letter extends Component {
       },
       signature: '[signature]'
     }
-  }
-
-  cleanData(data) {
-    // clean input data to avoid undefined or null object properties
-    // that could crash preview when trying to access null.<property>
-    for (let p in data) {
-      if (data.hasOwnProperty(p) && data[p] === null) {
-        delete data[p];
-      }
-    }
-    return data;
-  }
-
-  getData() {
-    return merge(
-      this.getDefaultData(),
-      this.cleanData(this.props.data)
-    );
   }
 
   render() {
@@ -106,9 +86,4 @@ export default class Letter extends Component {
       </article>
     )
   }
-}
-
-Letter.propTypes = {
-  data: object.isRequired,
-  content: array.isRequired
 }
