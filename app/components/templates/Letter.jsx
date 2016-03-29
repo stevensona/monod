@@ -4,9 +4,9 @@ import merge from 'deepmerge';
 const { array, object } = PropTypes;
 
 /**
- * Mail template
+ * Letter template
  */
-export default class Mail extends Component {
+export default class Letter extends Component {
 
   getDefaultData() {
     return {
@@ -108,7 +108,7 @@ export default class Mail extends Component {
   }
 }
 
-Mail.propTypes = {
+Letter.propTypes = {
   data: object.isRequired,
   content: array.isRequired
 }
