@@ -11,7 +11,7 @@ app.set('port', process.env.PORT || 3000);
 app.use(compression());
 app.use(express.static(static_path, { maxAge: '1y' }));
 
-app.get('*', function (req, res) {
+app.get('/', function (req, res) {
   res.sendFile('index.html', {
     root: static_path
   });
