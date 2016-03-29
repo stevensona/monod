@@ -328,6 +328,7 @@ describe('<Preview />', () => {
     const wrapper = mount(
       <Preview
         raw={'---\ntitle: Foo\nauthor: John Doe\n---\nThis is content'}
+        template='sample'
         pos={0}
         previewLoader={previewLoader}
       />
@@ -338,6 +339,35 @@ describe('<Preview />', () => {
 
       expect(html).to.contain('Foo</h1>');
       expect(html).to.contain('John Doe</div>');
+      expect(html).to.contain([
+          '<div class="chunk">',
+          '<span>',
+          '<p>',
+          'This is content',
+          '</p>\n',
+          '</span>',
+          '</div>',
+        ].join(''));
+
+      done();
+    }, 5);
+  });
+
+  it('does not add context without template', (done) => {
+    const wrapper = mount(
+      <Preview
+        raw={'---\ntitle: Foo\nauthor: John Doe\n---\nThis is content'}
+        template=''
+        pos={0}
+        previewLoader={previewLoader}
+      />
+    );
+
+    setTimeout(() => {
+      const html = wrapper.html();
+
+      expect(html).not.to.contain('Foo</h1>');
+      expect(html).not.to.contain('John Doe</div>');
       expect(html).to.contain([
           '<div class="chunk">',
           '<span>',
