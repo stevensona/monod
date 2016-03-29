@@ -168,7 +168,7 @@ export default class Preview extends Component {
         <i className="fa fa-spinner fa-spin"></i>
       </div>
     )];
-    let context = {};
+    let data = {};
 
     if (this.markdownIt) {
       // Markdown document environment (links references, footnotes, etc.)
@@ -176,7 +176,7 @@ export default class Preview extends Component {
 
       // Get front-matter vars
       this.matter = grayMatter(this.props.raw);
-      context = this.matter.data;
+      data = this.matter.data;
 
       // Get chunks to render from tokens
       let chunks = this.getChunks(this.matter.content, markdownItEnv);
@@ -195,7 +195,7 @@ export default class Preview extends Component {
       }, this);
     }
 
-    // Compile selected template with given context
+    // Compile selected template with given data
     if(this.props.template && this.props.template.length) {
       // Get the template component
       const Template = monodTemplates.find(
@@ -204,7 +204,7 @@ export default class Preview extends Component {
         }).component;
 
       content = (
-        <Template content={content} context={context} />
+        <Template content={content} data={data} />
       );
     }
 
