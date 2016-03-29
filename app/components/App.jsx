@@ -24,7 +24,7 @@ export default class App extends Component {
         uuid: uuid.v4(),
         content: DEFAULT_CONTENT
       },
-      secret: sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 0), 0),
+      secret: sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0),
       loaded: false
     };
 
@@ -70,7 +70,7 @@ export default class App extends Component {
       };
     });
 
-    doc.content = sjcl.encrypt(secret, doc.content);
+    doc.content = sjcl.encrypt(secret, doc.content, {ks: 256});
     localforage.setItem(doc.uuid, doc);
 
     window.history.pushState(
