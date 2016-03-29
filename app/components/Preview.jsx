@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import PreviewLoader from './loaders/Preview';
 import Sample from './templates/Sample';
 import grayMatter from 'gray-matter';
-import isEqual from 'lodash.isEqual';
+import isEqual from 'lodash.isequal';
 import sanitizeHtml from 'sanitize-html';
 
 
