@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from 'react';
-import Sample from './templates/Sample';
+import Mail from './templates/Mail';
 
 const { func } = PropTypes;
 
 export const monodTemplates = [
   {id: '', name: 'No template', component: {}},
-  {id: 'sample', name: 'Sample', component: Sample}
+  {id: 'mail', name: 'Mail', component: Mail}
 ]
 
 export default class TemplateForm extends Component {
