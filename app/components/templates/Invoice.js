@@ -119,15 +119,15 @@ export default class Invoice extends BaseTemplate {
             Montant : <strong>{data.amount}</strong>
           </p>
           <p>
-            TVA non applicable, article 293 B du Code général des impôts.
+            TVA non applicable, article 293 B du Code général des impôts.
           </p>
         </section>
         <section style={paymentStyle}>
-          <h2 style={sectionTitleStyle}>Règlement</h2>
+          <h2 style={sectionTitleStyle}>Règlement</h2>
           <p>
-            Le règlement est attendu à reception de la facture,
-            par chèque à l'ordre de Clermont'ech ou par virement
-            aux coordonnées bancaires suivantes :
+            Le règlement est attendu à reception de la facture,
+            par chèque à l'ordre de Clermont'ech ou par virement
+            aux coordonnées bancaires suivantes :
           </p>
 
           <pre style={ibanStyle}>
