@@ -11,7 +11,8 @@ app.set('port', process.env.PORT || 3000);
 app.use(compression());
 app.use(express.static(static_path, { maxAge: '1y' }));
 
-app.get('/', function (req, res) {
+// Match UUIDs
+app.get('/[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}', function (req, res) {
   res.sendFile('index.html', {
     root: static_path
   });
