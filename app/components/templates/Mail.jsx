@@ -13,16 +13,16 @@ export default class Mail extends Component {
       date: '<date>',
       location: '<location>',
       addressFrom: {
-        name: '<from: name>',
-        street: '<from: street>',
-        zipCode: '<from: zipcode>',
-        city: '<from: city>'
+        name: '<addressFrom/name>',
+        street: '<addressFrom/street>',
+        zipCode: '<addressFrom/zipcode>',
+        city: '<addressFrom/city>'
       },
       addressTo: {
-        name: '<to: name>',
-        street: '<to: street>',
-        zipCode: '<to: zipcode>',
-        city: '<to: city>'
+        name: '<addressTo/name>',
+        street: '<addressTo/street>',
+        zipCode: '<addressTo/zipcode>',
+        city: '<addressTo/city>'
       },
       signature: '<signature>'
     }
