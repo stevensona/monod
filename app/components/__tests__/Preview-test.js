@@ -288,4 +288,97 @@ describe('<Preview />', () => {
       done();
     }, 5);
   });
+
+  it('removes front-matter YAML header from preview', (done) => {
+    const wrapper = mount(
+      <Preview
+        raw={'---\ntoto: 1\n---\n*italic*'}
+        pos={0}
+        previewLoader={previewLoader}
+      />
+    );
+
+    setTimeout(() => {
+      expect(wrapper.html()).to.contain('<em>italic</em>');
+
+      done();
+    }, 5);
+  });
+
+  it('stores front-matter (YAML) values', (done) => {
+    const wrapper = mount(
+      <Preview
+        raw={'---\ntoto: 1\n---\n*italic*'}
+        pos={0}
+        previewLoader={previewLoader}
+      />
+    );
+
+    setTimeout(() => {
+      const preview = wrapper.instance();
+      expect(preview.matter).to.have.property('content', '*italic*');
+      expect(preview.matter).to.have.property('data');
+      expect(preview.matter.data).to.deep.equal({toto:1});
+
+      done();
+    }, 5);
+  });
+
+  it('compiles a template given a context', (done) => {
+    const wrapper = mount(
+      <Preview
+        raw={'---\nlocation: Foo\nsignature: John Doe\n---\nThis is content'}
+        template='letter'
+        pos={0}
+        previewLoader={previewLoader}
+      />
+    );
+
+    setTimeout(() => {
+      const html = wrapper.html();
+
+      expect(html).to.contain('<span>Foo</span>');
+      expect(html).to.contain('<div>John Doe</div>');
+      expect(html).to.contain([
+          '<div class="chunk">',
+          '<span>',
+          '<p>',
+          'This is content',
+          '</p>\n',
+          '</span>',
+          '</div>',
+        ].join(''));
+
+      done();
+    }, 5);
+  });
+
+  it('does not add context without template', (done) => {
+    const wrapper = mount(
+      <Preview
+        raw={'---\ntitle: Foo\nauthor: John Doe\n---\nThis is content'}
+        template=''
+        pos={0}
+        previewLoader={previewLoader}
+      />
+    );
+
+    setTimeout(() => {
+      const html = wrapper.html();
+
+      expect(html).not.to.contain('Foo</h1>');
+      expect(html).not.to.contain('John Doe</div>');
+      expect(html).to.contain([
+          '<div class="chunk">',
+          '<span>',
+          '<p>',
+          'This is content',
+          '</p>\n',
+          '</span>',
+          '</div>',
+        ].join(''));
+
+      done();
+    }, 5);
+  });
 });

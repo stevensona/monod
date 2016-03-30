@@ -1,8 +1,11 @@
 import React, { PropTypes, Component } from 'react';
 import ReactDOM from 'react-dom';
 import PreviewLoader from './loaders/Preview';
+import { Templates } from './TemplateForm';
+import grayMatter from 'gray-matter';
 import isEqual from 'lodash.isequal';
 import sanitizeHtml from 'sanitize-html';
+
 
 const { array, func, number, object, string } = PropTypes;
 
@@ -29,7 +32,7 @@ class PreviewChunk extends Component {
     html = this.props.markdownIt.renderer.render(
       this.props.chunk,
       this.props.markdownIt.options,
-      this.props.env
+      this.props.markdownItEnv
     );
     html = this.props.emojione.toImage(html);
 
@@ -52,7 +55,7 @@ PreviewChunk.propTypes = {
   markdownIt: object.isRequired,
   emojione: object.isRequired,
   chunk: array.isRequired,
-  env: object.isRequired
+  markdownItEnv: object.isRequired
 }
 
 
@@ -60,6 +63,7 @@ export default class Preview extends Component {
   constructor(props, context) {
     super(props, context);
 
+    this.matter = {};
     this.requestAnimationId = false;
   }
 
@@ -111,7 +115,7 @@ export default class Preview extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return this.props.raw !== nextProps.raw;
+    return this.props.raw !== nextProps.raw || this.props.template !== nextProps.template;
   }
 
   /**
@@ -158,21 +162,26 @@ export default class Preview extends Component {
   }
 
   render() {
-    let preview = (
-      <div className="preview-loader">
+    let content = [(
+      <div className="preview-loader" key="preview-loader">
         <p>Loading all the rendering stuff...</p>
         <i className="fa fa-spinner fa-spin"></i>
       </div>
-    );
+    )];
+    let data = {};
 
     if (this.markdownIt) {
       // Markdown document environment (links references, footnotes, etc.)
-      const env = {};
+      const markdownItEnv = {};
+
+      // Get front-matter vars
+      this.matter = grayMatter(this.props.raw);
+      data = this.matter.data;
 
       // Get chunks to render from tokens
-      let chunks = this.getChunks(this.props.raw, env);
+      let chunks = this.getChunks(this.matter.content, markdownItEnv);
 
-      preview = chunks.map((chunk, key) => {
+      content = chunks.map((chunk, key) => {
 
         return (
           <PreviewChunk
@@ -180,16 +189,29 @@ export default class Preview extends Component {
             markdownIt={this.markdownIt}
             emojione={this.emojione}
             chunk={chunk}
-            env={env}
+            markdownItEnv={markdownItEnv}
           />
         )
       }, this);
     }
 
+    // Compile selected template with given data
+    if(this.props.template && this.props.template.length) {
+      // Get the template component
+      const Template = Templates.find(
+        (template) => {
+          return template.id === this.props.template;
+        }).component;
+
+      content = (
+        <Template content={content} data={data} />
+      );
+    }
+
     return (
       <div className="preview">
         <div ref="rendered" className="rendered">
-          {preview}
+          {content}
         </div>
       </div>
     );
@@ -198,6 +220,7 @@ export default class Preview extends Component {
 
 Preview.propTypes = {
   raw: string.isRequired,
+  template: string.isRequired,
   pos: number.isRequired,
   previewLoader: func.isRequired
 }

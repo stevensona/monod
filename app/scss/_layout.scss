@@ -30,9 +30,10 @@ $vertical-handler-width: 40px;
 
 /* -- styles -- */
 .layout {
+    display: flex;
+    flex-direction: column;
 
     header.main {
-        width: 100%;
         height: header-height(small);
 
         @include breakpoint(medium) {
@@ -41,7 +42,6 @@ $vertical-handler-width: 40px;
     }
 
     .loader {
-        width: 100%;
         height: editor-height(small);
 
         @include breakpoint(medium) {
@@ -51,7 +51,6 @@ $vertical-handler-width: 40px;
 
     .editor {
         display: flex;
-        width: 100%;
         height: editor-height(small);
 
         @include breakpoint(medium) {
@@ -92,7 +91,7 @@ $vertical-handler-width: 40px;
                     width: $vertical-handler-width / 2;
 
                     .right {
-                        display: none
+                        display: none;
                     }
                 }
 
@@ -142,7 +141,6 @@ $vertical-handler-width: 40px;
     }
 
     footer.main {
-        width: 100%;
         height: footer-height(small);
 
         @include breakpoint(medium) {

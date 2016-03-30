@@ -15,10 +15,13 @@ $gray: #888;
 $foundation-palette: (
   primary: $td-green,
   secondary: $mercury,
+  success: #3adb76,
+  warning: #ffae00,
+  alert: #ec5840,
 );
 
 // Global
-$global-radius: 3px;
+$global-radius: 5px;
 
 // Fonts
 $common-font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
