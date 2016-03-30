@@ -30,8 +30,6 @@ export default class Markdown extends Component {
 
       // Set default value
       this.codeMirror.setValue(defaultValue);
-
-      // this.forceUpdate();
     });
   }
 
