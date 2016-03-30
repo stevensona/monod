@@ -1,7 +1,6 @@
 import React from 'react';
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import { expect } from 'chai';
-import sinon from 'sinon';
 
 // see: https://github.com/mochajs/mocha/issues/1847
 const { describe, it } = global;
@@ -31,11 +30,8 @@ describe('<App />', () => {
     expect(wrapper.find(Footer)).to.have.length(1);
   });
 
-  it('calls loadRaw() when mounted', () => {
-    sinon.spy(App.prototype, 'loadRaw');
-    mount(<App version={version} />);
-
-    expect(App.prototype.loadRaw.calledOnce).to.be.true;
-    App.prototype.loadRaw.restore();
+  it('should create a document object', () => {
+    const wrapper = shallow(<App version={version} />);
+    expect(wrapper.state('document')).to.be.an('object');
   });
 });

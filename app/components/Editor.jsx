@@ -6,66 +6,27 @@ import Preview from './Preview';
 import TemplateForm from './TemplateForm';
 import VerticalHandler from './VerticalHandler';
 
-const { objectOf, func } = PropTypes;
+const { bool, func, string } = PropTypes;
 
 export const EditorModes = {
   FOCUS: 'focus',
   PREVIEW: 'edit-preview',
   READING: 'reading'
-}
+};
 
 export default class Editor extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
-      raw: '',
       template: '',
       pos: 0,
-      loaded: false,
       mode: EditorModes.PREVIEW
     };
-  }
-
-  componentDidMount() {
-    this.props.loadRaw
-      .then((raw) => {
-        this.setState({
-          raw: raw,
-          template: '',
-          pos: 0,
-          loaded: true,
-          mode: EditorModes.PREVIEW
-        });
-      })
-      .catch(() => {
-        this.setState({
-          raw: '',
-          template: '',
-          pos: 0,
-          loaded: true,
-          mode: EditorModes.PREVIEW
-        });
-      });
-  }
-
-  updateRaw(newRaw) {
-    this.setState(function(previousState) {
-      return {
-        raw: newRaw ? newRaw : '',
-        template: previousState.template,
-        pos: previousState.pos,
-        loaded: previousState.loaded,
-        mode: previousState.mode
-      };
-    });
-
-    this.props.onUpdateRaw(newRaw);
   }
 
   updatePosition(newPos) {
     this.setState(function(previousState) {
       return {
-        raw: previousState.raw,
         template: previousState.template,
         pos: newPos,
         loaded: previousState.loaded,
@@ -77,7 +38,6 @@ export default class Editor extends Component {
   updateMode(newMode) {
     this.setState(function(previousState) {
       return {
-        raw: previousState.raw,
         template: previousState.template,
         pos: previousState.pos,
         loaded: previousState.loaded,
@@ -89,7 +49,6 @@ export default class Editor extends Component {
   updateTemplate(newTemplate) {
     this.setState(function(previousState) {
       return {
-        raw: previousState.raw,
         template: newTemplate,
         pos: previousState.pos,
         loaded: previousState.loaded,
@@ -116,31 +75,32 @@ export default class Editor extends Component {
   render() {
     return (
       <Loader
-        loaded={this.state.loaded}
+        loaded={this.props.loaded}
         loadedClassName={'editor ' + this.state.mode}>
         <TemplateForm
           doUpdateTemplate={this.updateTemplate.bind(this)}
         />
         <Markdown
-          raw={this.state.raw}
-          onChange={this.updateRaw.bind(this)}
+          raw={this.props.content}
+          onChange={this.props.onContentUpdate}
           doUpdatePosition={this.updatePosition.bind(this)}
         />
         <VerticalHandler
           onClickLeft={this.handleOnClick.bind(this)}
           onClickRight={this.handleOnClick.bind(this)}
         />
-        <Preview {...this.state} />
+        <Preview
+          raw={this.props.content}
+          pos={this.state.pos}
+          template={this.state.template}
+        />
       </Loader>
     );
   }
 }
 
 Editor.propTypes = {
-  // Promise
-  loadRaw: objectOf({
-    then: func.isRequired,
-    catch: func.isRequired
-  }).isRequired,
-  onUpdateRaw: func.isRequired
-}
+  loaded: bool.isRequired,
+  content: string.isRequired,
+  onContentUpdate: func.isRequired
+};
