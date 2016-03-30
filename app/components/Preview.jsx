@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react';
 import ReactDOM from 'react-dom';
 import PreviewLoader from './loaders/Preview';
-import { monodTemplates } from './TemplateForm';
+import { Templates } from './TemplateForm';
 import grayMatter from 'gray-matter';
 import isEqual from 'lodash.isequal';
 import sanitizeHtml from 'sanitize-html';
@@ -198,7 +198,7 @@ export default class Preview extends Component {
     // Compile selected template with given data
     if(this.props.template && this.props.template.length) {
       // Get the template component
-      const Template = monodTemplates.find(
+      const Template = Templates.find(
         (template) => {
           return template.id === this.props.template;
         }).component;

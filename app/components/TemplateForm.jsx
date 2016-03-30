@@ -5,7 +5,8 @@ import Report from './templates/Report';
 
 const { func } = PropTypes;
 
-export const monodTemplates = [
+
+export const Templates = [
   {id: '', name: 'No template', component: {}},
   {id: 'letter', name: 'Letter', component: Letter},
   {id: 'invoice', name: 'Invoice', component: Invoice},
@@ -27,7 +28,7 @@ export default class TemplateForm extends Component {
   }
 
   render() {
-    const optionNodes = monodTemplates.map((component, key) => {
+    const optionNodes = Templates.map((component, key) => {
       return (
         <option value={component.id} key={key}>{component.name}</option>
       )
