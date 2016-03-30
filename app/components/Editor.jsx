@@ -92,6 +92,7 @@ export default class Editor extends Component {
         <Preview
           raw={this.props.content}
           pos={this.state.pos}
+          template={this.state.template}
         />
       </Loader>
     );
