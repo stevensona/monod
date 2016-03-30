@@ -35,7 +35,8 @@ export default class Report extends BaseTemplate {
         textAlign: 'left'
       },
       contentStyle = {
-        fontFamily: '"Helvetica Neue", Helvetica, Roboto, Arial, sans-serif !important'      },
+        fontFamily: '"Helvetica Neue", Helvetica, Roboto, Arial, sans-serif !important'
+      },
       signatureStyle = {
         marginTop: '2cm',
         paddingTop: '0.3cm',
