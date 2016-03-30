@@ -1,13 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 import Letter from './templates/Letter';
 import Invoice from './templates/Invoice';
+import Report from './templates/Report';
 
 const { func } = PropTypes;
 
 export const monodTemplates = [
   {id: '', name: 'No template', component: {}},
   {id: 'letter', name: 'Letter', component: Letter},
-  {id: 'invoice', name: 'Invoice', component: Invoice}
+  {id: 'invoice', name: 'Invoice', component: Invoice},
+  {id: 'report', name: 'Report', component: Report}
 ]
 
 export default class TemplateForm extends Component {
