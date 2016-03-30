@@ -4,6 +4,10 @@
 
 .markdown {
 
+    & > textarea {
+        display: none;
+    }
+
     .CodeMirror {
         height: inherit;
     }
