@@ -1,8 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import localforage from 'localforage';
 import debounce from 'lodash.debounce';
-import uuid from 'uuid';
-import sjcl from 'sjcl';
 
 import Header from './Header';
 import Editor from './Editor';
@@ -15,67 +12,45 @@ export default class App extends Component {
   constructor(props, context) {
     super(props, context);
 
-    localforage.config({
-      name: 'monod'
-    });
-
     this.state = {
-      document: {
-        uuid: uuid.v4(),
-        content: DEFAULT_CONTENT
-      },
-      secret: sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0),
+      document: { content: '' },
       loaded: false
     };
 
-    this.updateContent = debounce(this.updateContent, 500);
+    this.updateContent = debounce(this.updateContent, 150);
   }
 
   componentDidMount() {
-    const id = window.location.pathname.slice(1);
-    const secret = window.location.hash.slice(1);
+    this.props.controller.on('store:notfound, store:invalid', (state) => {
+      if (state) {
+        this.setState({ document: state.document });
+      }
 
-    localforage
-      .getItem(id)
-      .then((document) => {
-        if (secret && null !== document) {
-          document.content = sjcl.decrypt(secret, document.content);
+      this.setState({ loaded: true });
+    });
 
-          this.setState({
-            document: document,
-            secret: secret,
-            loaded: true
-          });
-        }
-      })
-      .then(() => {
-        this.setState({ loaded: true });
+    this.props.controller.on('store:change', (state) => {
+      this.setState({
+        document: state.document,
+        loaded: true
       });
+
+      window.history.pushState(
+        {}, '', `/${state.document.uuid}#${state.secret}`
+      );
+    });
+
+    this.props.controller.dispatch('action:init', {
+      id: window.location.pathname.slice(1),
+      secret: window.location.hash.slice(1)
+    });
   }
 
   updateContent(content) {
-    if (DEFAULT_CONTENT === content) {
-      return;
-    }
-
     const doc    = this.state.document;
-    const secret = this.state.secret;
     doc.content  = content;
 
-    this.setState((previousState) => {
-      return {
-        document: doc,
-        secret: secret,
-        loaded: previousState.loaded
-      };
-    });
-
-    doc.content = sjcl.encrypt(secret, doc.content, {ks: 256});
-    localforage.setItem(doc.uuid, doc);
-
-    window.history.pushState(
-      {}, '', `/${this.state.document.uuid}#${this.state.secret}`
-    );
+    this.props.controller.dispatch('action:update', doc);
   }
 
   render() {
@@ -97,20 +72,6 @@ App.propTypes = {
   version: string.isRequired
 };
 
-const DEFAULT_CONTENT = [
-  'Introducing Monod',
-  '=================',
-  '',
-  '> **TL;DR** This editor is the first experiment we wanted to tackle at **Le lab**. This _week #1 release_ is a pure client-side application written with [React](https://facebook.github.io/react/) by the good folks at [TailorDev](https://tailordev.fr)!',
-  '',
-  'Read more about how and why we built Monod at: https://tailordev.fr/blog/.',
-  '',
-  'See, we have code & Emoji support, yay! :clap:',
-  '',
-  '``` python',
-  'def hello():',
-  '    print("Have fun with Monod!")',
-  '```',
-  '',
-  '*Play with this page and [send us feedback](mailto:hello@tailordev.fr?subject=About%20Monod). We would :heart: to hear from you!*'
-].join('\n');
+App.childContextTypes = {
+  controller: PropTypes.object
+};
