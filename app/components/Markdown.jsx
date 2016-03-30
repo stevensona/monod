@@ -10,31 +10,29 @@ export default class Markdown extends Component {
 
   componentWillMount() {
     MarkdownLoader().then(() => {
-      this.forceUpdate();
+      const defaultValue = this.props.raw || '';
+      const textareaNode = this.refs.markdownTextarea;
+      const options = {
+        autofocus: true,
+        lineNumbers: true,
+        lineWrapping: true,
+        mode: 'gfm',
+        scrollbarStyle: null,
+        theme: 'monod'
+      };
+
+      // CodeMirror main instance
+      this.codeMirror = CodeMirror.fromTextArea(textareaNode, options);
+
+      // Bind CodeMirror events
+      this.codeMirror.on('change', this.handleOnChange.bind(this));
+      this.codeMirror.on('scroll', this.handleScroll.bind(this));
+
+      // Set default value
+      this.codeMirror.setValue(defaultValue);
+
+      // this.forceUpdate();
     });
-  }
-
-  componentDidMount() {
-    const defaultValue = this.props.raw || '';
-    const textareaNode = this.refs.markdownTextarea;
-    const options = {
-      autofocus: true,
-      lineNumbers: true,
-      lineWrapping: true,
-      mode: 'gfm',
-      scrollbarStyle: null,
-      theme: 'monod'
-    };
-
-    // CodeMirror main instance
-    this.codeMirror = CodeMirror.fromTextArea(textareaNode, options);
-
-    // Bind CodeMirror events
-    this.codeMirror.on('change', this.handleOnChange.bind(this));
-    this.codeMirror.on('scroll', this.handleScroll.bind(this));
-
-    // Set default value
-    this.codeMirror.setValue(defaultValue);
   }
 
   shouldComponentUpdate() {
