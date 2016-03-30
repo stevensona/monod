@@ -11,6 +11,15 @@ import 'emojione/assets/sprites/emojione.sprites.css'
 class PreviewChunk extends Component {
 
   shouldComponentUpdate(nextProps) {
+    // It looks like `attrs` is modified by hljs on `render()`, which
+    // makes the chunk to be re-rendered all the time. The problem is
+    // that it impacts performance negatively since hljs is costly.
+    this.props.chunk.map((chunk) => {
+      if (chunk.type === 'fence') {
+        chunk.attrs = null;
+      }
+    });
+
     return !isEqual(this.props.chunk, nextProps.chunk) || this.props.key !== nextProps.key;
   }
 
