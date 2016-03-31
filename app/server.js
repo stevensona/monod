@@ -67,7 +67,7 @@ api.put('/documents/:uuid', (req, res) => {
 
     document.uuid          = uuid;
     document.content       = req.body.content;
-    document.last_modified = new Date();
+    document.last_modified = Date.now();
 
     fs.writeFile(filename, JSON.stringify(document), (err) => {
       if (err) {
