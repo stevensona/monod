@@ -66,6 +66,12 @@ export default class App extends Component {
       this.redirect(state.document, '/');
     });
 
+    this.props.controller.on(Events.CONFLICT, (state) => {
+      this.setState({
+        backupUrl: `/${state.old.document.uuid}#${state.old.secret}`
+      });
+    });
+
     this.props.controller.on(Events.CHANGE, (state) => {
       this.redirect(state.document, `/${state.document.uuid}#${state.secret}`);
     });
@@ -77,16 +83,30 @@ export default class App extends Component {
   }
 
   updateContent(content) {
-    const doc    = this.state.document;
-    doc.content  = content;
+    const doc = this.state.document;
 
-    this.props.controller.dispatch('action:update', doc);
+    if (doc.content !== content) {
+      doc.content = content;
+      this.props.controller.dispatch('action:update', doc);
+    }
   }
 
   render() {
+    let oldDocument = '';
+    if (this.state.backupUrl) {
+      oldDocument = (
+        <div>
+          Snap! The document you are working on has been updated. We created a
+          backup of your work <a href={this.state.backupUrl}>here</a>,
+          and the current document has been updated with the up-to-date content.
+        </div>
+      );
+    }
+
     return (
       <div className="layout">
         <Header />
+        {oldDocument}
         <Editor
           loaded={this.state.loaded}
           content={this.state.document.content}
