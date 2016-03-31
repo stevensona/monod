@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { Events } from '../Store';
 import debounce from 'lodash.debounce';
 
 import Header from './Header';
@@ -20,24 +21,53 @@ export default class App extends Component {
     this.updateContent = debounce(this.updateContent, 150);
   }
 
-  componentDidMount() {
-    this.props.controller.on('store:notfound, store:invalid', (state) => {
-      if (state) {
-        this.setState({ document: state.document });
-      }
+  getChildContext() {
+    // Pass the controller to child components.
+    return {
+      controller: this.props.controller
+    };
+  }
 
-      this.setState({ loaded: true });
+  redirect(document, uri) {
+    this.setState({
+      loaded: true,
+      document: document
     });
 
-    this.props.controller.on('store:change', (state) => {
-      this.setState({
-        document: state.document,
-        loaded: true
-      });
+    window.history.pushState({}, '', uri);
+  }
 
-      window.history.pushState(
-        {}, '', `/${state.document.uuid}#${state.secret}`
-      );
+  componentDidMount() {
+    this.props.controller.on(Events.NO_DOCUMENT_ID, (state) => {
+      this.setState({
+        loaded: true,
+        document: state.document
+      });
+    });
+
+    this.props.controller.on(Events.DECRYPTION_FAILED, (state) => {
+      // mouhahaha
+      alert([
+        'We were unable to decrypt the document. Either the secret has not',
+        'been supplied or it is invalid.',
+        'We have redirected you to a new document.'
+      ].join(' '));
+
+      this.redirect(state.document, '/');
+    });
+
+    this.props.controller.on(Events.DOCUMENT_NOT_FOUND, (state) => {
+      // mouhahaha (2)
+      alert([
+        'We could not find the document you were trying to load, so we have',
+        'redirected you to a new document.'
+      ].join(' '));
+
+      this.redirect(state.document, '/');
+    });
+
+    this.props.controller.on(Events.CHANGE, (state) => {
+      this.redirect(state.document, `/${state.document.uuid}#${state.secret}`);
     });
 
     this.props.controller.dispatch('action:init', {
