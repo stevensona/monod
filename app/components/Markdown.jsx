@@ -40,7 +40,7 @@ export default class Markdown extends Component {
       this.getCodeMirror().setValue(state.document.content);
     });
 
-    this.props.controller.on(Events.CONFLICT, (state) => {
+    this.context.controller.on(Events.CONFLICT, (state) => {
       // force content update
       this.getCodeMirror().setValue(state.new.content);
     });

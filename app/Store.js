@@ -1,5 +1,4 @@
 import localforage from 'localforage';
-import debounce from 'lodash.debounce';
 import uuid from 'uuid';
 import sjcl from 'sjcl';
 import request from 'superagent';
@@ -36,9 +35,6 @@ export default class Store {
       name: 'monod',
       storeName: name
     });
-
-    //TODO: enable again
-    //this._localPersist = debounce(this._localPersist, 2000);
   }
 
   findById(id, secret) {
@@ -55,12 +51,14 @@ export default class Store {
           return Promise.reject('document not found');
         }
 
-        this._decrypt(document.content, secret, (content) => {
-          document.content  = content;
-          this.state.secret = secret;
+        this
+          ._decrypt(document.content, secret)
+          .then((content) => {
+            document.content  = content;
+            this.state.secret = secret;
 
-          this.update(document, false);
-        });
+            this.update(document, false);
+          });
       })
       .catch(() => {
         request
@@ -80,12 +78,14 @@ export default class Store {
             }
 
             const document = res.body;
-            this._decrypt(document.content, secret, (content) => {
-              document.content  = content;
-              this.state.secret = secret;
+            this
+              ._decrypt(document.content, secret)
+              .then((content) => {
+                document.content  = content;
+                this.state.secret = secret;
 
-              this.update(document, false);
-            });
+                this.update(document, false);
+              });
 
             this.events.emit(Events.APP_IS_ONLINE);
           })
@@ -145,16 +145,13 @@ export default class Store {
             }
           } else {
             if (serverDocument.last_modified > localDocument.last_modified) {
-              // TODO: test if last_local_persist < last_modified, if yes:
-              // then update content
               if (
                 !localDocument.last_local_persist ||
                 serverDocument.last_modified > localDocument.last_local_persist
               ) {
-                this._decrypt(
-                  serverDocument.content,
-                  this.state.secret,
-                  (content) => {
+                this
+                  ._decrypt(serverDocument.content, this.state.secret)
+                  .then((content) => {
                     localDocument.content = content;
 
                     this.update(localDocument, false);
@@ -162,8 +159,7 @@ export default class Store {
                     this.events.emit(Events.UPDATE_WITHOUT_CONFLICT, {
                       document: localDocument
                     });
-                  }
-                );
+                  });
 
                 return;
               }
@@ -172,104 +168,104 @@ export default class Store {
               const secret = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0);
 
               // copy current document
-              const backup   = Object.assign({}, localDocument);
-              backup.uuid    = uuid.v4();
-              backup.content = this._encrypt(backup.content, secret);
-              backup.last_modified = null;
+              this
+                ._encrypt(localDocument.content, secret)
+                .then((content) => {
+                  const backup = Object.assign({}, localDocument);
+                  backup.uuid  = uuid.v4();
+                  backup.content = content;
+                  backup.last_modified = null;
 
-              // persist backup'ed document
-              localforage.setItem(backup.uuid, backup).then(() => {
-                // now, update current doc with server content
-                this._decrypt(
-                  serverDocument.content,
-                  this.state.secret,
-                  (content) => {
-                    this.state.document.content = content;
-                    // update last_modified so that we are fully sync'ed with
-                    // server now
-                    this.state.document.last_modified = serverDocument.last_modified;
+                  // persist backup'ed document
+                  localforage.setItem(backup.uuid, backup).then(() => {
+                    // now, update current doc with server content
+                    this
+                      ._decrypt(serverDocument.content, this.state.secret)
+                      .then((content) => {
+                        this.state.document.content = content;
+                        // update last_modified so that we are fully sync'ed with
+                        // server now
+                        this.state.document.last_modified = serverDocument.last_modified;
 
-                    // persist locally
-                    localforage.setItem(
-                      this.state.document.uuid,
-                      this.state.document
-                    ).then(() => {
-                      this.events.emit(Events.CONFLICT, {
-                        old: {
-                          document: backup,
-                          secret: secret
-                        },
-                        new: {
-                          document: this.state.document,
-                          secret: this.state.secret
-                        }
+                        // persist locally
+                        localforage.setItem(
+                          this.state.document.uuid,
+                          this.state.document
+                        ).then(() => {
+                          this.events.emit(Events.CONFLICT, {
+                            old: {
+                              document: backup,
+                              secret: secret
+                            },
+                            new: {
+                              document: this.state.document,
+                              secret: this.state.secret
+                            }
+                          });
+                        });
                       });
                     });
-                  }
-                );
-              });
+                });
             }
           }
         });
     }
   }
 
-  _decrypt(content, secret, callback) {
-    // TODO: fixme
-    return callback(content);
-
+  _decrypt(content, secret) {
     try {
-      callback(sjcl.decrypt(secret, content));
+      return Promise.resolve(sjcl.decrypt(secret, content));
     } catch (e) {
       this.events.emit(Events.DECRYPTION_FAILED, this.state);
+
+      return Promise.reject('decryption failed');
     }
   }
 
   _encrypt(content, secret) {
-    // TODO: fixme
-    return content;
-
-    return sjcl.encrypt(secret, content, { ks: 256 });
+    return Promise.resolve(sjcl.encrypt(secret, content, { ks: 256 }));
   }
 
   _localPersist() {
-    const document = Object.assign({}, this.state.document);
+    this
+      ._encrypt(this.state.document.content, this.state.secret)
+      .then((content) => {
+        const document = Object.assign({}, this.state.document);
+        document.content = content;
 
-    document.content = this._encrypt(
-      this.state.document.content,
-      this.state.secret
-    );
-
-    localforage.setItem(document.uuid, document);
+        localforage.setItem(document.uuid, document);
+      });
   }
 
   _serverPersist() {
-    const document = Object.assign({}, this.state.document);
-    const content  = this._encrypt(
-      this.state.document.content,
-      this.state.secret
+    this
+      ._encrypt(this.state.document.content, this.state.secret)
+      .then((content) => {
+        const document = Object.assign({}, this.state.document);
+        document.content = content;
+
+        request
+          .put(`${this.endpoint}/documents/${document.uuid}`)
+          .set('Accept', 'application/json')
+          .set('Content-Type', 'application/json')
+          .send({
+            content: content
+          })
+          .end((err, res) => {
+            if (err) {
+              this.events.emit(Events.APP_IS_OFFLINE);
+
+              return;
+            }
+
+            this.state.document.last_modified = res.body.last_modified;
+            this._localPersist();
+
+            this.events.emit(Events.SYNCHRONIZE, { date: new Date() });
+            this.events.emit(Events.APP_IS_ONLINE);
+          });
+      }
     );
-
-    request
-      .put(`${this.endpoint}/documents/${document.uuid}`)
-      .set('Accept', 'application/json')
-      .set('Content-Type', 'application/json')
-      .send({
-        content: content
-      })
-      .end((err, res) => {
-        if (err) {
-          this.events.emit(Events.APP_IS_OFFLINE);
-
-          return;
-        }
-
-        this.state.document.last_modified = res.body.last_modified;
-        this._localPersist();
-
-        this.events.emit(Events.SYNCHRONIZE, { date: new Date() });
-        this.events.emit(Events.APP_IS_ONLINE);
-      });
   }
 }
 

@@ -51,7 +51,7 @@ export default class App extends Component {
       const message = [
         'We were unable to decrypt the document. Either the secret has not',
         'been supplied or it is invalid.',
-        'We have loadAndRedirected you to a new document.'
+        'We have redirected you to a new document.'
       ].join(' ');
 
       this.loadAndRedirect(state.document, '/', message);
@@ -60,7 +60,7 @@ export default class App extends Component {
     this.props.controller.on(Events.DOCUMENT_NOT_FOUND, (state) => {
       const message = [
         'We could not find the document you were trying to load, so we have',
-        'loadAndRedirected you to a new document.'
+        'redirected you to a new document.'
       ].join(' ');
 
       this.loadAndRedirect(state.document, '/', message);
