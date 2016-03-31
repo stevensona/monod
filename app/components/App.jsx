@@ -112,5 +112,5 @@ const DEFAULT_CONTENT = [
   '    print("Have fun with Monod!")',
   '```',
   '',
-  '*Play with this page and [send us feedback](mailto:hello@tailordev.fr?subject=About Monod). We would :heart: to hear from you!*'
+  '*Play with this page and [send us feedback](mailto:hello@tailordev.fr?subject=About%20Monod). We would :heart: to hear from you!*'
 ].join('\n');
