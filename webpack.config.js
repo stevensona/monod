@@ -115,6 +115,8 @@ const common = {
             template: 'lib/webpack-template.ejs',
             // The page's title is read from npm's `package.json` file
             title: pkg.name,
+            // Favicon generated with http://realfavicongenerator.net
+            favicon: 'app/favicon.ico',
             version: VERSION.substring(0, 7),
             // Main "div" `id`
             appMountId: 'app',
