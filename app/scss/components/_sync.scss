@@ -1,0 +1,21 @@
+/*
+ * Header component
+ */
+
+.sync {
+  float: right;
+  margin-top: 0.1rem;
+
+  .status {
+    padding: 0.4rem 0.5rem 0.3rem;
+    margin-right: 0.1rem;
+    border-radius: $global-radius;
+    background-color: darken($td-blue, 10%);
+    color: $white;
+  }
+
+  button {
+    @include button();
+    font-size: 0.6rem;
+  }
+}
