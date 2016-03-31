@@ -118,6 +118,7 @@ const common = {
             // Favicon generated with http://realfavicongenerator.net
             favicon: 'app/favicon.ico',
             version: VERSION.substring(0, 7),
+            apiEndpoint: TARGET === 'dev' ? 'http://localhost:3000' : '',
             // Main "div" `id`
             appMountId: 'app',
             // No need to inject assets in the given template as it is handled
