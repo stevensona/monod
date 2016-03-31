@@ -26,7 +26,6 @@
     "babel-preset-react": "^6.5.0",
     "babel-preset-react-hmre": "^1.1.0",
     "babel-register": "^6.6.5",
-    "body-parser": "^1.15.0",
     "chai": "^3.5.0",
     "clean-webpack-plugin": "^0.1.8",
     "codemirror": "^5.12.0",
@@ -53,6 +52,7 @@
     "markdown-it": "^6.0.0",
     "mocha": "^2.4.5",
     "mocha-circleci-reporter": "0.0.1",
+    "moment": "^2.12.0",
     "node-sass": "^3.4.2",
     "nyc": "^6.0.0",
     "offline-plugin": "github:willdurand/offline-plugin#monod",
@@ -65,16 +65,19 @@
     "sinon": "^1.17.3",
     "sjcl": "^1.0.3",
     "style-loader": "^0.13.0",
-    "unlazy-loader": "^0.1.2",
+    "superagent": "^1.8.3",
     "supertest": "^1.2.0",
+    "unlazy-loader": "^0.1.2",
     "uuid": "^2.0.1",
     "webpack": "^1.12.14",
     "webpack-dev-server": "^1.14.1",
     "webpack-merge": "^0.8.3"
   },
   "dependencies": {
+    "compression": "^1.6.1",
+    "cors": "^2.7.1",
     "express": "^4.13.4",
-    "compression": "^1.6.1"
+    "body-parser": "^1.15.0"
   },
   "engines": {
     "node": "^5.7"
