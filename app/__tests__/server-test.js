@@ -36,8 +36,7 @@ describe('Express app', () => {
         .expect(200, {
           content: { ba: 'bar' },
           last_modified: '2016-03-30T10:50:09.229Z',
-          uuid: '9950e80b-f214-45d0-a98c-bffee2582c71',
-          version: 42
+          uuid: '9950e80b-f214-45d0-a98c-bffee2582c71'
         }, done);
     });
   });
@@ -49,7 +48,7 @@ describe('Express app', () => {
         // create existing file that will be updated
         fs.writeFile(
           path.join(process.env.MONOD_DATA_DIR, EXISTING_DOCUMENT_UUID),
-          '{ "version": 123 }',
+          '{}',
           (err) => {
             done();
           }
@@ -98,8 +97,7 @@ describe('Express app', () => {
         .expect(201, {
           content: content,
           uuid: NEW_DOCUMENT_UUID,
-          last_modified: 'date',
-          version: 1
+          last_modified: 'date'
         }, done);
     });
 
@@ -120,8 +118,7 @@ describe('Express app', () => {
         .expect(200, {
           content: content,
           uuid: EXISTING_DOCUMENT_UUID,
-          last_modified: 'date',
-          version: 124
+          last_modified: 'date'
         }, done);
     });
   });

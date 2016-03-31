@@ -1,6 +1,7 @@
 var express = require('express');
 var compression = require('compression');
 var bodyParser = require('body-parser');
+var cors = require('cors');
 var path = require('path');
 var fs = require('fs');
 
@@ -17,6 +18,7 @@ app.set('port', process.env.PORT || 3000);
 app.use(compression());
 app.use(express.static(static_path));
 app.use(bodyParser.json());
+app.use(cors());
 app.use(api);
 
 const isValidId = (uuid) => {
@@ -61,12 +63,11 @@ api.put('/documents/:uuid', (req, res) => {
 
   fs.readFile(filename, (err, data) => {
     const isNew = err ? true : false;
-    const document = isNew ? { version: 0 } : JSON.parse(data);
+    const document = isNew ? {} : JSON.parse(data);
 
     document.uuid          = uuid;
     document.content       = req.body.content;
     document.last_modified = new Date();
-    document.version       = document.version + 1;
 
     fs.writeFile(filename, JSON.stringify(document), (err) => {
       if (err) {
