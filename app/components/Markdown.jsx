@@ -35,9 +35,14 @@ export default class Markdown extends Component {
   }
 
   componentDidMount() {
-    this.context.controller.on(Events.CONFLICT, (state) => {
+    this.context.controller.on(Events.UPDATE_WITHOUT_CONFLICT, (state) => {
       // force content update
-      this.codeMirror.setValue(state.new.document.content);
+      this.getCodeMirror().setValue(state.document.content);
+    });
+
+    this.props.controller.on(Events.CONFLICT, (state) => {
+      // force content update
+      this.getCodeMirror().setValue(state.new.content);
     });
   }
 

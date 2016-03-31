@@ -75,7 +75,7 @@ export default class Sync extends Component {
 
     return (
       <div className="sync">
-        <span className="status">
+        <span className={this.state.offline ? 'status is-offline' : 'status is-online'}>
           <i
             title={title}
             className={this.state.offline ? 'fa fa-toggle-off' : 'fa fa-toggle-on'}

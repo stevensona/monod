@@ -5,6 +5,7 @@ import debounce from 'lodash.debounce';
 import Header from './Header';
 import Editor from './Editor';
 import Footer from './Footer';
+import MessageBox from './MessageBox';
 
 const { string } = PropTypes;
 
@@ -28,10 +29,11 @@ export default class App extends Component {
     };
   }
 
-  redirect(document, uri) {
+  loadAndRedirect(document, uri, message) {
     this.setState({
       loaded: true,
-      document: document
+      document: document,
+      message: message || false
     });
 
     window.history.pushState({}, '', uri);
@@ -46,34 +48,52 @@ export default class App extends Component {
     });
 
     this.props.controller.on(Events.DECRYPTION_FAILED, (state) => {
-      // mouhahaha
-      alert([
+      const message = [
         'We were unable to decrypt the document. Either the secret has not',
         'been supplied or it is invalid.',
-        'We have redirected you to a new document.'
-      ].join(' '));
+        'We have loadAndRedirected you to a new document.'
+      ].join(' ');
 
-      this.redirect(state.document, '/');
+      this.loadAndRedirect(state.document, '/', message);
     });
 
     this.props.controller.on(Events.DOCUMENT_NOT_FOUND, (state) => {
-      // mouhahaha (2)
-      alert([
+      const message = [
         'We could not find the document you were trying to load, so we have',
-        'redirected you to a new document.'
-      ].join(' '));
+        'loadAndRedirected you to a new document.'
+      ].join(' ');
 
-      this.redirect(state.document, '/');
+      this.loadAndRedirect(state.document, '/', message);
     });
 
     this.props.controller.on(Events.CONFLICT, (state) => {
+      const message = [
+        'Snap! The document you were working on has been updated, so we have',
+        ' forked it for you; You can find the original (and updated) content',
+        ' at:',
+        <a href={'/' + state.new.document.uuid + '#' + state.new.secret}>
+          {'/' + state.new.document.uuid + '#' + state.new.secret}
+        </a>
+      ];
+
+      this.loadAndRedirect(
+        state.old.document,
+        `/${state.old.document.uuid}#${state.old.secret}`,
+        message
+      );
+    });
+
+    this.props.controller.on(Events.UPDATE_WITHOUT_CONFLICT, () => {
       this.setState({
-        backupUrl: `/${state.old.document.uuid}#${state.old.secret}`
+        message: [
+          'We have updated the document you are viewing to its latest revision.',
+          'Happy reading/working!'
+        ].join(' ')
       });
     });
 
     this.props.controller.on(Events.CHANGE, (state) => {
-      this.redirect(state.document, `/${state.document.uuid}#${state.secret}`);
+      this.loadAndRedirect(state.document, `/${state.document.uuid}#${state.secret}`);
     });
 
     this.props.controller.dispatch('action:init', {
@@ -83,30 +103,20 @@ export default class App extends Component {
   }
 
   updateContent(content) {
-    const doc = this.state.document;
+    const document = Object.assign({}, this.state.document);
 
-    if (doc.content !== content) {
-      doc.content = content;
-      this.props.controller.dispatch('action:update', doc);
+    if (document.content !== content) {
+      document.content = content;
+
+      this.props.controller.dispatch('action:update', document);
     }
   }
 
   render() {
-    let oldDocument = '';
-    if (this.state.backupUrl) {
-      oldDocument = (
-        <div>
-          Snap! The document you are working on has been updated. We created a
-          backup of your work <a href={this.state.backupUrl}>here</a>,
-          and the current document has been updated with the up-to-date content.
-        </div>
-      );
-    }
-
     return (
       <div className="layout">
         <Header />
-        {oldDocument}
+        <MessageBox message={this.state.message || false} />
         <Editor
           loaded={this.state.loaded}
           content={this.state.document.content}

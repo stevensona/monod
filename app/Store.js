@@ -14,7 +14,8 @@ export const Events = {
   CHANGE: 'store:change',
   SYNCHRONIZE: 'store:synchronize',
   DECRYPTION_FAILED: 'store:decryption_failed',
-  CONFLICT: 'store:conflict'
+  CONFLICT: 'store:conflict',
+  UPDATE_WITHOUT_CONFLICT: 'store:update-without-conflict'
 };
 
 export default class Store {
@@ -54,15 +55,12 @@ export default class Store {
           return Promise.reject('document not found');
         }
 
-        // try to decrypt content
-        const content = this._decrypt(document.content, secret);
-
-        if (false !== content) {
-          document.content = content;
+        this._decrypt(document.content, secret, (content) => {
+          document.content  = content;
           this.state.secret = secret;
 
           this.update(document, false);
-        }
+        });
       })
       .catch(() => {
         request
@@ -82,14 +80,12 @@ export default class Store {
             }
 
             const document = res.body;
-            const content  = this._decrypt(document.content, secret);
-
-            if (false !== content) {
-              document.content = content;
+            this._decrypt(document.content, secret, (content) => {
+              document.content  = content;
               this.state.secret = secret;
 
               this.update(document, false);
-            }
+            });
 
             this.events.emit(Events.APP_IS_ONLINE);
           })
@@ -102,7 +98,7 @@ export default class Store {
       return;
     }
 
-    this.state.document = document;
+    this.state.document = Object.assign({}, document);
 
     if (updateLastLocalPersist) {
       this.state.document.last_local_persist = Date.now();
@@ -114,7 +110,7 @@ export default class Store {
   }
 
   sync() {
-    if (DEFAULT_CONTENT === this.state.document.content || !this.state.document.last_local_persist) {
+    if (DEFAULT_CONTENT === this.state.document.content) {
       return;
     }
 
@@ -139,7 +135,7 @@ export default class Store {
           }
 
           const serverDocument = res.body;
-          const localDocument  = this.state.document;
+          const localDocument  = Object.assign({}, this.state.document);
 
           if (serverDocument.last_modified === localDocument.last_modified) {
             // here, documents are equal on both local and remote sides so we
@@ -149,34 +145,68 @@ export default class Store {
             }
           } else {
             if (serverDocument.last_modified > localDocument.last_modified) {
-              const backup = {
-                document: {
-                  uuid: uuid.v4(),
-                  content: localDocument.content
-                },
-                secret: sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0)
-              };
+              // TODO: test if last_local_persist < last_modified, if yes:
+              // then update content
+              if (
+                !localDocument.last_local_persist ||
+                serverDocument.last_modified > localDocument.last_local_persist
+              ) {
+                this._decrypt(
+                  serverDocument.content,
+                  this.state.secret,
+                  (content) => {
+                    localDocument.content = content;
 
-              localDocument.content = this._encrypt(
-                localDocument.content,
-                backup.secret
-              );
-              localforage.setItem(backup.document.uuid, localDocument);
+                    this.update(localDocument, false);
 
-              this.state.document.content = this._decrypt(
-                serverDocument.content,
-                this.state.secret
-              );
-              this.state.document.last_modified = serverDocument.last_modified;
+                    this.events.emit(Events.UPDATE_WITHOUT_CONFLICT, {
+                      document: localDocument
+                    });
+                  }
+                );
 
-              localforage.setItem(
-                this.state.document.uuid,
-                this.state.document
-              ).then(() => {
-                this.events.emit(Events.CONFLICT, {
-                  old: backup,
-                  new: { document: this.state.document }
-                });
+                return;
+              }
+
+              // generate a new secret for backup'ed document
+              const secret = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0);
+
+              // copy current document
+              const backup   = Object.assign({}, localDocument);
+              backup.uuid    = uuid.v4();
+              backup.content = this._encrypt(backup.content, secret);
+              backup.last_modified = null;
+
+              // persist backup'ed document
+              localforage.setItem(backup.uuid, backup).then(() => {
+                // now, update current doc with server content
+                this._decrypt(
+                  serverDocument.content,
+                  this.state.secret,
+                  (content) => {
+                    this.state.document.content = content;
+                    // update last_modified so that we are fully sync'ed with
+                    // server now
+                    this.state.document.last_modified = serverDocument.last_modified;
+
+                    // persist locally
+                    localforage.setItem(
+                      this.state.document.uuid,
+                      this.state.document
+                    ).then(() => {
+                      this.events.emit(Events.CONFLICT, {
+                        old: {
+                          document: backup,
+                          secret: secret
+                        },
+                        new: {
+                          document: this.state.document,
+                          secret: this.state.secret
+                        }
+                      });
+                    });
+                  }
+                );
               });
             }
           }
@@ -184,17 +214,15 @@ export default class Store {
     }
   }
 
-  _decrypt(content, secret) {
+  _decrypt(content, secret, callback) {
     // TODO: fixme
-    return content;
+    return callback(content);
 
     try {
-      return sjcl.decrypt(secret, content);
+      callback(sjcl.decrypt(secret, content));
     } catch (e) {
       this.events.emit(Events.DECRYPTION_FAILED, this.state);
     }
-
-    return false;
   }
 
   _encrypt(content, secret) {
@@ -205,7 +233,7 @@ export default class Store {
   }
 
   _localPersist() {
-    const document = this.state.document;
+    const document = Object.assign({}, this.state.document);
 
     document.content = this._encrypt(
       this.state.document.content,
@@ -216,7 +244,7 @@ export default class Store {
   }
 
   _serverPersist() {
-    const document = this.state.document;
+    const document = Object.assign({}, this.state.document);
     const content  = this._encrypt(
       this.state.document.content,
       this.state.secret

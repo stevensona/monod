@@ -9,6 +9,8 @@
 @include foundation-typography;
 @include foundation-forms;
 @include foundation-table;
+@include foundation-close-button;
+@include foundation-callout;
 
 /* -- FontAwesome -- */
 $fa-font-path: '~font-awesome/fonts';
@@ -30,3 +32,4 @@ $fa-font-path: '~font-awesome/fonts';
 @import 'components/preview';
 @import 'components/footer';
 @import 'components/sync';
+@import 'components/message_box';
