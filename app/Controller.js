@@ -24,7 +24,7 @@ export default class Controller {
   }
 
   onUpdate(document) {
-    this.store.update(document);
+    this.store.update(document, true);
   }
 
   onSync() {
