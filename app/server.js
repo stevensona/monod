@@ -13,13 +13,18 @@ var static_path = path.join(__dirname, '/../build');
 var data_dir    = process.env.MONOD_DATA_DIR || path.join(__dirname, '/../data');
 
 app.set('port', process.env.PORT || 3000);
+app.set('etag', false);
 
 // middlewares
 app.use(compression());
 app.use(express.static(static_path));
 app.use(bodyParser.json());
-app.use(cors());
 app.use(api);
+
+// this is required to be able to run another server in dev
+if ('production' !== process.env.NODE_ENV) {
+  app.use(cors());
+}
 
 const isValidId = (uuid) => {
   return /[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}/.test(uuid);
