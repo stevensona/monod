@@ -92,8 +92,7 @@ const common = {
             // JSON files (required for markdown-it)
             {
                 test: /\.json$/,
-                loaders: ['file?name=[path][name].[ext]&context=./node_modules'],
-                include: path.join(__dirname, 'node_modules/entities/')
+                loaders: ['file?name=[path][name].[ext]&context=./node_modules']
             },
             // PNG files (required for emojione)
             {
@@ -118,7 +117,7 @@ const common = {
             // Favicon generated with http://realfavicongenerator.net
             favicon: 'app/favicon.ico',
             version: VERSION.substring(0, 7),
-            apiEndpoint: TARGET === 'dev' ? 'http://localhost:3000' : '',
+            apiEndpoint: (!TARGET || TARGET === 'dev') ? 'http://localhost:3000' : '',
             // Main "div" `id`
             appMountId: 'app',
             // No need to inject assets in the given template as it is handled
