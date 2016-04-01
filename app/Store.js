@@ -20,10 +20,14 @@ export default class Store {
 
   constructor(name, events, endpoint, localforage) {
     this.state = {
+      // we automatically create a default document, but it might not be used
       document: {
         uuid: uuid.v4(),
-        content: DEFAULT_CONTENT
+        content: DEFAULT_CONTENT,
+        last_modified: null, // defined by the server
+        last_modified_locally: null
       },
+      // we automatically generate a secret, but it might not be used
       secret: sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0)
     };
 
@@ -37,6 +41,22 @@ export default class Store {
     });
   }
 
+  /**
+   * The aim of this method is to load a document by:
+   *
+   *   0. No ID => Events.NO_DOCUMENT_ID
+   *   1. Looking into the local database first
+   *     1.1. If it is not found => go to 2.
+   *     1.2. If found, we attempt to decrypt it
+   *       1.2.1 Decryption OK => document loaded + Events.CHANGE
+   *       1.2.2 Decryption KO => Events.DECRYPTION_FAILED
+   *   2. Fetch the document on the server
+   *     2.1 Found => We attempt to decrypt it
+   *       2.1.1 Decryption OK => document loaded + Events.CHANGE
+   *       2.1.2 Decryption KO => Events.DECRYPTION_FAILED
+   *     2.2 Not found => Events.DOCUMENT_NOT_FOUND
+   *
+   */
   findById(id, secret) {
     if (!id) {
       this.events.emit(Events.NO_DOCUMENT_ID, this.state);
@@ -57,7 +77,7 @@ export default class Store {
             document.content  = content;
             this.state.secret = secret;
 
-            this.update(document, false);
+            this._localPersistAndNotifyChange(document);
           });
       })
       .catch(() => {
@@ -84,7 +104,7 @@ export default class Store {
                 document.content  = content;
                 this.state.secret = secret;
 
-                this.update(document, false);
+                this._localPersistAndNotifyChange(document);
               });
 
             this.events.emit(Events.APP_IS_ONLINE);
@@ -92,17 +112,22 @@ export default class Store {
       });
   }
 
-  update(document, updateLastLocalPersist) {
+  /**
+   * This method is called when the document has been updated by the user
+   */
+  update(document) {
     // we don't want to store default content
     if (DEFAULT_CONTENT === document.content) {
       return;
     }
 
-    this.state.document = Object.assign({}, document);
+    document.last_modified_locally = Date.now();
 
-    if (updateLastLocalPersist) {
-      this.state.document.last_local_persist = Date.now();
-    }
+    this._localPersistAndNotifyChange(document);
+  }
+
+  _localPersistAndNotifyChange(document) {
+    this.state.document = Object.assign({}, document);
 
     this._localPersist();
 
@@ -138,23 +163,23 @@ export default class Store {
           const localDocument  = Object.assign({}, this.state.document);
 
           if (serverDocument.last_modified === localDocument.last_modified) {
-            // here, documents are equal on both local and remote sides so we
-            // can probably push safely
-            if (serverDocument.last_modified < localDocument.last_local_persist) {
+            // here, document on the server has not been update, so we can
+            // probably push safely
+            if (serverDocument.last_modified < localDocument.last_modified_locally) {
               this._serverPersist();
             }
           } else {
             if (serverDocument.last_modified > localDocument.last_modified) {
               if (
-                !localDocument.last_local_persist ||
-                serverDocument.last_modified > localDocument.last_local_persist
+                !localDocument.last_modified_locally ||
+                serverDocument.last_modified > localDocument.last_modified_locally
               ) {
                 this
                   ._decrypt(serverDocument.content, this.state.secret)
                   .then((content) => {
                     localDocument.content = content;
 
-                    this.update(localDocument, false);
+                    this._localPersistAndNotifyChange(localDocument);
 
                     this.events.emit(Events.UPDATE_WITHOUT_CONFLICT, {
                       document: localDocument
@@ -164,20 +189,22 @@ export default class Store {
                 return;
               }
 
-              // generate a new secret for backup'ed document
+              // someone fucking modified my document!
+
+              // generate a new secret for fork'ed document
               const secret = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0);
 
               // copy current document
               this
                 ._encrypt(localDocument.content, secret)
                 .then((content) => {
-                  const backup = Object.assign({}, localDocument);
-                  backup.uuid  = uuid.v4();
-                  backup.content = content;
-                  backup.last_modified = null;
+                  const fork = Object.assign({}, localDocument);
+                  fork.uuid  = uuid.v4();
+                  fork.content = content;
+                  fork.last_modified = null;
 
-                  // persist backup'ed document
-                  this.localforage.setItem(backup.uuid, backup).then(() => {
+                  // persist fork'ed document
+                  this.localforage.setItem(fork.uuid, fork).then(() => {
                     // now, update current doc with server content
                     this
                       ._decrypt(serverDocument.content, this.state.secret)
@@ -194,7 +221,7 @@ export default class Store {
                         ).then(() => {
                           this.events.emit(Events.CONFLICT, {
                             old: {
-                              document: backup,
+                              document: fork,
                               secret: secret
                             },
                             new: {
