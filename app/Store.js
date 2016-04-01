@@ -1,6 +1,7 @@
 import uuid from 'uuid';
 import sjcl from 'sjcl';
 import request from 'superagent';
+import debounce from 'lodash.debounce';
 
 const { Promise } = global;
 
@@ -39,6 +40,9 @@ export default class Store {
       name: 'monod',
       storeName: name
     });
+
+    this._localPersist  = debounce(this._localPersist, 1000);
+    this._serverPersist = debounce(this._serverPersist, 1000);
   }
 
   /**
@@ -77,7 +81,8 @@ export default class Store {
             document.content  = content;
             this.state.secret = secret;
 
-            this._localPersistAndNotifyChange(document);
+            this._updateCurrentDocument(document);
+            this._localPersist();
           });
       })
       .catch(() => {
@@ -104,7 +109,8 @@ export default class Store {
                 document.content  = content;
                 this.state.secret = secret;
 
-                this._localPersistAndNotifyChange(document);
+                this._updateCurrentDocument(document);
+                this._localPersist();
               });
 
             this.events.emit(Events.APP_IS_ONLINE);
@@ -123,14 +129,13 @@ export default class Store {
 
     document.last_modified_locally = Date.now();
 
-    this._localPersistAndNotifyChange(document);
-  }
-
-  _localPersistAndNotifyChange(document) {
-    this.state.document = Object.assign({}, document);
+    this._updateCurrentDocument(document);
 
     this._localPersist();
+  }
 
+  _updateCurrentDocument(document) {
+    this.state.document = Object.assign({}, document);
     this.events.emit(Events.CHANGE, this.state);
   }
 
@@ -163,7 +168,7 @@ export default class Store {
           const localDocument  = Object.assign({}, this.state.document);
 
           if (serverDocument.last_modified === localDocument.last_modified) {
-            // here, document on the server has not been update, so we can
+            // here, document on the server has not been updated, so we can
             // probably push safely
             if (serverDocument.last_modified < localDocument.last_modified_locally) {
               this._serverPersist();
@@ -179,11 +184,13 @@ export default class Store {
                   .then((content) => {
                     localDocument.content = content;
 
-                    this._localPersistAndNotifyChange(localDocument);
+                    this._updateCurrentDocument(localDocument);
 
                     this.events.emit(Events.UPDATE_WITHOUT_CONFLICT, {
                       document: localDocument
                     });
+
+                    this._localPersist();
                   });
 
                 return;
@@ -199,26 +206,33 @@ export default class Store {
                 ._encrypt(localDocument.content, secret)
                 .then((content) => {
                   const fork = Object.assign({}, localDocument);
-                  fork.uuid  = uuid.v4();
+
+                  fork.uuid = uuid.v4();
                   fork.content = content;
                   fork.last_modified = null;
 
                   // persist fork'ed document
                   this.localforage.setItem(fork.uuid, fork).then(() => {
-                    // now, update current doc with server content
+                    // now, update current doc with server content if we
+                    // are able to decrypt it
                     this
                       ._decrypt(serverDocument.content, this.state.secret)
                       .then((content) => {
-                        this.state.document.content = content;
-                        // update last_modified so that we are fully sync'ed with
-                        // server now
+                        // update last_modified so that we are fully sync'ed
+                        // with server now
                         this.state.document.last_modified = serverDocument.last_modified;
+
+                        // we persist encrypted content
+                        this.state.document.content = serverDocument.content;
 
                         // persist locally
                         this.localforage.setItem(
                           this.state.document.uuid,
                           this.state.document
                         ).then(() => {
+                          // we deal with decrypted content
+                          this.state.document.content = content;
+
                           this.events.emit(Events.CONFLICT, {
                             fork: {
                               document: fork,
