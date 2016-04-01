@@ -220,14 +220,12 @@ export default class Store {
                           this.state.document
                         ).then(() => {
                           this.events.emit(Events.CONFLICT, {
-                            old: {
+                            fork: {
                               document: fork,
                               secret: secret
                             },
-                            new: {
-                              document: this.state.document,
-                              secret: this.state.secret
-                            }
+                            document: this.state.document,
+                            secret: this.state.secret
                           });
                         });
                       });

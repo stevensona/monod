@@ -68,17 +68,18 @@ export default class App extends Component {
 
     this.props.controller.on(Events.CONFLICT, (state) => {
       const message = [
-        'Snap! The document you were working on has been updated, so we have',
-        ' forked it for you; You can find the original (and updated) content',
-        ' at:',
-        <a href={'/' + state.new.document.uuid + '#' + state.new.secret}>
-          {'/' + state.new.document.uuid + '#' + state.new.secret}
+        <i>Snap!</i>,
+        'The document you were working on has been updated by a third,',
+        'and you are now working on a fork. You can still find the original',
+        '(and updated) document at:',
+        <a href={'/' + state.document.uuid + '#' + state.secret}>
+          {'/' + state.document.uuid + '#' + state.secret}
         </a>
       ];
 
       this.loadAndRedirect(
-        state.old.document,
-        `/${state.old.document.uuid}#${state.old.secret}`,
+        state.fork.document,
+        `/${state.fork.document.uuid}#${state.fork.secret}`,
         message
       );
     });

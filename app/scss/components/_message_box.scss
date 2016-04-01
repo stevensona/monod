@@ -1,6 +1,6 @@
-
 .message-box {
-  background-color: lighten(map-get($foundation-palette, warning), 40%);
+  @include callout-base;
+  background-color: lighten($warning-color, 40%);
 
   p {
     margin-bottom: 0 !important;
