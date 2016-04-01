@@ -70,11 +70,10 @@ export default class App extends Component {
       const message = [
         <i>Snap!</i>,
         'The document you were working on has been updated by a third,',
-        'and you are now working on a fork. You can still find the original',
-        '(and updated) document at:',
-        <a href={'/' + state.document.uuid + '#' + state.secret}>
-          {'/' + state.document.uuid + '#' + state.secret}
-        </a>
+        ' and you are now working on a fork. You can still find the original',
+        ' (and updated) document: ',
+        <a href={'/' + state.document.uuid + '#' + state.secret}>here</a>,
+        '.'
       ];
 
       this.loadAndRedirect(
