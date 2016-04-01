@@ -1,4 +1,3 @@
-import localforage from 'localforage';
 import uuid from 'uuid';
 import sjcl from 'sjcl';
 import request from 'superagent';
@@ -19,7 +18,7 @@ export const Events = {
 
 export default class Store {
 
-  constructor(name, events, endpoint) {
+  constructor(name, events, endpoint, localforage) {
     this.state = {
       document: {
         uuid: uuid.v4(),
@@ -28,10 +27,11 @@ export default class Store {
       secret: sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0)
     };
 
-    this.events = events;
-    this.endpoint = endpoint;
+    this.events      = events;
+    this.endpoint    = endpoint;
+    this.localforage = localforage;
 
-    localforage.config({
+    this.localforage.config({
       name: 'monod',
       storeName: name
     });
@@ -44,7 +44,7 @@ export default class Store {
       return;
     }
 
-    localforage
+    this.localforage
       .getItem(id)
       .then((document) => {
         if (null === document) {
@@ -177,7 +177,7 @@ export default class Store {
                   backup.last_modified = null;
 
                   // persist backup'ed document
-                  localforage.setItem(backup.uuid, backup).then(() => {
+                  this.localforage.setItem(backup.uuid, backup).then(() => {
                     // now, update current doc with server content
                     this
                       ._decrypt(serverDocument.content, this.state.secret)
@@ -188,7 +188,7 @@ export default class Store {
                         this.state.document.last_modified = serverDocument.last_modified;
 
                         // persist locally
-                        localforage.setItem(
+                        this.localforage.setItem(
                           this.state.document.uuid,
                           this.state.document
                         ).then(() => {
@@ -233,7 +233,7 @@ export default class Store {
         const document = Object.assign({}, this.state.document);
         document.content = content;
 
-        localforage.setItem(document.uuid, document);
+        this.localforage.setItem(document.uuid, document);
       });
   }
 
