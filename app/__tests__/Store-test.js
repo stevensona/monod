@@ -134,7 +134,7 @@ describe('Store', () => {
               expect(state).to.have.property('document');
               expect(state).to.have.property('secret');
 
-              console.log(localForageMock);
+              expect(localForageMock.items[123]).to.be.an('object');
             });
           });
       });
