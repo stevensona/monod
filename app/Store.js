@@ -1,7 +1,6 @@
 import uuid from 'uuid';
 import sjcl from 'sjcl';
 import request from 'superagent';
-import debounce from 'lodash.debounce';
 
 const { Promise } = global;
 
@@ -40,9 +39,6 @@ export default class Store {
       name: 'monod',
       storeName: name
     });
-
-    this._localPersist  = debounce(this._localPersist, 1000);
-    this._serverPersist = debounce(this._serverPersist, 1000);
   }
 
   /**
@@ -65,56 +61,53 @@ export default class Store {
     if (!id) {
       this.events.emit(Events.NO_DOCUMENT_ID, this.state);
 
-      return;
+      return Promise.reject('No document id');
     }
 
-    this.localforage
+    return this
+      .localforage
       .getItem(id)
       .then((document) => {
         if (null === document) {
           return Promise.reject('document not found');
         }
 
-        this
-          ._decrypt(document.content, secret)
+        return document;
+      })
+      .catch(() => {
+        return request
+          .get(`${this.endpoint}/documents/${id}`)
+          .set('Accept', 'application/json')
+          .set('Content-Type', 'application/json')
+          .then((res) => {
+            this.events.emit(Events.APP_IS_ONLINE);
+
+            return Promise.resolve(res.body);
+          })
+          .catch((err) => {
+            if (err.response && 404 === err.response.statusCode) {
+              this.events.emit(Events.DOCUMENT_NOT_FOUND, this.state);
+
+              return Promise.reject('document not found');
+            }
+
+            this.events.emit(Events.APP_IS_OFFLINE);
+
+            return Promise.reject('request failed (network)');
+          });
+      })
+      .then((document) => {
+        return this
+          .decrypt(document.content, secret)
           .then((content) => {
             document.content  = content;
             this.state.secret = secret;
 
             this._updateCurrentDocument(document);
             this._localPersist();
+
+            return this.state;
           });
-      })
-      .catch(() => {
-        request
-          .get(`${this.endpoint}/documents/${id}`)
-          .set('Accept', 'application/json')
-          .set('Content-Type', 'application/json')
-          .end((err, res) => {
-            if (err) {
-              this.events.emit(Events.APP_IS_OFFLINE, this.state);
-            }
-
-            if (err || 200 !== res.statusCode) {
-              // `err` might be handled differently in the future
-              this.events.emit(Events.DOCUMENT_NOT_FOUND, this.state);
-
-              return;
-            }
-
-            const document = res.body;
-            this
-              ._decrypt(document.content, secret)
-              .then((content) => {
-                document.content  = content;
-                this.state.secret = secret;
-
-                this._updateCurrentDocument(document);
-                this._localPersist();
-              });
-
-            this.events.emit(Events.APP_IS_ONLINE);
-          })
       });
   }
 
@@ -180,7 +173,7 @@ export default class Store {
                 serverDocument.last_modified > localDocument.last_modified_locally
               ) {
                 this
-                  ._decrypt(serverDocument.content, this.state.secret)
+                  .decrypt(serverDocument.content, this.state.secret)
                   .then((content) => {
                     localDocument.content = content;
 
@@ -203,7 +196,7 @@ export default class Store {
 
               // copy current document
               this
-                ._encrypt(localDocument.content, secret)
+                .encrypt(localDocument.content, secret)
                 .then((content) => {
                   const fork = Object.assign({}, localDocument);
 
@@ -216,7 +209,7 @@ export default class Store {
                     // now, update current doc with server content if we
                     // are able to decrypt it
                     this
-                      ._decrypt(serverDocument.content, this.state.secret)
+                      .decrypt(serverDocument.content, this.state.secret)
                       .then((content) => {
                         // update last_modified so that we are fully sync'ed
                         // with server now
@@ -251,7 +244,7 @@ export default class Store {
     }
   }
 
-  _decrypt(content, secret) {
+  decrypt(content, secret) {
     try {
       return Promise.resolve(sjcl.decrypt(secret, content));
     } catch (e) {
@@ -261,13 +254,13 @@ export default class Store {
     }
   }
 
-  _encrypt(content, secret) {
+  encrypt(content, secret) {
     return Promise.resolve(sjcl.encrypt(secret, content, { ks: 256 }));
   }
 
   _localPersist() {
     this
-      ._encrypt(this.state.document.content, this.state.secret)
+      .encrypt(this.state.document.content, this.state.secret)
       .then((content) => {
         const document = Object.assign({}, this.state.document);
         document.content = content;
@@ -278,7 +271,7 @@ export default class Store {
 
   _serverPersist() {
     this
-      ._encrypt(this.state.document.content, this.state.secret)
+      .encrypt(this.state.document.content, this.state.secret)
       .then((content) => {
         const document = Object.assign({}, this.state.document);
         document.content = content;
