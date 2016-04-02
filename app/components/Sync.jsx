@@ -8,7 +8,6 @@ export default class Sync extends Component {
     super(props, context);
 
     this.state = {
-      date: null,
       duration: DEFAULT_DURATION,
       counter: DEFAULT_DURATION,
       offline: false
@@ -24,9 +23,6 @@ export default class Sync extends Component {
         this.setState({ counter: counter });
 
         if (0 === counter) {
-          this.setState({
-            counter: this.state.duration
-          });
           this.context.controller.dispatch('action:sync');
         }
       }
@@ -38,23 +34,20 @@ export default class Sync extends Component {
   }
 
   componentDidMount() {
-    this.context.controller.on(Events.SYNCHRONIZE, (state) => {
-      this.setState({
-        date: state.date,
-        duration: DEFAULT_DURATION
-      });
-    });
-
     this.context.controller.on(Events.APP_IS_ONLINE, () => {
       this.setState({
+        counter: DEFAULT_DURATION,
         duration: DEFAULT_DURATION,
         offline: false
       });
     });
 
     this.context.controller.on(Events.APP_IS_OFFLINE, () => {
+      const duration = Math.round(this.state.duration * 2);
+
       this.setState({
-        duration: Math.round(this.state.duration * 2),
+        counter: duration,
+        duration: duration,
         offline: true
       });
     });

@@ -340,7 +340,7 @@ export default class Store {
               secret: secret
             };
 
-            this.events.emit(Events.SYNCHRONIZE, { date: new Date() });
+            this.events.emit(Events.SYNCHRONIZE);
 
             return this._localPersist();
           });
