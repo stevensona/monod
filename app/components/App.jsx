@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Events } from '../Store';
+import Document from '../Document';
 import debounce from 'lodash.debounce';
 
 import Header from './Header';
@@ -15,7 +16,7 @@ export default class App extends Component {
     super(props, context);
 
     this.state = {
-      document: { content: '' },
+      document: new Document(),
       loaded: false
     };
 
@@ -103,12 +104,15 @@ export default class App extends Component {
   }
 
   updateContent(content) {
-    const document = Object.assign({}, this.state.document);
+    const doc = this.state.document;
 
-    if (document.content !== content) {
-      document.content = content;
-
-      this.props.controller.dispatch('action:update', document);
+    if (doc.content !== content) {
+      this.props.controller.dispatch('action:update', new Document({
+        uuid: doc.get('uuid'),
+        content: content,
+        last_modified: doc.get('last_modified'),
+        last_modified_locally: doc.get('last_modified_locally')
+      }));
     }
   }
 
@@ -119,7 +123,7 @@ export default class App extends Component {
         <MessageBox message={this.state.message || false} />
         <Editor
           loaded={this.state.loaded}
-          content={this.state.document.content}
+          content={this.state.document.get('content')}
           onContentUpdate={this.updateContent.bind(this)}
         />
         <Footer version={this.props.version} />
