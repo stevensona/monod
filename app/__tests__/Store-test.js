@@ -2,11 +2,10 @@ import Store, { Events } from '../Store';
 import Document from '../Document';
 
 import sinon from 'sinon';
-import localforage from 'localforage';
 import fauxJax from 'faux-jax';
 
 // see: https://github.com/mochajs/mocha/issues/1847
-const { describe, it } = global;
+const { Promise, beforeEach, afterEach, describe, it } = global;
 
 // chai-as-promised
 const chai = require('chai');
@@ -38,7 +37,7 @@ describe('Store', () => {
       getItem: function (k) {
         localForageMock.nbGetItemCall++;
 
-        return Promise.resolve(localForageMock.items[k] || null);
+        return Promise.resolve(localForageMock.items[k] || null);
       }
     };
 
@@ -72,7 +71,7 @@ describe('Store', () => {
           fauxJax.restore();
         });
 
-        return store.findById(123).catch(() => {
+        return store.findById(123).catch(() => {
           expect(localForageMock.nbGetItemCall).to.equal(1);
         });
       });
@@ -87,7 +86,7 @@ describe('Store', () => {
               content: encrypted
             });
 
-            return store.findById(123, 'secret').then((state) => {
+            return store.findById(123, 'secret').then((state) => {
               expect(eventEmitterSpy.calledOnce).to.be.true;
               expect(eventEmitterSpy.calledWith(Events.CHANGE)).to.be.true;
 

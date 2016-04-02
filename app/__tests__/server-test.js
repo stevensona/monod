@@ -4,7 +4,7 @@ import server from '../server';
 import fs from 'fs';
 
 // see: https://github.com/mochajs/mocha/issues/1847
-const { describe, it } = global;
+const { before, after, describe, it } = global;
 
 describe('Express app', () => {
   const DOCUMENTS_ENDPOINT     = '/documents';
@@ -21,7 +21,7 @@ describe('Express app', () => {
       .expect(200, done);
   });
 
-  describe('- GET /documents/:uuid', (done) => {
+  describe('- GET /documents/:uuid', () => {
     it('returns 400 if document id is not a valid UUID', (done) => {
       api
         .get(`${DOCUMENTS_ENDPOINT}/123`)
@@ -41,27 +41,23 @@ describe('Express app', () => {
     });
   });
 
-  describe('- PUT /documents/:uuid', (done) => {
+  describe('- PUT /documents/:uuid', () => {
     before((done) => {
       // remove file created when testing the creation of a new document
-      fs.unlink(path.join(process.env.MONOD_DATA_DIR, NEW_DOCUMENT_UUID), (err) => {
+      fs.unlink(path.join(process.env.MONOD_DATA_DIR, NEW_DOCUMENT_UUID), () => {
         // create existing file that will be updated
         fs.writeFile(
           path.join(process.env.MONOD_DATA_DIR, EXISTING_DOCUMENT_UUID),
           '{}',
-          (err) => {
-            done();
-          }
+          done
         );
       });
     });
 
     after((done) => {
       // cleanup everything
-      fs.unlink(path.join(process.env.MONOD_DATA_DIR, NEW_DOCUMENT_UUID), (err) => {
-        fs.unlink(path.join(process.env.MONOD_DATA_DIR, EXISTING_DOCUMENT_UUID), (err) => {
-          done();
-        });
+      fs.unlink(path.join(process.env.MONOD_DATA_DIR, NEW_DOCUMENT_UUID), () => {
+        fs.unlink(path.join(process.env.MONOD_DATA_DIR, EXISTING_DOCUMENT_UUID), done);
       });
     });
 

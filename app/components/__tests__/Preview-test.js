@@ -358,7 +358,7 @@ describe('<Preview />', () => {
           'This is content',
           '</p>\n',
           '</span>',
-          '</div>',
+          '</div>'
         ].join(''));
 
       done();
@@ -387,7 +387,7 @@ describe('<Preview />', () => {
           'This is content',
           '</p>\n',
           '</span>',
-          '</div>',
+          '</div>'
         ].join(''));
 
       done();

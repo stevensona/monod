@@ -4,7 +4,7 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 
 // see: https://github.com/mochajs/mocha/issues/1847
-const { describe, it } = global;
+const { before, describe, it } = global;
 
 import Markdown from '../Markdown';
 

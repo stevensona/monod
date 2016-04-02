@@ -207,9 +207,7 @@ export default class Store {
               // but I also modified it so... let's fork \o/
 
               // generate a new secret for fork'ed document
-              const forkSecret = sjcl.codec.base64.fromBits(
-                sjcl.random.randomWords(8, 10), 0
-              );
+              const forkSecret = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0);
 
               // what we want is to create a fork
               return this
@@ -238,7 +236,6 @@ export default class Store {
                   return this
                     .decrypt(serverDoc.content, this.state.secret)
                     .then((decryptedContent) => {
-                      console.log(decryptedContent);
                       // state is sync'ed with server now
                       this.state = {
                         document: new Document({
@@ -262,7 +259,7 @@ export default class Store {
                         secret: state.secret
                       });
 
-                      return state;
+                      return Promise.resolve(state);
                     });
                 });
             }
