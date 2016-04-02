@@ -328,6 +328,10 @@ export default class Store {
           .then((res) => {
             this.events.emit(Events.APP_IS_ONLINE);
 
+            return Promise.resolve(res);
+          })
+          .catch(this._handleRequestError.bind(this))
+          .then((res) => {
             this.state = {
               document: new Document({
                 uuid: doc.get('uuid'),
@@ -341,8 +345,7 @@ export default class Store {
             this.events.emit(Events.SYNCHRONIZE, { date: new Date() });
 
             return this._localPersist();
-          })
-          .catch(this._handleRequestError.bind(this));
+          });
       }
     );
   }
