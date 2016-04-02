@@ -117,7 +117,7 @@ const common = {
             // Favicon generated with http://realfavicongenerator.net
             favicon: 'app/favicon.ico',
             version: VERSION.substring(0, 7),
-            apiEndpoint: (!TARGET || TARGET === 'dev') ? 'http://localhost:3000' : '',
+            apiEndpoint: '',
             // Main "div" `id`
             appMountId: 'app',
             // No need to inject assets in the given template as it is handled
@@ -160,7 +160,12 @@ if (TARGET === 'dev' || !TARGET) {
             stats: 'errors-only',
             // Development server settings
             host: process.env.HOST || '127.0.0.1',
-            port: process.env.PORT || 8080
+            port: process.env.PORT || 8080,
+            proxy: {
+              '/documents/*': {
+                target: 'http://127.0.0.1:3000',
+              }
+            }
         },
         module: {
             loaders: [

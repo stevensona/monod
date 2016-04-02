@@ -21,11 +21,6 @@ app.use(express.static(static_path));
 app.use(bodyParser.json());
 app.use(api);
 
-// this is required to be able to run another server in dev
-if ('production' !== process.env.NODE_ENV) {
-  app.use(cors());
-}
-
 const isValidId = (uuid) => {
   return /[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}/.test(uuid);
 };
@@ -48,7 +43,6 @@ api.get('/documents/:uuid', (req, res) => {
 
   fs.readFile(path.join(data_dir, uuid), (err, data) => {
     if (err) {
-      console.log(err);
       return res.status(404).json();
     }
 
