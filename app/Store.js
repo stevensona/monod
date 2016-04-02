@@ -176,7 +176,6 @@ export default class Store {
           } else {
             // In theory, it should never happened, but... what happens if:
             // localDoc.get('last_modified') > serverDoc.get('last_modified') ?
-
             if (serverDoc.get('last_modified') > localDoc.get('last_modified')) {
               if (localDoc.hasNoLocalChanges()) {
                 const secret = this.state.secret;
@@ -186,10 +185,9 @@ export default class Store {
                   .then((decryptedContent) => {
                     this.state = {
                       document: new Document({
-                        uuid: localDoc.get('uuid'),
+                        uuid: serverDoc.get('uuid'),
                         content: decryptedContent,
-                        last_modified: serverDoc.get('last_modified'),
-                        last_modified_locally: localDoc.get('last_modified_locally')
+                        last_modified: serverDoc.get('last_modified')
                       }),
                       secret: secret
                     };
@@ -201,69 +199,70 @@ export default class Store {
                   .then(() => {
                     return this._localPersist();
                   });
-              }
+              } else {
+                // someone fucking modified my document!
+                // but I also modified it so... let's fork \o/
 
-              // someone fucking modified my document!
-              // but I also modified it so... let's fork \o/
+                // generate a new secret for fork'ed document
+                const forkSecret = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0);
 
-              // generate a new secret for fork'ed document
-              const forkSecret = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0);
+                // what we want is to create a fork
+                return this
+                  .encrypt(localDoc.content, forkSecret)
+                  .then((encryptedContent) => {
+                    const fork = new Document({
+                      uuid: uuid.v4(),
+                      content: localDoc.content
+                    });
 
-              // what we want is to create a fork
-              return this
-                .encrypt(localDoc.content, forkSecret)
-                .then((encryptedContent) => {
-                  const fork = new Document({
-                    uuid: uuid.v4(),
-                    content: localDoc.content
-                  });
-
-                  // persist fork'ed document
-                  return this.localforage.setItem(
-                    fork.get('uuid'),
-                    new Document({
-                      uuid: fork.get('uuid'),
-                      content: encryptedContent
-                    }).toJS()
-                  )
-                  .then(() => {
-                    return Promise.resolve(fork);
-                  });
-                })
-                .then((fork) => {
-                  // now, we can update current doc with server content if we
-                  // are able to decrypt it
-                  return this
-                    .decrypt(serverDoc.content, this.state.secret)
-                    .then((decryptedContent) => {
-                      // state is sync'ed with server now
-                      this.state = {
-                        document: new Document({
-                          uuid: localDoc.get('uuid'),
-                          content: decryptedContent,
-                          last_modified: serverDoc.last_modified
-                        }),
-                        secret: this.state.secret
-                      };
-                    })
+                    // persist fork'ed document
+                    return this.localforage.setItem(
+                      fork.get('uuid'),
+                      new Document({
+                        uuid: fork.get('uuid'),
+                        content: encryptedContent
+                      }).toJS()
+                    )
                     .then(() => {
-                      return this._localPersist();
-                    })
-                    .then((state) => {
-                      const conflictState = {
-                        fork: {
+                      return Promise.resolve(fork);
+                    });
+                  })
+                  .then((fork) => {
+                    // now, we can update the former doc with server content
+                    const former = new Document({
+                      uuid: serverDoc.get('uuid'),
+                      content: serverDoc.get('content'),
+                      last_modified: serverDoc.get('last_modified')
+                    });
+
+                    return this
+                      .localforage
+                      .setItem(
+                        former.get('uuid'),
+                        former.toJS()
+                      )
+                      .then(() => {
+                        const conflictState = {
+                          fork: {
+                            document: fork,
+                            secret: forkSecret
+                          },
+                          document: former,
+                          secret: this.state.secret
+                        };
+
+                        // state is now sync'ed with fork
+                        this.state = {
                           document: fork,
                           secret: forkSecret
-                        },
-                        document: state.document,
-                        secret: state.secret
-                      };
+                        };
 
-                      this.events.emit(Events.CONFLICT, conflictState);
+                        this.events.emit(Events.CONFLICT, conflictState);
 
-                      return Promise.resolve(conflictState);
-                    });
-                });
+                        return Promise.resolve(conflictState);
+                      });
+                  });
+              }
             }
           }
         });
@@ -336,7 +335,7 @@ export default class Store {
                 uuid: doc.get('uuid'),
                 content: doc.get('content'),
                 last_modified: res.body.last_modified,
-                last_modified_locally: doc.get('last_modified_locally')
+                last_modified_locally: null
               }),
               secret: secret
             };

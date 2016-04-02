@@ -84,8 +84,9 @@ export default class App extends Component {
       );
     });
 
-    this.props.controller.on(Events.UPDATE_WITHOUT_CONFLICT, () => {
+    this.props.controller.on(Events.UPDATE_WITHOUT_CONFLICT, (state) => {
       this.setState({
+        document: state.document,
         message: [
           'We have updated the document you are viewing to its latest revision.',
           'Happy reading/working!'
@@ -94,7 +95,10 @@ export default class App extends Component {
     });
 
     this.props.controller.on(Events.CHANGE, (state) => {
-      this.loadAndRedirect(state.document, `/${state.document.uuid}#${state.secret}`);
+      this.loadAndRedirect(
+        state.document,
+        `/${state.document.uuid}#${state.secret}`
+      );
     });
 
     this.props.controller.dispatch('action:init', {

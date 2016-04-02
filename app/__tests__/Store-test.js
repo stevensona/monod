@@ -308,10 +308,7 @@ describe('Store', () => {
         });
       });
 
-      it([
-        'should get the latest version of the server',
-        'when there is no local change'
-      ].join(' '), () => {
+      it('should get the latest version of the server when there is no local change', () => {
         const contentSentByServer = 'new content';
 
         return store
@@ -320,10 +317,12 @@ describe('Store', () => {
           .then((encryptedContent) => {
             const responses = function* () {
               yield { status: 200, body: {
+                uuid: 'foo',
                 content: encryptedContent,
                 last_modified: 2
               } }
               yield { status: 200, body: {
+                uuid: 'foo',
                 content: encryptedContent,
                 last_modified: 2
               } }
@@ -360,8 +359,11 @@ describe('Store', () => {
               expect(state).to.have.property('document');
               expect(state).to.have.property('secret');
 
-              expect(state.document.get('last_modified')).to.equal(2);
+              expect(state.document.get('uuid')).to.equal('foo');
               expect(state.document.get('content')).to.equal(contentSentByServer);
+              expect(state.document.get('last_modified')).to.equal(2);
+              // should be resetted to avoid sync issues
+              expect(state.document.get('last_modified_locally')).to.be.null;
             });
           });
       });
@@ -375,6 +377,7 @@ describe('Store', () => {
           .then((encryptedContent) => {
             const responses = function* () {
               yield { status: 200, body: {
+                uuid: 'foo',
                 content: encryptedContent,
                 last_modified: 10
               } }
@@ -429,14 +432,27 @@ describe('Store', () => {
               expect(state).to.have.property('document');
               expect(state).to.have.property('secret');
 
+              // the fork
+              expect(state.fork.document.get('uuid')).to.equal(forkId);
               expect(state.fork.document.get('content')).to.equal('Change ALL THE THINGS!');
+              expect(state.fork.document.get('last_modified')).to.be.null;
+              expect(state.fork.document.get('last_modified_locally')).to.be.null;
 
               // this is the up-to-date current document
               expect(state.document.get('uuid')).to.equal('foo');
-              expect(state.document.get('content')).to.equal(contentSentByServer);
+              // below we return the encrypted content, but it should not be
+              // encrypted. In the `Store` code, the `former` document has been
+              // persisted and then directly returned, which is fine in this
+              // case since we don't use the content anyway
+              expect(state.document.get('content')).to.equal(encryptedContent);
               expect(state.document.get('last_modified')).to.equal(10); // from server
               // ensure we reset the local date
               expect(state.document.get('last_modified_locally')).to.be.null;
+
+              // check internal Store state
+              expect(store.state.document.get('uuid')).to.equal(fork.uuid);
+              expect(store.state.document.get('last_modified')).to.be.null;
+              expect(store.state.document.get('last_modified_locally')).to.be.null;
             });
           });
       });
