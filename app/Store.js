@@ -1,6 +1,8 @@
 import uuid from 'uuid';
 import sjcl from 'sjcl';
 import request from 'superagent';
+import Document from './Document';
+import { Config } from './Config';
 
 const { Promise } = global;
 
@@ -21,12 +23,7 @@ export default class Store {
   constructor(name, events, endpoint, localforage) {
     this.state = {
       // we automatically create a default document, but it might not be used
-      document: {
-        uuid: uuid.v4(),
-        content: DEFAULT_CONTENT,
-        last_modified: null, // defined by the server
-        last_modified_locally: null
-      },
+      document: new Document(),
       // we automatically generate a secret, but it might not be used
       secret: sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0)
     };
@@ -36,7 +33,7 @@ export default class Store {
     this.localforage = localforage;
 
     this.localforage.config({
-      name: 'monod',
+      name: Config.APP_NAME,
       storeName: name
     });
   }
@@ -82,28 +79,30 @@ export default class Store {
           .then((res) => {
             this.events.emit(Events.APP_IS_ONLINE);
 
-            return Promise.resolve(res.body);
+            return Promise.resolve(new Document({
+              uuid: res.body.uuid,
+              content: res.body.content,
+              last_modified: res.body.last_modified
+            }));
           })
-          .catch((err) => {
-            if (err.response && 404 === err.response.statusCode) {
-              this.events.emit(Events.DOCUMENT_NOT_FOUND, this.state);
-
-              return Promise.reject('document not found');
-            }
-
-            this.events.emit(Events.APP_IS_OFFLINE);
-
-            return Promise.reject('request failed (network)');
-          });
+          .catch(this._handleRequestError.bind(this));
       })
       .then((document) => {
         return this
           .decrypt(document.content, secret)
           .then((content) => {
-            document.content  = content;
-            this.state.secret = secret;
+            this.state = {
+              document: new Document({
+                uuid: document.get('uuid'),
+                content: content,
+                last_modified: document.get('last_modified'),
+                last_modified_locally: document.get('last_modified_locally')
+              }),
+              secret: secret
+            };
 
-            this._updateCurrentDocument(document);
+            this.events.emit(Events.CHANGE, this.state);
+
             this._localPersist();
 
             return this.state;
@@ -116,89 +115,100 @@ export default class Store {
    */
   update(document) {
     // we don't want to store default content
-    if (DEFAULT_CONTENT === document.content) {
+    if (document.hasDefaultContent()) {
       return;
     }
 
-    document.last_modified_locally = Date.now();
+    this.state = {
+      document: new Document({
+        uuid: document.get('uuid'),
+        content: document.get('content'),
+        last_modified: document.get('last_modified'),
+        last_modified_locally: Date.now()
+      }),
+      secret: this.state.secret
+    };
 
-    this._updateCurrentDocument(document);
+    this.events.emit(Events.CHANGE, this.state);
 
     this._localPersist();
   }
 
-  _updateCurrentDocument(document) {
-    this.state.document = Object.assign({}, document);
-    this.events.emit(Events.CHANGE, this.state);
-  }
-
+  /**
+   * Synchronize current document between local and server databases
+   */
   sync() {
-    if (DEFAULT_CONTENT === this.state.document.content) {
-      return;
+    if (this.state.document.hasDefaultContent()) {
+      return Promise.reject('No need to sync');
     }
 
     // document is new
-    if (!this.state.document.last_modified) {
-      this._serverPersist();
+    if (this.state.document.isNew()) {
+      return this._serverPersist();
     } else {
-      request
-        .get(`${this.endpoint}/documents/${this.state.document.uuid}`)
+      return request
+        .get(`${this.endpoint}/documents/${this.state.document.get('uuid')}`)
         .set('Accept', 'application/json')
         .set('Content-Type', 'application/json')
-        .end((err, res) => {
-          // `err` is not null if request fails (e.g., status code = 400),
-          // but `res` if undefined when the request fails because of the
-          // network.
-          if (err) {
-            if (!res) {
-              this.events.emit(Events.APP_IS_OFFLINE);
-            }
+        .then((res) => {
+          this.events.emit(Events.APP_IS_ONLINE);
 
-            return;
-          }
+          const localDoc  = this.state.document;
+          const serverDoc = new Document({
+            uuid: res.body.uuid,
+            content: res.body.content,
+            last_modified: res.body.last_modified
+          });
 
-          const serverDocument = res.body;
-          const localDocument  = Object.assign({}, this.state.document);
-
-          if (serverDocument.last_modified === localDocument.last_modified) {
+          if (serverDoc.get('last_modified') === localDoc.get('last_modified')) {
             // here, document on the server has not been updated, so we can
             // probably push safely
-            if (serverDocument.last_modified < localDocument.last_modified_locally) {
-              this._serverPersist();
+            if (serverDoc.get('last_modified') < localDoc.get('last_modified_locally')) {
+              return this._serverPersist();
             }
-          } else {
-            if (serverDocument.last_modified > localDocument.last_modified) {
-              if (
-                !localDocument.last_modified_locally ||
-                serverDocument.last_modified > localDocument.last_modified_locally
-              ) {
-                this
-                  .decrypt(serverDocument.content, this.state.secret)
-                  .then((content) => {
-                    localDocument.content = content;
 
-                    this._updateCurrentDocument(localDocument);
+            return Promise.resolve('nothing to do');
+          } else {
+            // In theory, it should never happened, but... what happens if:
+            // localDoc.get('last_modified') > serverDoc.get('last_modified') ?
+
+            if (serverDoc.get('last_modified') > localDoc.get('last_modified')) {
+              if (localDoc.hasNoLocalChanges()) {
+                const secret = this.state.secret;
+
+                return this
+                  .decrypt(serverDoc.content, secret)
+                  .then((decryptedContent) => {
+                    this.state = {
+                      document: new Document({
+                        uuid: localDoc.get('uuid'),
+                        content: decryptedContent,
+                        last_modified: serverDoc.get('last_modified'),
+                        last_modified_locally: localDoc.get('last_modified_locally')
+                      }),
+                      secret: secret
+                    };
 
                     this.events.emit(Events.UPDATE_WITHOUT_CONFLICT, {
-                      document: localDocument
+                      document: this.state.document
                     });
-
-                    this._localPersist();
+                  })
+                  .then(() => {
+                    return this._localPersist();
                   });
-
-                return;
               }
 
               // someone fucking modified my document!
+              // but I also modified it so... let's fork \o/
 
               // generate a new secret for fork'ed document
               const secret = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0);
 
               // copy current document
               this
-                .encrypt(localDocument.content, secret)
+                .encrypt(localDoc.content, secret)
                 .then((content) => {
-                  const fork = Object.assign({}, localDocument);
+                  const fork = Object.assign({}, localDoc);
 
                   fork.uuid = uuid.v4();
                   fork.content = content;
@@ -209,14 +219,14 @@ export default class Store {
                     // now, update current doc with server content if we
                     // are able to decrypt it
                     this
-                      .decrypt(serverDocument.content, this.state.secret)
+                      .decrypt(serverDoc.content, this.state.secret)
                       .then((content) => {
                         // update last_modified so that we are fully sync'ed
                         // with server now
-                        this.state.document.last_modified = serverDocument.last_modified;
+                        this.state.document.last_modified = serverDoc.last_modified;
 
                         // we persist encrypted content
-                        this.state.document.content = serverDocument.content;
+                        this.state.document.content = serverDoc.content;
 
                         // persist locally
                         this.localforage.setItem(
@@ -240,10 +250,12 @@ export default class Store {
                 });
             }
           }
-        });
+        })
+        .catch(this._handleRequestError.bind(this));
     }
   }
 
+  // Pure / side-effect free method
   decrypt(content, secret) {
     try {
       return Promise.resolve(sjcl.decrypt(secret, content));
@@ -254,67 +266,80 @@ export default class Store {
     }
   }
 
+  // Pure / side-effect free method
   encrypt(content, secret) {
     return Promise.resolve(sjcl.encrypt(secret, content, { ks: 256 }));
   }
 
+  // Impure / side-effect free method
   _localPersist() {
-    this
-      .encrypt(this.state.document.content, this.state.secret)
-      .then((content) => {
-        const document = Object.assign({}, this.state.document);
-        document.content = content;
+    const doc = this.state.document;
+    const secret = this.state.secret;
 
-        this.localforage.setItem(document.uuid, document);
+    return this
+      .encrypt(doc.get('content'), secret)
+      .then((encryptedContent) => {
+        return this.localforage.setItem(
+          doc.get('uuid'),
+          new Document({
+            uuid: doc.get('uuid'),
+            content: encryptedContent,
+            last_modified: doc.get('last_modified'),
+            last_modified_locally: doc.get('last_modified_locally')
+          })
+        );
+      })
+      .then(() => {
+        return Promise.resolve(this.state);
       });
   }
 
+  // Impure / side-effect free method
   _serverPersist() {
-    this
-      .encrypt(this.state.document.content, this.state.secret)
-      .then((content) => {
-        const document = Object.assign({}, this.state.document);
-        document.content = content;
+    const doc = this.state.document;
+    const secret = this.state.secret;
 
-        request
-          .put(`${this.endpoint}/documents/${document.uuid}`)
+    return this
+      .encrypt(doc.get('content'), secret)
+      .then((encryptedContent) => {
+        return request
+          .put(`${this.endpoint}/documents/${doc.get('uuid')}`)
           .set('Accept', 'application/json')
           .set('Content-Type', 'application/json')
           .send({
-            content: content
+            content: encryptedContent
           })
-          .end((err, res) => {
-            if (err) {
-              this.events.emit(Events.APP_IS_OFFLINE);
+          .then((res) => {
+            this.events.emit(Events.APP_IS_ONLINE);
 
-              return;
-            }
-
-            this.state.document.last_modified = res.body.last_modified;
-            this._localPersist();
+            this.state = {
+              document: new Document({
+                uuid: doc.get('uuid'),
+                content: doc.get('content'),
+                last_modified: res.body.last_modified,
+                last_modified_locally: doc.get('last_modified_locally')
+              }),
+              secret: secret
+            };
 
             this.events.emit(Events.SYNCHRONIZE, { date: new Date() });
-            this.events.emit(Events.APP_IS_ONLINE);
-          });
+
+            return this._localPersist();
+          })
+          .catch(this._handleRequestError.bind(this));
       }
     );
   }
-}
 
-const DEFAULT_CONTENT = [
-  'Introducing Monod',
-  '=================',
-  '',
-  '> **TL;DR** This editor is the first experiment we wanted to tackle at **Le lab**. This _week #1 release_ is a pure client-side application written with [React](https://facebook.github.io/react/) by the good folks at [TailorDev](https://tailordev.fr)!',
-  '',
-  'Read more about how and why we built Monod at: https://tailordev.fr/blog/.',
-  '',
-  'See, we have code & Emoji support, yay! :clap:',
-  '',
-  '``` python',
-  'def hello():',
-  '    print("Have fun with Monod!")',
-  '```',
-  '',
-  '*Play with this page and [send us feedback](mailto:hello@tailordev.fr?subject=About Monod). We would :heart: to hear from you!*'
-].join('\n');
+  _handleRequestError(err) {
+    if (err.response && 404 === err.response.statusCode) {
+      this.events.emit(Events.DOCUMENT_NOT_FOUND, this.state);
+
+      return Promise.reject('document not found');
+    }
+
+    this.events.emit(Events.APP_IS_OFFLINE);
+
+    return Promise.reject('request failed (network)');
+  }
+}
