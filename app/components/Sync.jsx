@@ -62,12 +62,12 @@ export default class Sync extends Component {
   }
 
   render() {
-    let title = 'No Internet connection';
+    let title = 'No Internet connection or server is unreachable';
 
     if (false === this.state.offline) {
       title = [
         'Connected to the Internets™ ',
-        '(Last sync: ',
+        '(Last synchronization to the server: ',
         moment(this.state.date).fromNow(),
         ')'
       ].join('')
