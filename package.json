@@ -56,7 +56,6 @@
     "markdown-it": "^6.0.0",
     "mocha": "^2.4.5",
     "mocha-circleci-reporter": "0.0.1",
-    "moment": "^2.12.0",
     "node-sass": "^3.4.2",
     "nyc": "^6.0.0",
     "offline-plugin": "github:willdurand/offline-plugin#monod",

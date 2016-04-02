@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import { Events } from '../Store';
-import moment from 'moment';
 
 const DEFAULT_DURATION = 5;
 
@@ -65,12 +64,7 @@ export default class Sync extends Component {
     let title = 'No Internet connection or server is unreachable';
 
     if (false === this.state.offline) {
-      title = [
-        'Connected to the Internets™ ',
-        '(Last synchronization to the server: ',
-        moment(this.state.date).fromNow(),
-        ')'
-      ].join('')
+      title = 'Connected to the Internets™';
     }
 
     return (
