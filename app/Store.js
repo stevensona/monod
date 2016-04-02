@@ -215,16 +215,16 @@ export default class Store {
                 .then((encryptedContent) => {
                   const fork = new Document({
                     uuid: uuid.v4(),
-                    content: encryptedContent
+                    content: localDoc.content
                   });
 
-                  return Promise.resolve(fork);
-                })
-                .then((fork) => {
                   // persist fork'ed document
                   return this.localforage.setItem(
                     fork.get('uuid'),
-                    fork.toJS()
+                    new Document({
+                      uuid: fork.get('uuid'),
+                      content: encryptedContent
+                    }).toJS()
                   )
                   .then(() => {
                     return Promise.resolve(fork);
@@ -250,16 +250,18 @@ export default class Store {
                       return this._localPersist();
                     })
                     .then((state) => {
-                      this.events.emit(Events.CONFLICT, {
+                      const conflictState = {
                         fork: {
                           document: fork,
                           secret: forkSecret
                         },
                         document: state.document,
                         secret: state.secret
-                      });
+                      };
 
-                      return Promise.resolve(state);
+                      this.events.emit(Events.CONFLICT, conflictState);
+
+                      return Promise.resolve(conflictState);
                     });
                 });
             }

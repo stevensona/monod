@@ -421,11 +421,15 @@ describe('Store', () => {
               expect(fork.uuid).to.equal(forkId);
               expect(fork.last_modified).to.be.null;
               expect(fork.last_modified_locally).to.be.null;
-              // cannot assert `content` since it is automatically encrypte
-              // with a generated random secret
-
+              // cannot assert `content` since it is automatically encrypted
+              // with a generated random secret, but we can look at the
+              // CONFLICT event data (which is useful to ensure we pass
+              // the clear content
+              expect(state).to.have.property('fork');
               expect(state).to.have.property('document');
               expect(state).to.have.property('secret');
+
+              expect(state.fork.document.get('content')).to.equal('Change ALL THE THINGS!');
 
               // this is the up-to-date current document
               expect(state.document.get('uuid')).to.equal('foo');
