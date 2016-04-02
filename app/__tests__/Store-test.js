@@ -202,7 +202,7 @@ describe('Store', () => {
     it('should not sync if the document has default content', () => {
       const promise = store.sync();
 
-      return expect(promise).to.be.rejected;
+      return expect(promise).to.be.eventually.equal('No need to sync');
     });
 
     describe('with Internet connection', () => {

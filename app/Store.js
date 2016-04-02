@@ -3,6 +3,7 @@ import sjcl from 'sjcl';
 import request from 'superagent';
 import Document from './Document';
 import { Config } from './Config';
+import Immutable from 'immutable';
 
 const { Promise } = global;
 
@@ -69,7 +70,7 @@ export default class Store {
           return Promise.reject('document not found');
         }
 
-        return document;
+        return Promise.resolve(Immutable.fromJS(document));
       })
       .catch(() => {
         return request
@@ -89,12 +90,12 @@ export default class Store {
       })
       .then((document) => {
         return this
-          .decrypt(document.content, secret)
-          .then((content) => {
+          .decrypt(document.get('content'), secret)
+          .then((decryptedContent) => {
             this.state = {
               document: new Document({
                 uuid: document.get('uuid'),
-                content: content,
+                content: decryptedContent,
                 last_modified: document.get('last_modified'),
                 last_modified_locally: document.get('last_modified_locally')
               }),
@@ -139,7 +140,7 @@ export default class Store {
    */
   sync() {
     if (this.state.document.hasDefaultContent()) {
-      return Promise.reject('No need to sync');
+      return Promise.resolve('No need to sync');
     }
 
     // document is new
@@ -286,7 +287,7 @@ export default class Store {
             content: encryptedContent,
             last_modified: doc.get('last_modified'),
             last_modified_locally: doc.get('last_modified_locally')
-          })
+          }).toJS()
         );
       })
       .then(() => {
