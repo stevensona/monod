@@ -154,6 +154,10 @@ export default class Store {
         .then((res) => {
           this.events.emit(Events.APP_IS_ONLINE);
 
+          return Promise.resolve(res);
+        })
+        .catch(this._handleRequestError.bind(this))
+        .then((res) => {
           const localDoc  = this.state.document;
           const serverDoc = new Document({
             uuid: res.body.uuid,
@@ -203,56 +207,67 @@ export default class Store {
               // but I also modified it so... let's fork \o/
 
               // generate a new secret for fork'ed document
-              const secret = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0);
+              const forkSecret = sjcl.codec.base64.fromBits(
+                sjcl.random.randomWords(8, 10), 0
+              );
 
-              // copy current document
-              this
-                .encrypt(localDoc.content, secret)
-                .then((content) => {
-                  const fork = Object.assign({}, localDoc);
+              // what we want is to create a fork
+              return this
+                .encrypt(localDoc.content, forkSecret)
+                .then((encryptedContent) => {
+                  const fork = new Document({
+                    uuid: uuid.v4(),
+                    content: encryptedContent
+                  });
 
-                  fork.uuid = uuid.v4();
-                  fork.content = content;
-                  fork.last_modified = null;
-
+                  return Promise.resolve(fork);
+                })
+                .then((fork) => {
                   // persist fork'ed document
-                  this.localforage.setItem(fork.uuid, fork).then(() => {
-                    // now, update current doc with server content if we
-                    // are able to decrypt it
-                    this
-                      .decrypt(serverDoc.content, this.state.secret)
-                      .then((content) => {
-                        // update last_modified so that we are fully sync'ed
-                        // with server now
-                        this.state.document.last_modified = serverDoc.last_modified;
-
-                        // we persist encrypted content
-                        this.state.document.content = serverDoc.content;
-
-                        // persist locally
-                        this.localforage.setItem(
-                          this.state.document.uuid,
-                          this.state.document
-                        ).then(() => {
-                          // we deal with decrypted content
-                          this.state.document.content = content;
-
-                          this.events.emit(Events.CONFLICT, {
-                            fork: {
-                              document: fork,
-                              secret: secret
-                            },
-                            document: this.state.document,
-                            secret: this.state.secret
-                          });
-                        });
+                  return this.localforage.setItem(
+                    fork.get('uuid'),
+                    fork.toJS()
+                  )
+                  .then(() => {
+                    return Promise.resolve(fork);
+                  });
+                })
+                .then((fork) => {
+                  // now, we can update current doc with server content if we
+                  // are able to decrypt it
+                  return this
+                    .decrypt(serverDoc.content, this.state.secret)
+                    .then((decryptedContent) => {
+                      console.log(decryptedContent);
+                      // state is sync'ed with server now
+                      this.state = {
+                        document: new Document({
+                          uuid: localDoc.get('uuid'),
+                          content: decryptedContent,
+                          last_modified: serverDoc.last_modified
+                        }),
+                        secret: this.state.secret
+                      };
+                    })
+                    .then(() => {
+                      return this._localPersist();
+                    })
+                    .then((state) => {
+                      this.events.emit(Events.CONFLICT, {
+                        fork: {
+                          document: fork,
+                          secret: forkSecret
+                        },
+                        document: state.document,
+                        secret: state.secret
                       });
+
+                      return state;
                     });
                 });
             }
           }
-        })
-        .catch(this._handleRequestError.bind(this));
+        });
     }
   }
 

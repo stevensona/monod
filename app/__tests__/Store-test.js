@@ -18,10 +18,10 @@ describe('Store', () => {
 
   const STORE_NAME = 'mocha-test';
 
-  let eventSpy, localForageMock, store;
+  let eventEmitterSpy, localForageMock, store;
 
    beforeEach(() => {
-    eventSpy = sinon.spy();
+    eventEmitterSpy = sinon.spy();
     localForageMock   = {
       items: {},
       nbGetItemCall: 0,
@@ -42,7 +42,7 @@ describe('Store', () => {
       }
     };
 
-    store = new Store(STORE_NAME, { emit: eventSpy }, '', localForageMock);
+    store = new Store(STORE_NAME, { emit: eventEmitterSpy }, '', localForageMock);
   });
 
   describe('- findById()', (done) => {
@@ -51,8 +51,8 @@ describe('Store', () => {
       store
         .findById()
         .catch(() => {
-          expect(eventSpy.calledOnce).to.be.true;
-          expect(eventSpy.calledWith(Events.NO_DOCUMENT_ID)).to.be.true;
+          expect(eventEmitterSpy.calledOnce).to.be.true;
+          expect(eventEmitterSpy.calledWith(Events.NO_DOCUMENT_ID)).to.be.true;
 
           done();
         });
@@ -88,8 +88,8 @@ describe('Store', () => {
             });
 
             return store.findById(123, 'secret').then((state) => {
-              expect(eventSpy.calledOnce).to.be.true;
-              expect(eventSpy.calledWith(Events.CHANGE)).to.be.true;
+              expect(eventEmitterSpy.calledOnce).to.be.true;
+              expect(eventEmitterSpy.calledWith(Events.CHANGE)).to.be.true;
 
               expect(state).to.have.property('document');
               expect(state).to.have.property('secret');
@@ -107,8 +107,8 @@ describe('Store', () => {
         });
 
         return store.findById(123, 'secret').catch(() => {
-          expect(eventSpy.calledOnce).to.be.true;
-          expect(eventSpy.calledWith(Events.DOCUMENT_NOT_FOUND)).to.be.true;
+          expect(eventEmitterSpy.calledOnce).to.be.true;
+          expect(eventEmitterSpy.calledWith(Events.DOCUMENT_NOT_FOUND)).to.be.true;
         });
       });
 
@@ -130,9 +130,9 @@ describe('Store', () => {
             });
 
             return store.findById(123, 'secret').then((state) => {
-              expect(eventSpy.calledTwice).to.be.true;
-              expect(eventSpy.calledWith(Events.APP_IS_ONLINE)).to.be.true;
-              expect(eventSpy.calledWith(Events.CHANGE)).to.be.true;
+              expect(eventEmitterSpy.calledTwice).to.be.true;
+              expect(eventEmitterSpy.calledWith(Events.APP_IS_ONLINE)).to.be.true;
+              expect(eventEmitterSpy.calledWith(Events.CHANGE)).to.be.true;
 
               expect(state).to.have.property('document');
               expect(state).to.have.property('secret');
@@ -146,8 +146,8 @@ describe('Store', () => {
     describe('with NO Internet connection', () => {
       it('emits an event because we are offline', () => {
         return store.findById(123, 'secret').catch(() => {
-          expect(eventSpy.calledOnce).to.be.true;
-          expect(eventSpy.calledWith(Events.APP_IS_OFFLINE)).to.be.true;
+          expect(eventEmitterSpy.calledOnce).to.be.true;
+          expect(eventEmitterSpy.calledWith(Events.APP_IS_OFFLINE)).to.be.true;
         });
       });
     });
@@ -157,7 +157,7 @@ describe('Store', () => {
     it('returns a promise', () => {
       const promise = store.encrypt('foo', 'secret');
 
-      expect(eventSpy.called).to.be.false;
+      expect(eventEmitterSpy.called).to.be.false;
 
       return expect(promise).to.be.fulfilled;
     });
@@ -167,8 +167,8 @@ describe('Store', () => {
     it('emits an event when decryption has failed', () => {
       let promise = store.decrypt('foo', 'secret');
 
-      expect(eventSpy.calledOnce).to.be.true;
-      expect(eventSpy.calledWith(Events.DECRYPTION_FAILED)).to.be.true;
+      expect(eventEmitterSpy.calledOnce).to.be.true;
+      expect(eventEmitterSpy.calledWith(Events.DECRYPTION_FAILED)).to.be.true;
 
       return expect(promise).to.be.rejected;
     });
@@ -193,8 +193,8 @@ describe('Store', () => {
 
       expect(doc).not.to.have.property('last_local_persist');
 
-      expect(eventSpy.calledOnce).to.be.true;
-      expect(eventSpy.calledWith(Events.CHANGE)).to.be.true;
+      expect(eventEmitterSpy.calledOnce).to.be.true;
+      expect(eventEmitterSpy.calledWith(Events.CHANGE)).to.be.true;
     });
   });
 
@@ -227,13 +227,13 @@ describe('Store', () => {
         const doc = new Document({ uuid: 'foo', content: 'bar' });
 
         store.update(doc);
-        eventSpy.reset();
+        eventEmitterSpy.reset();
 
         // test
         return store.sync().then((state) => {
-          expect(eventSpy.calledTwice).to.be.true;
-          expect(eventSpy.calledWith(Events.SYNCHRONIZE)).to.be.true;
-          expect(eventSpy.calledWith(Events.APP_IS_ONLINE)).to.be.true;
+          expect(eventEmitterSpy.calledTwice).to.be.true;
+          expect(eventEmitterSpy.calledWith(Events.SYNCHRONIZE)).to.be.true;
+          expect(eventEmitterSpy.calledWith(Events.APP_IS_ONLINE)).to.be.true;
 
           expect(state).to.have.property('document');
           expect(state).to.have.property('secret');
@@ -262,7 +262,7 @@ describe('Store', () => {
         });
 
         store.update(doc);
-        eventSpy.reset();
+        eventEmitterSpy.reset();
 
         // test
         return expect(store.sync()).to.eventually.equal('nothing to do');
@@ -270,9 +270,9 @@ describe('Store', () => {
 
       it([
         'should directly update the document when there are no server changes,',
-        'but there are local changes !!'
+        'but there are local changes'
       ].join(' '), () => {
-        const responses =  function* () {
+        const responses = function* () {
           yield { status: 200, body: { last_modified: 1 } }
           yield { status: 200, body: { last_modified: 2 } }
         }();
@@ -294,13 +294,13 @@ describe('Store', () => {
         });
 
         store.update(doc);
-        eventSpy.reset();
+        eventEmitterSpy.reset();
 
         // test
         return store.sync().then((state) => {
-          expect(eventSpy.calledThrice).to.be.true;
-          expect(eventSpy.calledWith(Events.SYNCHRONIZE)).to.be.true;
-          expect(eventSpy.calledWith(Events.APP_IS_ONLINE)).to.be.true; // 2 times
+          expect(eventEmitterSpy.calledThrice).to.be.true;
+          expect(eventEmitterSpy.calledWith(Events.SYNCHRONIZE)).to.be.true;
+          expect(eventEmitterSpy.calledWith(Events.APP_IS_ONLINE)).to.be.true; // 2 times
 
           expect(state).to.have.property('document');
           expect(state).to.have.property('secret');
@@ -319,7 +319,7 @@ describe('Store', () => {
           // we need to encrypt the content that will be sent by the server
           .encrypt(contentSentByServer, 'secret')
           .then((encryptedContent) => {
-            const responses =  function* () {
+            const responses = function* () {
               yield { status: 200, body: {
                 content: encryptedContent,
                 last_modified: 2
@@ -350,19 +350,90 @@ describe('Store', () => {
               secret: 'secret'
             };
 
-            eventSpy.reset();
+            eventEmitterSpy.reset();
 
             // test
             return store.sync().then((state) => {
-              expect(eventSpy.calledTwice).to.be.true;
-              expect(eventSpy.calledWith(Events.APP_IS_ONLINE)).to.be.true;
-              expect(eventSpy.calledWith(Events.UPDATE_WITHOUT_CONFLICT)).to.be.true;
+              expect(eventEmitterSpy.calledTwice).to.be.true;
+              expect(eventEmitterSpy.calledWith(Events.APP_IS_ONLINE)).to.be.true;
+              expect(eventEmitterSpy.calledWith(Events.UPDATE_WITHOUT_CONFLICT)).to.be.true;
 
               expect(state).to.have.property('document');
               expect(state).to.have.property('secret');
 
               expect(state.document.get('last_modified')).to.equal(2);
               expect(state.document.get('content')).to.equal(contentSentByServer);
+            });
+          });
+      });
+
+      it('should create a fork when there is a conflict', () => {
+        const contentSentByServer = 'some content from the server';
+
+        return store
+          // we need to encrypt the content that will be sent by the server
+          .encrypt(contentSentByServer, 'secret')
+          .then((encryptedContent) => {
+            const responses = function* () {
+              yield { status: 200, body: {
+                content: encryptedContent,
+                last_modified: 10
+              } }
+            }();
+
+            fauxJax.on('request', (request) => {
+              const response = responses.next().value;
+
+              request.respond(
+                response.status,
+                { 'Content-Type': 'application/json' },
+                JSON.stringify(response.body)
+              );
+            });
+
+            // force store state
+            store.state = {
+              document: new Document({
+                uuid: 'foo',
+                content: 'Change ALL THE THINGS!',
+                last_modified: 1,
+                last_modified_locally: 16 // we made a lot of changes
+              }),
+              secret: 'secret'
+            };
+
+            expect(Object.keys(localForageMock.items)).to.have.length(0);
+
+            // test
+            return store.sync().then((state) => {
+              expect(eventEmitterSpy.calledTwice).to.be.true;
+              expect(eventEmitterSpy.calledWith(Events.APP_IS_ONLINE)).to.be.true;
+              expect(eventEmitterSpy.calledWith(Events.CONFLICT)).to.be.true;
+
+              const uuids = Object.keys(localForageMock.items);
+
+              expect(uuids).to.have.length(2);
+              expect(uuids).to.contain('foo'); // the current doc
+
+              // fork
+              const forkId = uuids[0];
+              const fork   = localForageMock.items[forkId];
+
+              expect(fork.uuid).to.equal(forkId);
+              expect(fork.last_modified).to.be.null;
+              expect(fork.last_modified_locally).to.be.null;
+              // cannot assert `content` since it is automatically encrypte
+              // with a generated random secret
+
+              expect(state).to.have.property('document');
+              expect(state).to.have.property('secret');
+
+              // this is the up-to-date current document
+              expect(state.document.get('uuid')).to.equal('foo');
+              expect(state.document.get('content')).to.equal(contentSentByServer);
+              expect(state.document.get('last_modified')).to.equal(10); // from server
+              // ensure we reset the local date
+              expect(state.document.get('last_modified_locally')).to.be.null;
             });
           });
       });
@@ -377,12 +448,12 @@ describe('Store', () => {
         });
 
         store.update(doc);
-        eventSpy.reset();
+        eventEmitterSpy.reset();
 
         // test
         return store.sync().catch(() => {
-          expect(eventSpy.calledOnce).to.be.true;
-          expect(eventSpy.calledWith(Events.APP_IS_OFFLINE)).to.be.true;
+          expect(eventEmitterSpy.calledOnce).to.be.true;
+          expect(eventEmitterSpy.calledWith(Events.APP_IS_OFFLINE)).to.be.true;
         });
       });
     });
