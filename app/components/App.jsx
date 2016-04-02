@@ -70,7 +70,7 @@ export default class App extends Component {
     this.props.controller.on(Events.CONFLICT, (state) => {
       const message = [
         <i>Snap!</i>,
-        'The document you were working on has been updated by a third,',
+        ' The document you were working on has been updated by a third,',
         ' and you are now working on a fork. You can still find the original',
         ' (and updated) document: ',
         <a href={'/' + state.document.uuid + '#' + state.secret}>here</a>,
