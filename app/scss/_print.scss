@@ -2,18 +2,8 @@
 @media print {
 
     @page {
-        size: A4;
-        margin: 2cm 1cm !important;
-
-        @top-left {
-            padding-top: 1cm;
-            content: "Monod - The Markdown Editor by TailorDev";
-        }
-
-        @bottom-right {
-            padding-top: 0;
-            content: "Page " counter(page) "/" counter(pages);
-        }
+        size: 'A4';
+        margin: 3cm 2cm !important;
     }
 
     // Page breaks
@@ -45,14 +35,23 @@
     }
 
     // Force preview max width/height
-    .editor {
-        height: 100% !important;
+    .layout {
+        display: block !important;
 
-        .preview {
-            width: 100% !important;
+        .editor {
+            height: 100% !important;
+            display: block !important;
 
-            p {
-                font-size: 1rem !important;
+            .preview {
+                overflow: visible;
+
+                .rendered {
+                    padding: 0;
+
+                    p {
+                        font-size: 11pt !important;
+                    }
+                }
             }
         }
     }
