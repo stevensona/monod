@@ -16,8 +16,7 @@ const pkg = require('./package.json');
 const TARGET = process.env.npm_lifecycle_event;
 const PATHS  = {
     app: path.join(__dirname, 'app'),
-    build: path.join(__dirname, 'build'),
-    print: path.join(__dirname, 'app/scss/print.scss')
+    build: path.join(__dirname, 'build')
 };
 const VERSION = process.env.SOURCE_VERSION || process.env.SHA || childProcess.execSync('git rev-parse HEAD').toString();
 
@@ -28,8 +27,7 @@ process.env.BABEL_ENV = TARGET;
 const common = {
     // Entry points are used to define "bundles"
     entry: {
-        app: PATHS.app,
-        print: PATHS.print
+        app: PATHS.app
     },
     // Extensions that should be used to resolve module
     //
