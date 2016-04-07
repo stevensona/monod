@@ -92,8 +92,7 @@ const common = {
             // JSON files (required for markdown-it)
             {
                 test: /\.json$/,
-                loaders: ['file?name=[path][name].[ext]&context=./node_modules'],
-                include: path.join(__dirname, 'node_modules/entities/')
+                loaders: ['file?name=[path][name].[ext]&context=./node_modules']
             },
             // PNG files (required for emojione)
             {
@@ -118,6 +117,7 @@ const common = {
             // Favicon generated with http://realfavicongenerator.net
             favicon: 'app/favicon.ico',
             version: VERSION.substring(0, 7),
+            apiEndpoint: '',
             // Main "div" `id`
             appMountId: 'app',
             // No need to inject assets in the given template as it is handled
@@ -132,7 +132,8 @@ const common = {
             cache_name: 'monod'
           },
           AppCache: {
-            FALLBACK: { '/': '/' }
+            FALLBACK: { '/': '/' },
+            NETWORK: '/documents'
           }
         })
     ]
@@ -160,7 +161,12 @@ if (TARGET === 'dev' || !TARGET) {
             stats: 'errors-only',
             // Development server settings
             host: process.env.HOST || '127.0.0.1',
-            port: process.env.PORT || 8080
+            port: process.env.PORT || 8080,
+            proxy: {
+              '/documents/*': {
+                target: 'http://127.0.0.1:3000',
+              }
+            }
         },
         module: {
             loaders: [

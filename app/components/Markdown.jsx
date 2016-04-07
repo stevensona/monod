@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import MarkdownLoader from './loaders/Markdown';
 import CodeMirror from 'codemirror';
+import { Events } from '../Store';
 
 import 'codemirror/lib/codemirror.css';
 
@@ -30,6 +31,22 @@ export default class Markdown extends Component {
 
       // Set default value
       this.codeMirror.setValue(defaultValue);
+    });
+  }
+
+  componentDidMount() {
+    if (!this.context.controller) {
+      return;
+    }
+
+    this.context.controller.on(Events.UPDATE_WITHOUT_CONFLICT, (state) => {
+      // force content update
+      this.getCodeMirror().setValue(state.document.content);
+    });
+
+    this.context.controller.on(Events.CONFLICT, (state) => {
+      // force content update
+      this.getCodeMirror().setValue(state.fork.document.content);
     });
   }
 
@@ -75,4 +92,8 @@ Markdown.propTypes = {
   raw: string.isRequired,
   onChange: func.isRequired,
   doUpdatePosition: func.isRequired
+};
+
+Markdown.contextTypes = {
+  controller: PropTypes.object.isRequired
 };

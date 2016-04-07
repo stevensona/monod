@@ -1,0 +1,9 @@
+.message-box {
+  @include callout-base;
+  background-color: lighten($warning-color, 40%);
+
+  p {
+    margin-bottom: 0 !important;
+    margin-right: 1rem;
+  }
+}

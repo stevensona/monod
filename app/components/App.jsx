@@ -1,12 +1,12 @@
 import React, { Component, PropTypes } from 'react';
-import localforage from 'localforage';
+import { Events } from '../Store';
+import Document from '../Document';
 import debounce from 'lodash.debounce';
-import uuid from 'uuid';
-import sjcl from 'sjcl';
 
 import Header from './Header';
 import Editor from './Editor';
 import Footer from './Footer';
+import MessageBox from './MessageBox';
 
 const { string } = PropTypes;
 
@@ -15,76 +15,119 @@ export default class App extends Component {
   constructor(props, context) {
     super(props, context);
 
-    localforage.config({
-      name: 'monod'
-    });
-
     this.state = {
-      document: {
-        uuid: uuid.v4(),
-        content: DEFAULT_CONTENT
-      },
-      secret: sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0),
+      document: new Document(),
       loaded: false
     };
 
-    this.updateContent = debounce(this.updateContent, 500);
+    this.updateContent = debounce(this.updateContent, 150);
+  }
+
+  getChildContext() {
+    // Pass the controller to child components.
+    return {
+      controller: this.props.controller
+    };
+  }
+
+  loadAndRedirect(document, uri, message) {
+    this.setState({
+      loaded: true,
+      document: document,
+      message: message || false
+    });
+
+    window.history.pushState({}, '', uri);
   }
 
   componentDidMount() {
-    const id = window.location.pathname.slice(1);
-    const secret = window.location.hash.slice(1);
-
-    localforage
-      .getItem(id)
-      .then((document) => {
-        if (secret && null !== document) {
-          document.content = sjcl.decrypt(secret, document.content);
-
-          this.setState({
-            document: document,
-            secret: secret,
-            loaded: true
-          });
-        }
-      })
-      .then(() => {
-        this.setState({ loaded: true });
+    this.props.controller.on(Events.NO_DOCUMENT_ID, (state) => {
+      this.setState({
+        loaded: true,
+        document: state.document
       });
+    });
+
+    this.props.controller.on(Events.DECRYPTION_FAILED, (state) => {
+      const message = [
+        'We were unable to decrypt the document. Either the secret has not',
+        'been supplied or it is invalid.',
+        'We have redirected you to a new document.'
+      ].join(' ');
+
+      this.loadAndRedirect(state.document, '/', message);
+    });
+
+    this.props.controller.on(Events.DOCUMENT_NOT_FOUND, (state) => {
+      const message = [
+        'We could not find the document you were trying to load, so we have',
+        'redirected you to a new document.'
+      ].join(' ');
+
+      this.loadAndRedirect(state.document, '/', message);
+    });
+
+    this.props.controller.on(Events.CONFLICT, (state) => {
+      const message = [
+        <i>Snap!</i>,
+        ' The document you were working on has been updated by a third,',
+        ' and you are now working on a fork. You can still find the original',
+        ' (and updated) document: ',
+        <a href={'/' + state.document.uuid + '#' + state.secret}>here</a>,
+        '.'
+      ];
+
+      this.loadAndRedirect(
+        state.fork.document,
+        `/${state.fork.document.uuid}#${state.fork.secret}`,
+        message
+      );
+    });
+
+    this.props.controller.on(Events.UPDATE_WITHOUT_CONFLICT, (state) => {
+      this.setState({
+        document: state.document,
+        message: [
+          'We have updated the document you are viewing to its latest revision.',
+          'Happy reading/working!'
+        ].join(' ')
+      });
+    });
+
+    this.props.controller.on(Events.CHANGE, (state) => {
+      this.loadAndRedirect(
+        state.document,
+        `/${state.document.uuid}#${state.secret}`
+      );
+    });
+
+    this.props.controller.dispatch('action:init', {
+      id: window.location.pathname.slice(1),
+      secret: window.location.hash.slice(1)
+    });
   }
 
   updateContent(content) {
-    if (DEFAULT_CONTENT === content) {
-      return;
+    const doc = this.state.document;
+
+    if (doc.content !== content) {
+      this.props.controller.dispatch('action:update', new Document({
+        uuid: doc.get('uuid'),
+        content: content,
+        last_modified: doc.get('last_modified'),
+        last_modified_locally: doc.get('last_modified_locally')
+      }));
     }
-
-    const doc    = this.state.document;
-    const secret = this.state.secret;
-    doc.content  = content;
-
-    this.setState((previousState) => {
-      return {
-        document: doc,
-        secret: secret,
-        loaded: previousState.loaded
-      };
-    });
-
-    doc.content = sjcl.encrypt(secret, doc.content, {ks: 256});
-    localforage.setItem(doc.uuid, doc);
-
-    window.history.pushState(
-      {}, '', `/${this.state.document.uuid}#${this.state.secret}`
-    );
   }
 
   render() {
     return (
       <div className="layout">
         <Header />
+        <MessageBox message={this.state.message || false} />
         <Editor
           loaded={this.state.loaded}
-          content={this.state.document.content}
+          content={this.state.document.get('content')}
           onContentUpdate={this.updateContent.bind(this)}
         />
         <Footer version={this.props.version} />
@@ -97,20 +140,6 @@ App.propTypes = {
   version: string.isRequired
 };
 
-const DEFAULT_CONTENT = [
-  'Introducing Monod',
-  '=================',
-  '',
-  '> **TL;DR** This editor is the first experiment we wanted to tackle at **Le lab**. This _week #1 release_ is a pure client-side application written with [React](https://facebook.github.io/react/) by the good folks at [TailorDev](https://tailordev.fr)!',
-  '',
-  'Read more about how and why we built Monod at: https://tailordev.fr/blog/.',
-  '',
-  'See, we have code & Emoji support, yay! :clap:',
-  '',
-  '``` python',
-  'def hello():',
-  '    print("Have fun with Monod!")',
-  '```',
-  '',
-  '*Play with this page and [send us feedback](mailto:hello@tailordev.fr?subject=About%20Monod). We would :heart: to hear from you!*'
-].join('\n');
+App.childContextTypes = {
+  controller: PropTypes.object
+};

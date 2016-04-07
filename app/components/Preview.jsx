@@ -99,6 +99,10 @@ export default class Preview extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (!this.$rendered) {
+      return;
+    }
+
     if (this.props.pos !== nextProps.pos || nextProps.pos === 1) {
       if (this.requestAnimationId) {
         window.cancelAnimationFrame(this.requestAnimationId);

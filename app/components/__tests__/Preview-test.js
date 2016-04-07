@@ -27,13 +27,15 @@ describe('<Preview />', () => {
   });
 
   it('renders a block with preview css class', () => {
-    const wrapper = shallow(<Preview raw={""} pos={0} />);
+    const wrapper = shallow(
+      <Preview raw={""} pos={0} template={''} />
+    );
 
     expect(wrapper.find('.preview')).to.have.length(1);
   });
 
   it('renders a loading message', () => {
-    const wrapper = render(<Preview raw={""} pos={0} />);
+    const wrapper = render(<Preview raw={""} pos={0} template={''} />);
 
     expect(wrapper.text()).to.contain('Loading all the rendering stuff...');
   });
@@ -44,6 +46,7 @@ describe('<Preview />', () => {
         raw={'foo'}
         pos={0}
         previewLoader={previewLoader}
+        template={''}
       />
     );
 
@@ -60,6 +63,7 @@ describe('<Preview />', () => {
         raw={'*italic*'}
         pos={0}
         previewLoader={previewLoader}
+        template={''}
       />
     );
 
@@ -76,6 +80,7 @@ describe('<Preview />', () => {
         raw={['*italic*', '**bold**'].join('\n\n')}
         pos={0}
         previewLoader={previewLoader}
+        template={''}
       />
     );
 
@@ -98,6 +103,7 @@ describe('<Preview />', () => {
         raw={":smile:"}
         pos={0}
         previewLoader={previewLoader}
+        template={''}
       />
     );
 
@@ -116,6 +122,7 @@ describe('<Preview />', () => {
         raw={'```python\nprint()\n```'}
         pos={0}
         previewLoader={previewLoader}
+        template={''}
       />
     );
 
@@ -143,6 +150,7 @@ describe('<Preview />', () => {
         raw={''}
         pos={0}
         previewLoader={previewLoader}
+        template={''}
       />
     );
 
@@ -176,6 +184,7 @@ describe('<Preview />', () => {
         raw={''}
         pos={0}
         previewLoader={previewLoader}
+        template={''}
       />
     );
 
@@ -201,6 +210,7 @@ describe('<Preview />', () => {
         raw={''}
         pos={0}
         previewLoader={previewLoader}
+        template={''}
       />
     );
 
@@ -227,6 +237,7 @@ describe('<Preview />', () => {
         raw={''}
         pos={0}
         previewLoader={previewLoader}
+        template={''}
       />
     );
 
@@ -265,6 +276,7 @@ describe('<Preview />', () => {
         raw={''}
         pos={0}
         previewLoader={previewLoader}
+        template={''}
       />
     );
 
@@ -293,6 +305,7 @@ describe('<Preview />', () => {
         raw={'---\ntoto: 1\n---\n*italic*'}
         pos={0}
         previewLoader={previewLoader}
+        template={''}
       />
     );
 
@@ -309,6 +322,7 @@ describe('<Preview />', () => {
         raw={'---\ntoto: 1\n---\n*italic*'}
         pos={0}
         previewLoader={previewLoader}
+        template={''}
       />
     );
 
@@ -326,7 +340,7 @@ describe('<Preview />', () => {
     const wrapper = mount(
       <Preview
         raw={'---\nlocation: Foo\nsignature: John Doe\n---\nThis is content'}
-        template='letter'
+        template={'letter'}
         pos={0}
         previewLoader={previewLoader}
       />
@@ -344,7 +358,7 @@ describe('<Preview />', () => {
           'This is content',
           '</p>\n',
           '</span>',
-          '</div>',
+          '</div>'
         ].join(''));
 
       done();
@@ -355,7 +369,7 @@ describe('<Preview />', () => {
     const wrapper = mount(
       <Preview
         raw={'---\ntitle: Foo\nauthor: John Doe\n---\nThis is content'}
-        template=''
+        template={''}
         pos={0}
         previewLoader={previewLoader}
       />
@@ -373,7 +387,7 @@ describe('<Preview />', () => {
           'This is content',
           '</p>\n',
           '</span>',
-          '</div>',
+          '</div>'
         ].join(''));
 
       done();

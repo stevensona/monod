@@ -17,6 +17,7 @@ describe('<Editor />', () => {
   it('renders Markdown component', () => {
     const wrapper = shallow(
       <Editor
+        loaded={true}
         content={''}
         onContentUpdate={() => {}}
       />
@@ -27,6 +28,7 @@ describe('<Editor />', () => {
   it('renders Preview component', () => {
     const wrapper = shallow(
       <Editor
+        loaded={true}
         content={''}
         onContentUpdate={() => {}}
       />
@@ -38,7 +40,11 @@ describe('<Editor />', () => {
     const spy = sinon.spy();
 
     const wrapper = shallow(
-      <Editor loaded={true} content={''} onContentUpdate={spy} />
+      <Editor
+        loaded={true}
+        content={''}
+        onContentUpdate={spy}
+      />
     );
     const content = 'Hello, World';
 
@@ -48,7 +54,13 @@ describe('<Editor />', () => {
   });
 
   it('renders a Loader component', () => {
-    const wrapper = shallow(<Editor content={''} onContentUpdate={() => {}} />);
+    const wrapper = shallow(
+      <Editor
+        loaded={true}
+        content={''}
+        onContentUpdate={() => {}}
+      />
+    );
 
     expect(wrapper.find(Loader)).to.have.length(1);
   });
@@ -66,6 +78,8 @@ describe('<Editor />', () => {
   });
 
   it('removes loader once content is loaded', () => {
+    // this test triggers a warning message because it is currently not
+    // possible to pass a context to child components :-(
     const wrapper = mount(
       <Editor
         loaded={true}
@@ -79,7 +93,13 @@ describe('<Editor />', () => {
 
   it('calls onContentUpdate prop on change', () => {
     const spy = sinon.spy();
-    const wrapper = shallow(<Editor content={''} onContentUpdate={spy} />);
+    const wrapper = shallow(
+      <Editor
+        loaded={true}
+        content={''}
+        onContentUpdate={spy}
+        />
+    );
 
     wrapper.find('Markdown').simulate('change');
 
@@ -87,7 +107,13 @@ describe('<Editor />', () => {
   });
 
   it('switches from preview to reading mode', () => {
-    const wrapper = shallow(<Editor content={''} onContentUpdate={() => {}} />);
+    const wrapper = shallow(
+      <Editor
+        loaded={true}
+        content={''}
+        onContentUpdate={() => {}}
+      />
+    );
     const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();
 
     // Mock the click event
@@ -99,7 +125,13 @@ describe('<Editor />', () => {
   });
 
   it('switches from preview to reading mode and then back to preview mode', () => {
-    const wrapper = shallow(<Editor content={''} onContentUpdate={() => {}} />);
+    const wrapper = shallow(
+      <Editor
+        loaded={true}
+        content={''}
+        onContentUpdate={() => {}}
+      />
+    );
     const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();
 
     // Mock the click event
@@ -117,7 +149,13 @@ describe('<Editor />', () => {
   });
 
   it('switches from preview to focus mode', () => {
-    const wrapper = shallow(<Editor content={''} onContentUpdate={() => {}} />);
+    const wrapper = shallow(
+      <Editor
+        loaded={true}
+        content={''}
+        onContentUpdate={() => {}}
+      />
+    );
     const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();
 
     // Mock the click event
@@ -129,7 +167,13 @@ describe('<Editor />', () => {
   });
 
   it('switches from preview to focus mode and then back to preview mode', () => {
-    const wrapper = shallow(<Editor content={''} onContentUpdate={() => {}} />);
+    const wrapper = shallow(
+      <Editor
+        loaded={true}
+        content={''}
+        onContentUpdate={() => {}}
+      />
+    );
     const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();
 
     // Mock the click event
