@@ -77,22 +77,21 @@ export default class Store {
           .get(`${this.endpoint}/documents/${id}`)
           .set('Accept', 'application/json')
           .set('Content-Type', 'application/json')
+          .then(this._handleRequestSuccess.bind(this))
+          .catch(this._handleRequestError.bind(this))
           .then((res) => {
-            this.events.emit(Events.APP_IS_ONLINE);
-
             return Promise.resolve(new Document({
               uuid: res.body.uuid,
               content: res.body.content,
               last_modified: res.body.last_modified
             }));
-          })
-          .catch(this._handleRequestError.bind(this));
+          });
       })
       .then((document) => {
         return this
           .decrypt(document.get('content'), secret)
           .then((decryptedContent) => {
-            this.state = {
+            this._setState({
               document: new Document({
                 uuid: document.get('uuid'),
                 content: decryptedContent,
@@ -100,14 +99,11 @@ export default class Store {
                 last_modified_locally: document.get('last_modified_locally')
               }),
               secret: secret
-            };
-
-            this.events.emit(Events.CHANGE, this.state);
-
-            this._localPersist();
-
-            return this.state;
-          });
+            });
+          })
+      })
+      .then(() => {
+        return this._localPersist();
       });
   }
 
@@ -120,7 +116,7 @@ export default class Store {
       return;
     }
 
-    this.state = {
+    this._setState({
       document: new Document({
         uuid: document.get('uuid'),
         content: document.get('content'),
@@ -128,11 +124,9 @@ export default class Store {
         last_modified_locally: Date.now()
       }),
       secret: this.state.secret
-    };
+    });
 
-    this.events.emit(Events.CHANGE, this.state);
-
-    this._localPersist();
+    return this._localPersist();
   }
 
   /**
@@ -151,11 +145,7 @@ export default class Store {
         .get(`${this.endpoint}/documents/${this.state.document.get('uuid')}`)
         .set('Accept', 'application/json')
         .set('Content-Type', 'application/json')
-        .then((res) => {
-          this.events.emit(Events.APP_IS_ONLINE);
-
-          return Promise.resolve(res);
-        })
+        .then(this._handleRequestSuccess.bind(this))
         .catch(this._handleRequestError.bind(this))
         .then((res) => {
           const localDoc  = this.state.document;
@@ -183,18 +173,20 @@ export default class Store {
                 return this
                   .decrypt(serverDoc.content, secret)
                   .then((decryptedContent) => {
-                    this.state = {
-                      document: new Document({
-                        uuid: serverDoc.get('uuid'),
-                        content: decryptedContent,
-                        last_modified: serverDoc.get('last_modified')
-                      }),
-                      secret: secret
-                    };
-
-                    this.events.emit(Events.UPDATE_WITHOUT_CONFLICT, {
-                      document: this.state.document
-                    });
+                    this._setState(
+                      {
+                        document: new Document({
+                          uuid: serverDoc.get('uuid'),
+                          content: decryptedContent,
+                          last_modified: serverDoc.get('last_modified')
+                        }),
+                        secret: secret
+                      },
+                      Events.UPDATE_WITHOUT_CONFLICT,
+                      {
+                        document: this.state.document
+                      }
+                    );
                   })
                   .then(() => {
                     return this._localPersist();
@@ -252,12 +244,14 @@ export default class Store {
                         };
 
                         // state is now sync'ed with fork
-                        this.state = {
-                          document: fork,
-                          secret: forkSecret
-                        };
-
-                        this.events.emit(Events.CONFLICT, conflictState);
+                        this._setState(
+                          {
+                            document: fork,
+                            secret: forkSecret
+                          },
+                          Events.CONFLICT,
+                          conflictState
+                        );
 
                         return Promise.resolve(conflictState);
                       });
@@ -323,29 +317,32 @@ export default class Store {
           .send({
             content: encryptedContent
           })
-          .then((res) => {
-            this.events.emit(Events.APP_IS_ONLINE);
-
-            return Promise.resolve(res);
-          })
+          .then(this._handleRequestSuccess.bind(this))
           .catch(this._handleRequestError.bind(this))
           .then((res) => {
-            this.state = {
-              document: new Document({
-                uuid: doc.get('uuid'),
-                content: doc.get('content'),
-                last_modified: res.body.last_modified,
-                last_modified_locally: null
-              }),
-              secret: secret
-            };
-
-            this.events.emit(Events.SYNCHRONIZE);
+            this._setState(
+              {
+                document: new Document({
+                  uuid: doc.get('uuid'),
+                  content: doc.get('content'),
+                  last_modified: res.body.last_modified,
+                  last_modified_locally: null
+                }),
+                secret: secret
+              },
+              Events.SYNCHRONIZE
+            );
 
             return this._localPersist();
           });
       }
     );
+  }
+
+  _handleRequestSuccess(res) {
+    this.events.emit(Events.APP_IS_ONLINE);
+
+    return Promise.resolve(res);
   }
 
   _handleRequestError(err) {
@@ -358,5 +355,11 @@ export default class Store {
     this.events.emit(Events.APP_IS_OFFLINE);
 
     return Promise.reject('request failed (network)');
+  }
+
+  _setState(newState, eventName, eventState) {
+    this.state = newState;
+
+    this.events.emit(eventName || Events.CHANGE, eventState || this.state);
   }
 }
