@@ -5,7 +5,7 @@ import { expect } from 'chai';
 // see: https://github.com/mochajs/mocha/issues/1847
 const { describe, it } = global;
 
-import MessageBox from '../MessageBox';
+import {MessageBox} from '../MessageBox';
 
 
 describe('<MessageBox />', () => {
@@ -23,7 +23,7 @@ describe('<MessageBox />', () => {
     const wrapper = shallow(<MessageBox message={message} />);
 
     expect(wrapper.find('.message-box')).to.have.length(1);
-    expect(wrapper.text()).to.equal('hello.');
+    expect(wrapper.text()).to.equal('hello.×');
   });
 
 it('renders a typed message', () => {
@@ -34,6 +34,6 @@ it('renders a typed message', () => {
     const wrapper = shallow(<MessageBox message={message} />);
 
     expect(wrapper.find('.message-box.info')).to.have.length(1);
-    expect(wrapper.text()).to.equal('hello.');
+    expect(wrapper.text()).to.equal('hello.×');
   });
 });

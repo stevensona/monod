@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 const { array, func, object } = PropTypes;
 
 
-class MessageBox extends Component {
+export class MessageBox extends Component {
 
   render() {
     if (this.props.message && this.props.message.content) {
