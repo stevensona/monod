@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { Events } from '../Store';
 
 const DEFAULT_DURATION = 5;
-const MAX_VISIBLE_COUNTER = 60;
 const MAX_DURATION = 600;
 
 export default class Sync extends Component {
@@ -12,7 +11,8 @@ export default class Sync extends Component {
     this.state = {
       duration: DEFAULT_DURATION,
       counter: DEFAULT_DURATION,
-      offline: false
+      offline: false,
+      displayCounter: true
     };
   }
 
@@ -40,35 +40,38 @@ export default class Sync extends Component {
       this.setState({
         counter: DEFAULT_DURATION,
         duration: DEFAULT_DURATION,
-        offline: false
+        offline: false,
+        displayCounter: true
       });
     });
 
     this.context.controller.on(Events.APP_IS_OFFLINE, () => {
-      let duration = Math.round(this.state.duration * 2);
+      let displayCounter = DEFAULT_DURATION === this.state.duration;
+      let duration       = Math.round(this.state.duration * 2);
 
       if (duration >= MAX_DURATION) {
-        duration = DEFAULT_DURATION;
+        duration = DEFAULT_DURATION + 1;
       }
 
       this.setState({
         counter: duration,
         duration: duration,
-        offline: true
+        offline: true,
+        displayCounter: displayCounter
       });
     });
   }
 
   render() {
-    let title = 'No Internet connection or server is unreachable';
+    let title = 'Connected to the Internets™';
     let offlineStatus = '';
 
-    if (false === this.state.offline) {
-      title = 'Connected to the Internets™';
-    } else {
-      offlineStatus = (<span>&nbsp;Retrying in {this.state.counter} seconds</span>);
+    if (this.state.offline) {
+      title = 'No Internet connection or server is unreachable';
 
-      if (this.state.counter > MAX_VISIBLE_COUNTER) {
+      if (this.state.displayCounter) {
+        offlineStatus = (<span>&nbsp;Retrying in {this.state.counter} seconds</span>);
+      } else {
         offlineStatus = (<span>&nbsp;Offline</span>);
       }
     }
