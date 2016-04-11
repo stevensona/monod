@@ -47,12 +47,38 @@
 
                 .rendered {
                     padding: 0;
-
-                    p {
-                        font-size: 11pt !important;
-                    }
                 }
             }
         }
+    }
+
+    // Override styles
+    a {
+        border: 0 !important;
+    }
+
+    pre, blockquote {
+        border: 0;
+        border-left: 3px solid $silver;
+
+        & > * {
+            color: $emperor !important;
+        }
+    }
+
+    blockquote {
+        font-style: italic;
+    }
+
+    pre {
+        font-size: 10pt;
+
+        code {
+            margin: 0 !important;
+        }
+    }
+
+    p {
+        font-size: 11pt !important;
     }
 }
