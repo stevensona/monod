@@ -6,7 +6,7 @@ import debounce from 'lodash.debounce';
 import Header from './Header';
 import Editor from './Editor';
 import Footer from './Footer';
-import MessageBox from './MessageBox';
+import MessageBoxes from './MessageBox';
 
 const { string } = PropTypes;
 
@@ -17,6 +17,7 @@ export default class App extends Component {
 
     this.state = {
       document: new Document(),
+      messages: [],
       loaded: false
     };
 
@@ -34,7 +35,7 @@ export default class App extends Component {
     this.setState({
       loaded: true,
       document: document,
-      message: message || false
+      messages: this.state.messages.concat(message) || false
     });
 
     if (!window.history.state || !window.history.state.uuid ||
@@ -99,15 +100,17 @@ export default class App extends Component {
     });
 
     this.props.controller.on(Events.UPDATE_WITHOUT_CONFLICT, (state) => {
+      const message = {
+        content: [
+          'We have updated the document you are viewing to its latest revision.',
+          'Happy reading/working!'
+        ].join(' '),
+        type: 'info'
+      };
+
       this.setState({
         document: state.document,
-        message: {
-          content: [
-            'We have updated the document you are viewing to its latest revision.',
-            'Happy reading/working!'
-          ].join(' '),
-          type: 'info'
-        }
+        messages: this.state.messages.concat(message)
       });
     });
 
@@ -140,7 +143,7 @@ export default class App extends Component {
     return (
       <div className="layout">
         <Header />
-        <MessageBox message={this.state.message || {}} />
+        <MessageBoxes messages={this.state.messages || []} />
         <Editor
           loaded={this.state.loaded}
           content={this.state.document.get('content')}
