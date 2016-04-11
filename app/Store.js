@@ -173,18 +173,20 @@ export default class Store {
                 return this
                   .decrypt(serverDoc.content, secret)
                   .then((decryptedContent) => {
+                    const updatedDocument = new Document({
+                      uuid: serverDoc.get('uuid'),
+                      content: decryptedContent,
+                      last_modified: serverDoc.get('last_modified')
+                    });
+
                     this._setState(
                       {
-                        document: new Document({
-                          uuid: serverDoc.get('uuid'),
-                          content: decryptedContent,
-                          last_modified: serverDoc.get('last_modified')
-                        }),
+                        document: updatedDocument,
                         secret: secret
                       },
                       Events.UPDATE_WITHOUT_CONFLICT,
                       {
-                        document: this.state.document
+                        document: updatedDocument
                       }
                     );
                   })
@@ -245,10 +247,7 @@ export default class Store {
 
                         // state is now sync'ed with fork
                         this._setState(
-                          {
-                            document: fork,
-                            secret: forkSecret
-                          },
+                          conflictState.fork,
                           Events.CONFLICT,
                           conflictState
                         );

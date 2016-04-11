@@ -37,7 +37,10 @@ export default class App extends Component {
       message: message || false
     });
 
-    window.history.pushState({}, '', uri);
+    if (!window.history.state.uuid ||
+      (window.history.state.uuid && document.get('uuid') !== window.history.state.uuid)) {
+      window.history.pushState({ uuid: document.get('uuid') }, `Monod - ${document.get('uuid')}`, uri);
+    }
   }
 
   componentDidMount() {
@@ -107,7 +110,7 @@ export default class App extends Component {
       });
     });
 
-    this.props.controller.on(Events.CHANGE, (state) => {
+    this.props.controller.on(`${Events.SYNCHRONIZE}, ${Events.CHANGE}`, (state) => {
       this.loadAndRedirect(
         state.document,
         `/${state.document.uuid}#${state.secret}`
