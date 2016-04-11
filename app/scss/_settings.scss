@@ -30,9 +30,9 @@ $header-font-family: 'LatoLatin', $common-font-family;
 
 // Typography
 $code-font-family: Consolas, 'Liberation Mono', Courier, monospace;
-$code-background: transparent;
 $code-border: 0;
 $code-padding: 0;
+$print-transparent-backgrounds: false;
 
 // Callout
 $callout-radius: 0;

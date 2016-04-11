@@ -73,8 +73,9 @@
     pre {
         font-size: 10pt;
 
-        code {
+        & > code {
             margin: 0 !important;
+            background: transparent !important;
         }
     }
 
