@@ -17,9 +17,23 @@ describe('<MessageBox />', () => {
   });
 
   it('renders a message', () => {
-    const wrapper = shallow(<MessageBox message={'hello.'} />);
+    const message = {
+      content: 'hello.'
+    };
+    const wrapper = shallow(<MessageBox message={message} />);
 
     expect(wrapper.find('.message-box')).to.have.length(1);
+    expect(wrapper.text()).to.equal('hello.');
+  });
+
+it('renders a typed message', () => {
+    const message = {
+      content: 'hello.',
+      type: 'info'
+    };
+    const wrapper = shallow(<MessageBox message={message} />);
+
+    expect(wrapper.find('.message-box.info')).to.have.length(1);
     expect(wrapper.text()).to.equal('hello.');
   });
 });

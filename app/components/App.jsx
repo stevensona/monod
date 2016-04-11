@@ -49,33 +49,43 @@ export default class App extends Component {
     });
 
     this.props.controller.on(Events.DECRYPTION_FAILED, (state) => {
-      const message = [
-        'We were unable to decrypt the document. Either the secret has not',
-        'been supplied or it is invalid.',
-        'We have redirected you to a new document.'
-      ].join(' ');
+      const message = {
+        content: [
+          'We were unable to decrypt the document. Either the secret has not',
+          'been supplied or it is invalid.',
+          'We have redirected you to a new document.'
+        ].join(' '),
+        type: 'error'
+      }
 
       this.loadAndRedirect(state.document, '/', message);
     });
 
     this.props.controller.on(Events.DOCUMENT_NOT_FOUND, (state) => {
-      const message = [
-        'We could not find the document you were trying to load, so we have',
-        'redirected you to a new document.'
-      ].join(' ');
+      const message = {
+        content: [
+          'We could not find the document you were trying to load, so we have',
+          'redirected you to a new document.'
+        ].join(' '),
+        type: 'error'
+      };
 
       this.loadAndRedirect(state.document, '/', message);
     });
 
     this.props.controller.on(Events.CONFLICT, (state) => {
-      const message = [
-        <i>Snap!</i>,
-        ' The document you were working on has been updated by a third,',
-        ' and you are now working on a fork. You can still find the original',
-        ' (and updated) document: ',
-        <a href={'/' + state.document.uuid + '#' + state.secret}>here</a>,
-        '.'
-      ];
+      const message = {
+        content: (
+          <span>
+            <i>Snap!</i>&nbsp;
+            The document you were working on has been updated by a third,
+            and you are now working on a fork. You can still find the original
+            (and updated) document:&nbsp;
+            <a href={'/' + state.document.uuid + '#' + state.secret}>here</a>.
+          </span>
+        ),
+        type: 'warning'
+      };
 
       this.loadAndRedirect(
         state.fork.document,
@@ -87,10 +97,13 @@ export default class App extends Component {
     this.props.controller.on(Events.UPDATE_WITHOUT_CONFLICT, (state) => {
       this.setState({
         document: state.document,
-        message: [
-          'We have updated the document you are viewing to its latest revision.',
-          'Happy reading/working!'
-        ].join(' ')
+        message: {
+          content: [
+            'We have updated the document you are viewing to its latest revision.',
+            'Happy reading/working!'
+          ].join(' '),
+          type: 'info'
+        }
       });
     });
 
@@ -124,7 +137,7 @@ export default class App extends Component {
     return (
       <div className="layout">
         <Header />
-        <MessageBox message={this.state.message || false} />
+        <MessageBox message={this.state.message || {}} />
         <Editor
           loaded={this.state.loaded}
           content={this.state.document.get('content')}

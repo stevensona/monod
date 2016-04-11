@@ -17,7 +17,7 @@ $foundation-palette: (
   secondary: $mercury,
   success: #3adb76,
   warning: #ffae00,
-  alert: #ec5840,
+  alert: #ec5840
 );
 
 // Global
@@ -27,6 +27,7 @@ $global-radius: 5px;
 $common-font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
 $body-font-family: 'LatoLatinLight', $common-font-family;
 $header-font-family: 'LatoLatin', $common-font-family;
+$callout-font-family: $header-font-family;
 
 // Typography
 $code-font-family: Consolas, 'Liberation Mono', Courier, monospace;
@@ -37,6 +38,9 @@ $print-transparent-backgrounds: false;
 // Callout
 $callout-radius: 0;
 $callout-margin: 0;
+$callout-background-fade: 20%;
+$callout-font-color: $alabaster;
+$callout-border: 0 none none;
 
 /* -- Monod settings -- */
 $footer-font-family: 'LatoLatin', $common-font-family;
