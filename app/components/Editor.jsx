@@ -104,3 +104,7 @@ Editor.propTypes = {
   content: string.isRequired,
   onContentUpdate: func.isRequired
 };
+
+Editor.contextTypes = {
+  controller: PropTypes.object.isRequired
+};

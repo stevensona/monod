@@ -44,11 +44,11 @@ describe('Store', () => {
     store = new Store(STORE_NAME, { emit: eventEmitterSpy }, '', localForageMock);
   });
 
-  describe('- findById()', (done) => {
+  describe('- load()', (done) => {
     // 0. No ID => Events.NO_DOCUMENT_ID
     it('emits an event when no id is supplied', () => {
       store
-        .findById()
+        .load()
         .catch(() => {
           expect(eventEmitterSpy.calledOnce).to.be.true;
           expect(eventEmitterSpy.calledWith(Events.NO_DOCUMENT_ID)).to.be.true;
@@ -71,7 +71,7 @@ describe('Store', () => {
           fauxJax.restore();
         });
 
-        return store.findById(123).catch(() => {
+        return store.load(123).catch(() => {
           expect(localForageMock.nbGetItemCall).to.equal(1);
         });
       });
@@ -86,7 +86,7 @@ describe('Store', () => {
               content: encrypted
             });
 
-            return store.findById(123, 'secret').then((state) => {
+            return store.load(123, 'secret').then((state) => {
               expect(eventEmitterSpy.calledOnce).to.be.true;
               expect(eventEmitterSpy.calledWith(Events.CHANGE)).to.be.true;
 
@@ -105,7 +105,7 @@ describe('Store', () => {
           fauxJax.restore();
         });
 
-        return store.findById(123, 'secret').catch(() => {
+        return store.load(123, 'secret').catch(() => {
           expect(eventEmitterSpy.calledOnce).to.be.true;
           expect(eventEmitterSpy.calledWith(Events.DOCUMENT_NOT_FOUND)).to.be.true;
         });
@@ -128,7 +128,7 @@ describe('Store', () => {
               fauxJax.restore();
             });
 
-            return store.findById(123, 'secret').then((state) => {
+            return store.load(123, 'secret').then((state) => {
               expect(eventEmitterSpy.calledTwice).to.be.true;
               expect(eventEmitterSpy.calledWith(Events.APP_IS_ONLINE)).to.be.true;
               expect(eventEmitterSpy.calledWith(Events.CHANGE)).to.be.true;
@@ -144,7 +144,7 @@ describe('Store', () => {
 
     describe('with NO Internet connection', () => {
       it('emits an event because we are offline', () => {
-        return store.findById(123, 'secret').catch(() => {
+        return store.load(123, 'secret').catch(() => {
           expect(eventEmitterSpy.calledOnce).to.be.true;
           expect(eventEmitterSpy.calledWith(Events.APP_IS_OFFLINE)).to.be.true;
         });

@@ -20,7 +20,7 @@ export default class Controller {
   }
 
   onInit({ id, secret }) {
-    this.store.findById(id, secret);
+    this.store.load(id, secret);
   }
 
   onUpdate(document) {
