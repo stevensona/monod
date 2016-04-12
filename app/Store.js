@@ -55,7 +55,7 @@ export default class Store {
    *     2.2 Not found => Events.DOCUMENT_NOT_FOUND
    *
    */
-  findById(id, secret) {
+  load(id, secret) {
     if (!id) {
       this.events.emit(Events.NO_DOCUMENT_ID, this.state);
 
