@@ -14,6 +14,17 @@ import Preview from '../Preview';
 
 describe('<Editor />', () => {
 
+  let context;
+
+  before(() => {
+    context = {
+      controller: {
+        on: () => {},
+        dispatch: () => {}
+      }
+    };
+  });
+
   it('renders Markdown component', () => {
     const wrapper = shallow(
       <Editor
@@ -78,14 +89,13 @@ describe('<Editor />', () => {
   });
 
   it('removes loader once content is loaded', () => {
-    // this test triggers a warning message because it is currently not
-    // possible to pass a context to child components :-(
     const wrapper = mount(
       <Editor
         loaded={true}
         content={''}
         onContentUpdate={() => {}}
-      />
+      />,
+      { context }
     );
 
     expect(wrapper.find('.editor')).to.have.length(1);
