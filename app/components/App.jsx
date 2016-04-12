@@ -37,8 +37,9 @@ export default class App extends Component {
       message: message || false
     });
 
-    if (!window.history.state.uuid ||
-      (window.history.state.uuid && document.get('uuid') !== window.history.state.uuid)) {
+    if (!window.history.state || !window.history.state.uuid ||
+      (window.history.state && window.history.state.uuid &&
+       document.get('uuid') !== window.history.state.uuid)) {
       window.history.pushState({ uuid: document.get('uuid') }, `Monod - ${document.get('uuid')}`, uri);
     }
   }
