@@ -35,7 +35,7 @@ export default class App extends Component {
     this.setState({
       loaded: true,
       document: document,
-      messages: this.state.messages.concat(message) || false
+      messages: this.state.messages.concat(message) || []
     });
 
     if (!window.history.state || !window.history.state.uuid ||
