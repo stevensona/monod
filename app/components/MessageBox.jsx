@@ -38,7 +38,7 @@ export default class MessageBoxes extends Component {
 
   render() {
 
-    var messageBoxNodes = this.props.messages.map((message, index) => {
+    const messageBoxNodes = this.props.messages.map((message, index) => {
       return (
           <MessageBox
             message={message}
