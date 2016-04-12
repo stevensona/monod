@@ -123,15 +123,14 @@ export default class App extends Component {
     });
   }
 
-  updateContent(content) {
+  updateContent(newContent) {
     const doc = this.state.document;
 
-    if (doc.content !== content) {
+    if (doc.content !== newContent) {
       this.props.controller.dispatch('action:update', new Document({
         uuid: doc.get('uuid'),
-        content: content,
-        last_modified: doc.get('last_modified'),
-        last_modified_locally: doc.get('last_modified_locally')
+        content: newContent,
+        last_modified: doc.get('last_modified')
       }));
     }
   }

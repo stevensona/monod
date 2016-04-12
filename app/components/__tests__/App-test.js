@@ -1,6 +1,7 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
+import sinon from 'sinon';
 
 // see: https://github.com/mochajs/mocha/issues/1847
 const { describe, it } = global;
@@ -33,5 +34,18 @@ describe('<App />', () => {
   it('should create a document object', () => {
     const wrapper = shallow(<App version={version} />);
     expect(wrapper.state('document')).to.be.an('object');
+  });
+
+  it('calls the init action on mount', () => {
+    const spy = sinon.spy();
+    const controller = {
+      on: () => {},
+      dispatch: spy
+    };
+
+    const wrapper = mount(<App version={version} controller={controller} />);
+
+    expect(spy.calledOnce).to.be.true;
+    expect(spy.calledWith('action:init')).to.be.true;
   });
 });

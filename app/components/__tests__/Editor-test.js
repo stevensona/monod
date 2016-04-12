@@ -5,7 +5,7 @@ import Loader from 'react-loader';
 import sinon from 'sinon';
 
 // see: https://github.com/mochajs/mocha/issues/1847
-const { describe, it } = global;
+const { before, describe, it } = global;
 
 import Editor, {EditorModes} from '../Editor';
 import Markdown from '../Markdown';
@@ -31,7 +31,8 @@ describe('<Editor />', () => {
         loaded={true}
         content={''}
         onContentUpdate={() => {}}
-      />
+      />,
+      { context }
     );
     expect(wrapper.find(Markdown)).to.have.length(1);
   });
@@ -42,7 +43,8 @@ describe('<Editor />', () => {
         loaded={true}
         content={''}
         onContentUpdate={() => {}}
-      />
+      />,
+      { context }
     );
     expect(wrapper.find(Preview)).to.have.length(1);
   });
@@ -55,7 +57,8 @@ describe('<Editor />', () => {
         loaded={true}
         content={''}
         onContentUpdate={spy}
-      />
+      />,
+      { context }
     );
     const content = 'Hello, World';
 
@@ -70,7 +73,8 @@ describe('<Editor />', () => {
         loaded={true}
         content={''}
         onContentUpdate={() => {}}
-      />
+      />,
+      { context }
     );
 
     expect(wrapper.find(Loader)).to.have.length(1);
@@ -82,7 +86,8 @@ describe('<Editor />', () => {
         loaded={false}
         content={''}
         onContentUpdate={() => {}}
-      />
+      />,
+      { context }
     );
 
     expect(wrapper.find('.editor')).to.have.length(0);
@@ -108,7 +113,8 @@ describe('<Editor />', () => {
         loaded={true}
         content={''}
         onContentUpdate={spy}
-        />
+      />,
+      { context }
     );
 
     wrapper.find('Markdown').simulate('change');
@@ -122,7 +128,8 @@ describe('<Editor />', () => {
         loaded={true}
         content={''}
         onContentUpdate={() => {}}
-      />
+      />,
+      { context }
     );
     const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();
 
@@ -140,7 +147,8 @@ describe('<Editor />', () => {
         loaded={true}
         content={''}
         onContentUpdate={() => {}}
-      />
+      />,
+      { context }
     );
     const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();
 
@@ -164,7 +172,8 @@ describe('<Editor />', () => {
         loaded={true}
         content={''}
         onContentUpdate={() => {}}
-      />
+      />,
+      { context }
     );
     const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();
 
@@ -182,7 +191,8 @@ describe('<Editor />', () => {
         loaded={true}
         content={''}
         onContentUpdate={() => {}}
-      />
+      />,
+      { context }
     );
     const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();
 

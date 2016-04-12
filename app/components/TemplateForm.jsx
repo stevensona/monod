@@ -46,4 +46,4 @@ export default class TemplateForm extends Component {
 
 TemplateForm.propTypes = {
   doUpdateTemplate: func.isRequired
-}
+};
