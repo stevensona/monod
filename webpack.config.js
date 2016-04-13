@@ -130,7 +130,8 @@ const common = {
             cache_name: 'monod'
           },
           AppCache: {
-            FALLBACK: { '/': '/' }
+            FALLBACK: { '/': '/' },
+            NETWORK: [ '/documents', '*' ]
           }
         })
     ]
