@@ -26,7 +26,7 @@ describe('<MessageBox />', () => {
     expect(wrapper.text()).to.equal('hello.×');
   });
 
-it('renders a typed message', () => {
+  it('renders a typed message', () => {
     const message = {
       content: 'hello.',
       type: 'info'
