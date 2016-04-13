@@ -3,25 +3,22 @@ import React, { Component, PropTypes } from 'react';
 const { array, func, object } = PropTypes;
 
 
-export class MessageBox extends Component {
+export const MessageBox = (props) => {
 
-  render() {
-    if (this.props.message && this.props.message.content) {
-      return (
-        <div className={'message-box ' + this.props.message.type} ref="msgBox">
-          <p>{this.props.message.content}</p>
-          <button
-            className="close-button"
-            onClick={this.props.doClose}
-            value={this.key} >
-            <span>&times;</span>
-          </button>
-        </div>
-      );
-    }
-
-    return null;
+  if (props.message && props.message.content) {
+    return (
+      <div className={'message-box ' + props.message.type}>
+        <p>{props.message.content}</p>
+        <button
+          className="close-button"
+          onClick={props.doClose}>
+          <span>&times;</span>
+        </button>
+      </div>
+    );
   }
+
+  return (<noscript />);
 }
 
 MessageBox.propTypes = {
