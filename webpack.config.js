@@ -131,7 +131,7 @@ const common = {
           },
           AppCache: {
             FALLBACK: { '/': '/' },
-            NETWORK: '/documents'
+            NETWORK: [ '/documents', '*' ]
           }
         })
     ]
