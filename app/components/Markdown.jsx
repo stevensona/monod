@@ -58,7 +58,7 @@ export default class Markdown extends Component {
     const newValue = this.getCodeMirror().getDoc().getValue();
 
     // Update the value -> rendering
-    this.props.onChange && this.props.onChange(newValue);
+    this.props.onChange(newValue);
 
     // Update scrolling position (ensure rendering is visible)
     this.handleScroll();

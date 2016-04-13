@@ -19,13 +19,13 @@ describe('Store', () => {
 
   let eventEmitterSpy, localForageMock, store;
 
-   beforeEach(() => {
+  beforeEach(() => {
     eventEmitterSpy = sinon.spy();
-    localForageMock   = {
+    localForageMock = {
       items: {},
       nbGetItemCall: 0,
       nbSetItemCall: 0,
-      config: function() {
+      config: function () {
         return this;
       },
       setItem: function (k, v) {
@@ -173,8 +173,8 @@ describe('Store', () => {
     });
 
     it('returns a promise with the decrypted content', (done) => {
-      const content   = 'foo';
-      const secret    = 'secret';
+      const content = 'foo';
+      const secret = 'secret';
 
       store.encrypt(content, secret).then((encrypted) => {
         const promise = store.decrypt(encrypted, secret);
@@ -272,8 +272,8 @@ describe('Store', () => {
         'but there are local changes'
       ].join(' '), () => {
         const responses = function* () {
-          yield { status: 200, body: { last_modified: 1 } }
-          yield { status: 200, body: { last_modified: 2 } }
+          yield { status: 200, body: { last_modified: 1 } };
+          yield { status: 200, body: { last_modified: 2 } };
         }();
 
         fauxJax.on('request', (request) => {
@@ -320,12 +320,12 @@ describe('Store', () => {
                 uuid: 'foo',
                 content: encryptedContent,
                 last_modified: 2
-              } }
+              } };
               yield { status: 200, body: {
                 uuid: 'foo',
                 content: encryptedContent,
                 last_modified: 2
-              } }
+              } };
             }();
 
             fauxJax.on('request', (request) => {
@@ -380,7 +380,7 @@ describe('Store', () => {
                 uuid: 'foo',
                 content: encryptedContent,
                 last_modified: 10
-              } }
+              } };
             }();
 
             fauxJax.on('request', (request) => {
@@ -419,7 +419,7 @@ describe('Store', () => {
 
               // fork
               const forkId = uuids[0];
-              const fork   = localForageMock.items[forkId];
+              const fork = localForageMock.items[forkId];
 
               expect(fork.uuid).to.equal(forkId);
               expect(fork.last_modified).to.be.null;

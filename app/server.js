@@ -1,22 +1,22 @@
-var express = require('express');
-var compression = require('compression');
-var bodyParser = require('body-parser');
-var path = require('path');
-var fs = require('fs');
+const express = require('express');
+const compression = require('compression');
+const bodyParser = require('body-parser');
+const path = require('path');
+const fs = require('fs');
 
-var app = express();
-var api = express.Router();
+const app = express();
+const api = express.Router();
 
 // config
-var static_path = path.join(__dirname, '/../build');
-var data_dir    = process.env.MONOD_DATA_DIR || path.join(__dirname, '/../data');
+const staticPath = path.join(__dirname, '/../build');
+const dataDir = process.env.MONOD_DATA_DIR || path.join(__dirname, '/../data');
 
 app.set('port', process.env.PORT || 3000);
 app.set('etag', false);
 
 // middlewares
 app.use(compression());
-app.use(express.static(static_path));
+app.use(express.static(staticPath));
 app.use(bodyParser.json());
 app.use(api);
 
@@ -27,20 +27,20 @@ const isValidId = (uuid) => {
 // Match UUIDs
 app.get('/[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}', (req, res) => {
   res.sendFile('index.html', {
-    root: static_path
+    root: staticPath
   });
 });
 
 // API
 api.get('/documents/:uuid', (req, res) => {
-  var uuid = req.params.uuid;
+  const uuid = req.params.uuid;
 
   // request validation
   if (!isValidId(uuid)) {
     return res.status(400).json();
   }
 
-  fs.readFile(path.join(data_dir, uuid), (err, data) => {
+  return fs.readFile(path.join(dataDir, uuid), (err, data) => {
     if (err) {
       return res.status(404).json();
     }
@@ -57,14 +57,13 @@ api.put('/documents/:uuid', (req, res) => {
     return res.status(400).json();
   }
 
-  const filename = path.join(data_dir, uuid);
+  const filename = path.join(dataDir, uuid);
 
-  fs.readFile(filename, (err, data) => {
-    const isNew = err ? true : false;
-    const document = isNew ? {} : JSON.parse(data);
+  return fs.readFile(filename, (readErr, data) => {
+    const document = readErr ? {} : JSON.parse(data);
 
-    document.uuid          = uuid;
-    document.content       = req.body.content;
+    document.uuid = uuid;
+    document.content = req.body.content;
     document.last_modified = Date.now();
 
     fs.writeFile(filename, JSON.stringify(document), (err) => {
@@ -72,7 +71,7 @@ api.put('/documents/:uuid', (req, res) => {
         return res.status(500).json();
       }
 
-      return res.status(isNew ? 201 : 200).json(document);
+      return res.status(readErr ? 201 : 200).json(document);
     });
   });
 });
@@ -80,7 +79,7 @@ api.put('/documents/:uuid', (req, res) => {
 // Listen only when doing: `node app/server.js`
 if (require.main === module) {
   app.listen(app.get('port'), () => {
-    console.log('Running at localhost:' + app.get('port'));
+    console.log(`Running at localhost: ${app.get('port')}`);
   });
 }
 

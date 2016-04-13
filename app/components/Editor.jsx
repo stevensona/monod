@@ -25,7 +25,7 @@ export default class Editor extends Component {
   }
 
   updatePosition(newPos) {
-    this.setState(function(previousState) {
+    this.setState((previousState) => {
       return {
         template: previousState.template,
         pos: newPos,
@@ -36,7 +36,7 @@ export default class Editor extends Component {
   }
 
   updateMode(newMode) {
-    this.setState(function(previousState) {
+    this.setState((previousState) => {
       return {
         template: previousState.template,
         pos: previousState.pos,
@@ -47,7 +47,7 @@ export default class Editor extends Component {
   }
 
   updateTemplate(newTemplate) {
-    this.setState(function(previousState) {
+    this.setState((previousState) => {
       return {
         template: newTemplate,
         pos: previousState.pos,
@@ -77,7 +77,8 @@ export default class Editor extends Component {
     return (
       <Loader
         loaded={this.props.loaded}
-        loadedClassName={'editor ' + this.state.mode}>
+        loadedClassName={`editor ${this.state.mode}`}
+      >
         <TemplateForm
           doUpdateTemplate={this.updateTemplate.bind(this)}
         />

@@ -31,10 +31,6 @@ export default class Sync extends Component {
     }, 1000);
   }
 
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
   componentDidMount() {
     this.context.controller.on(Events.APP_IS_ONLINE, () => {
       this.setState({
@@ -46,8 +42,8 @@ export default class Sync extends Component {
     });
 
     this.context.controller.on(Events.APP_IS_OFFLINE, () => {
-      let displayCounter = DEFAULT_DURATION === this.state.duration;
-      let duration       = Math.round(this.state.duration * 2);
+      const displayCounter = DEFAULT_DURATION === this.state.duration;
+      let duration = Math.round(this.state.duration * 2);
 
       if (duration >= MAX_DURATION) {
         duration = DEFAULT_DURATION + 1;
@@ -60,6 +56,10 @@ export default class Sync extends Component {
         displayCounter: displayCounter
       });
     });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   render() {

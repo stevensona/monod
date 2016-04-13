@@ -16,24 +16,25 @@ import Footer from '../Footer';
 describe('<App />', () => {
 
   const version = 'dummy';
+  const dummyController = {};
 
   it('renders Header component', () => {
-    const wrapper = shallow(<App version={version} />);
+    const wrapper = shallow(<App version={version} controller={dummyController} />);
     expect(wrapper.find(Header)).to.have.length(1);
   });
 
   it('renders Editor component', () => {
-    const wrapper = shallow(<App version={version} />);
+    const wrapper = shallow(<App version={version} controller={dummyController} />);
     expect(wrapper.find(Editor)).to.have.length(1);
   });
 
   it('renders Footer component', () => {
-    const wrapper = shallow(<App version={version} />);
+    const wrapper = shallow(<App version={version} controller={dummyController} />);
     expect(wrapper.find(Footer)).to.have.length(1);
   });
 
   it('should create a document object', () => {
-    const wrapper = shallow(<App version={version} />);
+    const wrapper = shallow(<App version={version} controller={dummyController} />);
     expect(wrapper.state('document')).to.be.an('object');
   });
 
@@ -65,7 +66,7 @@ describe('<App />', () => {
         type: 'info'
       }
     ]);
-    const wrapper = shallow(<App version={version} />);
+    const wrapper = shallow(<App version={version} controller={dummyController} />);
     const inst = wrapper.instance();
 
     wrapper.setState({

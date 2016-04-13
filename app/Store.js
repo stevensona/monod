@@ -1,3 +1,4 @@
+/* eslint consistent-return: 1 */
 import uuid from 'uuid';
 import sjcl from 'sjcl';
 import request from 'superagent';
@@ -16,7 +17,7 @@ export const Events = {
   SYNCHRONIZE: 'store:synchronize',
   DECRYPTION_FAILED: 'store:decryption_failed',
   CONFLICT: 'store:conflict',
-  UPDATE_WITHOUT_CONFLICT: 'store:update-without-conflict'
+  UPDATE_WITHOUT_CONFLICT: 'store:update-without-conflict',
 };
 
 export default class Store {
@@ -26,16 +27,16 @@ export default class Store {
       // we automatically create a default document, but it might not be used
       document: new Document(),
       // we automatically generate a secret, but it might not be used
-      secret: sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0)
+      secret: sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0),
     };
 
-    this.events      = events;
-    this.endpoint    = endpoint;
+    this.events = events;
+    this.endpoint = endpoint;
     this.localforage = localforage;
 
     this.localforage.config({
       name: Config.APP_NAME,
-      storeName: name
+      storeName: name,
     });
   }
 
@@ -100,7 +101,7 @@ export default class Store {
               }),
               secret: secret
             });
-          })
+          });
       })
       .then(() => {
         return this._localPersist();
@@ -140,126 +141,126 @@ export default class Store {
     // document is new
     if (this.state.document.isNew()) {
       return this._serverPersist();
-    } else {
-      return request
-        .get(`${this.endpoint}/documents/${this.state.document.get('uuid')}`)
-        .set('Accept', 'application/json')
-        .set('Content-Type', 'application/json')
-        .then(this._handleRequestSuccess.bind(this))
-        .catch(this._handleRequestError.bind(this))
-        .then((res) => {
-          const localDoc  = this.state.document;
-          const serverDoc = new Document({
-            uuid: res.body.uuid,
-            content: res.body.content,
-            last_modified: res.body.last_modified
-          });
-
-          if (serverDoc.get('last_modified') === localDoc.get('last_modified')) {
-            // here, document on the server has not been updated, so we can
-            // probably push safely
-            if (serverDoc.get('last_modified') < localDoc.get('last_modified_locally')) {
-              return this._serverPersist();
-            }
-
-            return Promise.resolve('nothing to do');
-          } else {
-            // In theory, it should never happened, but... what happens if:
-            // localDoc.get('last_modified') > serverDoc.get('last_modified') ?
-            if (serverDoc.get('last_modified') > localDoc.get('last_modified')) {
-              if (localDoc.hasNoLocalChanges()) {
-                const secret = this.state.secret;
-
-                return this
-                  .decrypt(serverDoc.content, secret)
-                  .then((decryptedContent) => {
-                    const updatedDocument = new Document({
-                      uuid: serverDoc.get('uuid'),
-                      content: decryptedContent,
-                      last_modified: serverDoc.get('last_modified')
-                    });
-
-                    this._setState(
-                      {
-                        document: updatedDocument,
-                        secret: secret
-                      },
-                      Events.UPDATE_WITHOUT_CONFLICT,
-                      {
-                        document: updatedDocument
-                      }
-                    );
-                  })
-                  .then(() => {
-                    return this._localPersist();
-                  });
-              } else {
-                // someone fucking modified my document!
-                // but I also modified it so... let's fork \o/
-
-                // generate a new secret for fork'ed document
-                const forkSecret = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0);
-
-                // what we want is to create a fork
-                return this
-                  .encrypt(localDoc.content, forkSecret)
-                  .then((encryptedContent) => {
-                    const fork = new Document({
-                      uuid: uuid.v4(),
-                      content: localDoc.content
-                    });
-
-                    // persist fork'ed document
-                    return this.localforage.setItem(
-                      fork.get('uuid'),
-                      new Document({
-                        uuid: fork.get('uuid'),
-                        content: encryptedContent
-                      }).toJS()
-                    )
-                    .then(() => {
-                      return Promise.resolve(fork);
-                    });
-                  })
-                  .then((fork) => {
-                    // now, we can update the former doc with server content
-                    const former = new Document({
-                      uuid: serverDoc.get('uuid'),
-                      content: serverDoc.get('content'),
-                      last_modified: serverDoc.get('last_modified')
-                    });
-
-                    return this
-                      .localforage
-                      .setItem(
-                        former.get('uuid'),
-                        former.toJS()
-                      )
-                      .then(() => {
-                        const conflictState = {
-                          fork: {
-                            document: fork,
-                            secret: forkSecret
-                          },
-                          document: former,
-                          secret: this.state.secret
-                        };
-
-                        // state is now sync'ed with fork
-                        this._setState(
-                          conflictState.fork,
-                          Events.CONFLICT,
-                          conflictState
-                        );
-
-                        return Promise.resolve(conflictState);
-                      });
-                  });
-              }
-            }
-          }
-        });
     }
+
+    return request
+      .get(`${this.endpoint}/documents/${this.state.document.get('uuid')}`)
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .then(this._handleRequestSuccess.bind(this))
+      .catch(this._handleRequestError.bind(this))
+      .then((res) => {
+        const localDoc = this.state.document;
+        const serverDoc = new Document({
+          uuid: res.body.uuid,
+          content: res.body.content,
+          last_modified: res.body.last_modified
+        });
+
+        if (serverDoc.get('last_modified') === localDoc.get('last_modified')) {
+          // here, document on the server has not been updated, so we can
+          // probably push safely
+          if (serverDoc.get('last_modified') < localDoc.get('last_modified_locally')) {
+            return this._serverPersist();
+          }
+
+          return Promise.resolve('nothing to do');
+        }
+
+        // In theory, it should never happened, but... what happens if:
+        // localDoc.get('last_modified') > serverDoc.get('last_modified') ?
+        if (serverDoc.get('last_modified') > localDoc.get('last_modified')) {
+          if (localDoc.hasNoLocalChanges()) {
+            const secret = this.state.secret;
+
+            return this
+              .decrypt(serverDoc.content, secret)
+              .then((decryptedContent) => {
+                const updatedDocument = new Document({
+                  uuid: serverDoc.get('uuid'),
+                  content: decryptedContent,
+                  last_modified: serverDoc.get('last_modified')
+                });
+
+                this._setState(
+                  {
+                    document: updatedDocument,
+                    secret: secret
+                  },
+                  Events.UPDATE_WITHOUT_CONFLICT,
+                  {
+                    document: updatedDocument
+                  }
+                );
+              })
+              .then(() => {
+                return this._localPersist();
+              });
+          }
+
+          // someone fucking modified my document!
+          // but I also modified it so... let's fork \o/
+
+          // generate a new secret for fork'ed document
+          const forkSecret = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0);
+
+          // what we want is to create a fork
+          return this
+            .encrypt(localDoc.content, forkSecret)
+            .then((encryptedContent) => {
+              const fork = new Document({
+                uuid: uuid.v4(),
+                content: localDoc.content
+              });
+
+              // persist fork'ed document
+              return this.localforage.setItem(
+                fork.get('uuid'),
+                new Document({
+                  uuid: fork.get('uuid'),
+                  content: encryptedContent
+                }).toJS()
+              )
+              .then(() => {
+                return Promise.resolve(fork);
+              });
+            })
+            .then((fork) => {
+              // now, we can update the former doc with server content
+              const former = new Document({
+                uuid: serverDoc.get('uuid'),
+                content: serverDoc.get('content'),
+                last_modified: serverDoc.get('last_modified')
+              });
+
+              return this
+                .localforage
+                .setItem(
+                  former.get('uuid'),
+                  former.toJS()
+                )
+                .then(() => {
+                  const conflictState = {
+                    fork: {
+                      document: fork,
+                      secret: forkSecret
+                    },
+                    document: former,
+                    secret: this.state.secret
+                  };
+
+                  // state is now sync'ed with fork
+                  this._setState(
+                    conflictState.fork,
+                    Events.CONFLICT,
+                    conflictState
+                  );
+
+                  return Promise.resolve(conflictState);
+                });
+            });
+        }
+      });
   }
 
   // Pure / side-effect free method

@@ -7,7 +7,7 @@ import sinon from 'sinon';
 // see: https://github.com/mochajs/mocha/issues/1847
 const { before, describe, it } = global;
 
-import Editor, {EditorModes} from '../Editor';
+import Editor, { EditorModes } from '../Editor';
 import Markdown from '../Markdown';
 import Preview from '../Preview';
 
@@ -28,7 +28,7 @@ describe('<Editor />', () => {
   it('renders Markdown component', () => {
     const wrapper = shallow(
       <Editor
-        loaded={true}
+        loaded
         content={''}
         onContentUpdate={() => {}}
       />,
@@ -40,7 +40,7 @@ describe('<Editor />', () => {
   it('renders Preview component', () => {
     const wrapper = shallow(
       <Editor
-        loaded={true}
+        loaded
         content={''}
         onContentUpdate={() => {}}
       />,
@@ -54,7 +54,7 @@ describe('<Editor />', () => {
 
     const wrapper = shallow(
       <Editor
-        loaded={true}
+        loaded
         content={''}
         onContentUpdate={spy}
       />,
@@ -70,7 +70,7 @@ describe('<Editor />', () => {
   it('renders a Loader component', () => {
     const wrapper = shallow(
       <Editor
-        loaded={true}
+        loaded
         content={''}
         onContentUpdate={() => {}}
       />,
@@ -96,7 +96,7 @@ describe('<Editor />', () => {
   it('removes loader once content is loaded', () => {
     const wrapper = mount(
       <Editor
-        loaded={true}
+        loaded
         content={''}
         onContentUpdate={() => {}}
       />,
@@ -110,7 +110,7 @@ describe('<Editor />', () => {
     const spy = sinon.spy();
     const wrapper = shallow(
       <Editor
-        loaded={true}
+        loaded
         content={''}
         onContentUpdate={spy}
       />,
@@ -125,7 +125,7 @@ describe('<Editor />', () => {
   it('switches from preview to reading mode', () => {
     const wrapper = shallow(
       <Editor
-        loaded={true}
+        loaded
         content={''}
         onContentUpdate={() => {}}
       />,
@@ -136,7 +136,7 @@ describe('<Editor />', () => {
     // Mock the click event
     verticalHandlerWrapper
       .find('.left')
-      .simulate('click', {target: {className: 'left'}});
+      .simulate('click', { target: { className: 'left' } });
 
     expect(wrapper.state('mode')).to.be.equal(EditorModes.READING);
   });
@@ -144,7 +144,7 @@ describe('<Editor />', () => {
   it('switches from preview to reading mode and then back to preview mode', () => {
     const wrapper = shallow(
       <Editor
-        loaded={true}
+        loaded
         content={''}
         onContentUpdate={() => {}}
       />,
@@ -155,13 +155,13 @@ describe('<Editor />', () => {
     // Mock the click event
     verticalHandlerWrapper
       .find('.left')
-      .simulate('click', {target: {className: 'left'}});
+      .simulate('click', { target: { className: 'left' } });
 
     expect(wrapper.state('mode')).to.be.equal(EditorModes.READING);
 
     verticalHandlerWrapper
       .find('.right')
-      .simulate('click', {target: {className: 'right'}});
+      .simulate('click', { target: { className: 'right' } });
 
     expect(wrapper.state('mode')).to.be.equal(EditorModes.PREVIEW);
   });
@@ -169,7 +169,7 @@ describe('<Editor />', () => {
   it('switches from preview to focus mode', () => {
     const wrapper = shallow(
       <Editor
-        loaded={true}
+        loaded
         content={''}
         onContentUpdate={() => {}}
       />,
@@ -180,7 +180,7 @@ describe('<Editor />', () => {
     // Mock the click event
     verticalHandlerWrapper
       .find('.right')
-      .simulate('click', {target: {className: 'right'}});
+      .simulate('click', { target: { className: 'right' } });
 
     expect(wrapper.state('mode')).to.be.equal(EditorModes.FOCUS);
   });
@@ -188,7 +188,7 @@ describe('<Editor />', () => {
   it('switches from preview to focus mode and then back to preview mode', () => {
     const wrapper = shallow(
       <Editor
-        loaded={true}
+        loaded
         content={''}
         onContentUpdate={() => {}}
       />,
@@ -199,13 +199,13 @@ describe('<Editor />', () => {
     // Mock the click event
     verticalHandlerWrapper
       .find('.right')
-      .simulate('click', {target: {className: 'right'}});
+      .simulate('click', { target: { className: 'right' } });
 
     expect(wrapper.state('mode')).to.be.equal(EditorModes.FOCUS);
 
     verticalHandlerWrapper
       .find('.left')
-      .simulate('click', {target: {className: 'left'}});
+      .simulate('click', { target: { className: 'left' } });
 
     expect(wrapper.state('mode')).to.be.equal(EditorModes.PREVIEW);
   });

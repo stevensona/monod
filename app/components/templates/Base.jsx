@@ -1,3 +1,4 @@
+/* eslint no-throw-literal: 0 */
 import { PropTypes, Component } from 'react';
 import merge from 'deepmerge';
 
@@ -14,26 +15,28 @@ export default class Base extends Component {
     throw 'Not implemented';
   }
 
-  cleanData(data) {
-    // Clean input data to avoid undefined or null object properties
-    // This avoids preview crash when trying to access null.<property>
-    for (let p in data) {
-      if (data.hasOwnProperty(p) && data[p] === null) {
-        delete data[p];
-      }
-    }
-    return data;
-  }
-
   getData() {
     return merge(
       this.getDefaultData(),
       this.cleanData(this.props.data)
     );
   }
+
+  cleanData(data) {
+    const cleaned = Object.assign({}, data);
+    // Clean input data to avoid undefined or null object properties
+    // This avoids preview crash when trying to access null.<property>
+    for (const p in data) {
+      if (data.hasOwnProperty(p) && data[p] === null) {
+        delete cleaned[p];
+      }
+    }
+
+    return cleaned;
+  }
 }
 
 Base.propTypes = {
   content: array.isRequired,
   data: object.isRequired
-}
+};

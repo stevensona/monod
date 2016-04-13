@@ -1,3 +1,4 @@
+/* eslint no-param-reassign: 1, array-callback-return: 1 */
 import React, { PropTypes, Component } from 'react';
 import ReactDOM from 'react-dom';
 import PreviewLoader from './loaders/Preview';
@@ -9,7 +10,7 @@ import sanitizeHtml from 'sanitize-html';
 
 const { array, func, number, object, string } = PropTypes;
 
-import 'emojione/assets/sprites/emojione.sprites.css'
+import 'emojione/assets/sprites/emojione.sprites.css';
 
 class PreviewChunk extends Component {
 
@@ -18,7 +19,7 @@ class PreviewChunk extends Component {
     // makes the chunk to be re-rendered all the time. The problem is
     // that it impacts performance negatively since hljs is costly.
     this.props.chunk.map((chunk) => {
-      if (chunk.type === 'fence') {
+      if ('fence' === chunk.type) {
         chunk.attrs = null;
       }
     });
@@ -42,7 +43,6 @@ class PreviewChunk extends Component {
   }
 
   render() {
-
     return (
       <div className="chunk">
         <span dangerouslySetInnerHTML={this.getHTML()} />
@@ -52,11 +52,12 @@ class PreviewChunk extends Component {
 }
 
 PreviewChunk.propTypes = {
+  key: string,
   markdownIt: object.isRequired,
   emojione: object.isRequired,
   chunk: array.isRequired,
   markdownItEnv: object.isRequired
-}
+};
 
 
 export default class Preview extends Component {
@@ -127,7 +128,6 @@ export default class Preview extends Component {
    * We build chunks from token's level and nesting properties
    */
   getChunks(raw, env) {
-
     // Parse the whole markdown document and get tokens
     let tokens = this.markdownIt.parse(raw, env);
 
@@ -141,11 +141,11 @@ export default class Preview extends Component {
       return token;
     });
 
-    let chunks = [],
-        start = 0,
-        stop = 0;
+    const chunks = [];
+    let start = 0;
+    let stop = 0;
 
-    for (let i = 0 ; i < tokens.length ; i++) {
+    for (let i = 0; i < tokens.length; i++) {
       if (
           // We are starting tokens walk or in a chunk
           i < start ||
@@ -157,7 +157,7 @@ export default class Preview extends Component {
           )) {
         continue;
       }
-      stop = i+1;
+      stop = i + 1;
       chunks.push(tokens.slice(start, stop));
       start = stop;
     }
@@ -183,24 +183,23 @@ export default class Preview extends Component {
       data = this.matter.data;
 
       // Get chunks to render from tokens
-      let chunks = this.getChunks(this.matter.content, markdownItEnv);
+      const chunks = this.getChunks(this.matter.content, markdownItEnv);
 
       content = chunks.map((chunk, key) => {
-
         return (
           <PreviewChunk
-            key={'ck-' + key.toString()}
+            key={`ck-${key.toString()}`}
             markdownIt={this.markdownIt}
             emojione={this.emojione}
             chunk={chunk}
             markdownItEnv={markdownItEnv}
           />
-        )
+        );
       }, this);
     }
 
     // Compile selected template with given data
-    if(this.props.template && this.props.template.length) {
+    if (this.props.template && this.props.template.length) {
       // Get the template component
       const Template = Templates.find(
         (template) => {
@@ -227,8 +226,8 @@ Preview.propTypes = {
   template: string.isRequired,
   pos: number.isRequired,
   previewLoader: func.isRequired
-}
+};
 
 Preview.defaultProps = {
   previewLoader: PreviewLoader
-}
+};

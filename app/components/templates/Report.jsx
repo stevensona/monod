@@ -1,3 +1,4 @@
+/* eslint one-var: 0 */
 import React from 'react';
 import BaseTemplate from './Base';
 
@@ -18,7 +19,7 @@ export default class Report extends BaseTemplate {
       location: '[location]',
       reference: '[reference]',
       version: '[version]'
-    }
+    };
   }
 
   render() {
@@ -49,7 +50,7 @@ export default class Report extends BaseTemplate {
       <article style={reportStyle}>
         <header>
           <div style={companyStyle}>
-            <img src={data.company.logo_url} alt={data.company.name + ' logo'} />
+            <img src={data.company.logo_url} alt={`${data.company.name} logo`} />
           </div>
           <h1>Activity report</h1>
           <table style={metaStyle}>
@@ -90,6 +91,6 @@ export default class Report extends BaseTemplate {
           </div>
         </footer>
       </article>
-    )
+    );
   }
 }

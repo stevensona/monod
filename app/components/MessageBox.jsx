@@ -1,17 +1,21 @@
 import React, { PropTypes } from 'react';
 
-const { func, object } = PropTypes;
+const { number, func, object } = PropTypes;
 
 
 export const MessageBox = (props) => {
+  const _onClick = () => {
+    props.doClose(props.index);
+  };
 
   if (props.message && props.message.content) {
     return (
-      <div className={'message-box ' + props.message.type}>
+      <div className={`message-box ${props.message.type}`}>
         <p>{props.message.content}</p>
         <button
           className="close-button"
-          onClick={props.doClose}>
+          onClick={_onClick}
+        >
           <span>&times;</span>
         </button>
       </div>
@@ -19,36 +23,31 @@ export const MessageBox = (props) => {
   }
 
   return (<noscript />);
-}
+};
 
 MessageBox.propTypes = {
+  index: number.isRequired,
   message: object.isRequired,
   doClose: func.isRequired
-}
+};
 
 
-const MessageBoxes = (props) => {
-
-  const messageBoxNodes = props.messages.map((message, index) => {
-    return (
-        <MessageBox
-          message={message}
-          key={index}
-          doClose={props.closeMessageBox.bind(this, index)}
-        />
-    )
-  });
-
-  return (
-    <div className="message-boxes">
-      {messageBoxNodes}
-    </div>
-  );
-}
+const MessageBoxes = (props) => (
+  <div className="message-boxes">
+    {props.messages.map((message, index) =>
+      <MessageBox
+        message={message}
+        index={index}
+        key={index}
+        doClose={props.closeMessageBox}
+      />
+    )}
+  </div>
+);
 
 MessageBoxes.propTypes = {
   messages: object.isRequired,
   closeMessageBox: func.isRequired
-}
+};
 
 export default MessageBoxes;

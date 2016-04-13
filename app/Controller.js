@@ -1,7 +1,7 @@
 export default class Controller {
 
   constructor(components, events) {
-    this.store  = components.store;
+    this.store = components.store;
     this.events = events;
 
     this.events.on('action:init', this.onInit.bind(this));
