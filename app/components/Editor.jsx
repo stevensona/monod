@@ -58,7 +58,8 @@ export default class Editor extends Component {
   }
 
   handleOnClick(e) {
-    const hasClickedLeft = e.target.className == 'left' || false;
+    // class names 'fa fa-chevron-left' and 'left' should match
+    const hasClickedLeft = /left/.test(e.target.className);
     let newMode = EditorModes.PREVIEW;
 
     if (hasClickedLeft && this.state.mode !== EditorModes.FOCUS) {
