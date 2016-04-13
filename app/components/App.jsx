@@ -32,10 +32,13 @@ export default class App extends Component {
   }
 
   loadAndRedirect(document, uri, message) {
+    if( message ) {
+      this.state.messages.push(message);
+    }
     this.setState({
       loaded: true,
       document: document,
-      messages: this.state.messages.concat(message) || []
+      messages: this.state.messages
     });
 
     if (!window.history.state || !window.history.state.uuid ||
@@ -143,7 +146,7 @@ export default class App extends Component {
     return (
       <div className="layout">
         <Header />
-        <MessageBoxes messages={this.state.messages || []} />
+        <MessageBoxes messages={this.state.messages} />
         <Editor
           loaded={this.state.loaded}
           content={this.state.document.get('content')}

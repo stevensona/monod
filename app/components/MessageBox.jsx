@@ -30,15 +30,24 @@ MessageBox.propTypes = {
 }
 
 export default class MessageBoxes extends Component {
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = { messages: props.messages };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({ messages: nextProps.messages });
+  }
 
   closeMessageBox(index) {
-    this.props.messages.splice(index, 1);
-    this.forceUpdate();
+    this.state.messages.splice(index, 1);
+    this.setState({ messages: this.state.messages });
   }
 
   render() {
 
-    const messageBoxNodes = this.props.messages.map((message, index) => {
+    const messageBoxNodes = this.state.messages.map((message, index) => {
       return (
           <MessageBox
             message={message}
