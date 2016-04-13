@@ -33,7 +33,7 @@ export default class App extends Component {
   }
 
   loadAndRedirect(document, uri, message) {
-    if( message ) {
+    if (message) {
       this.state.messages.push(message);
     }
     this.setState({
@@ -114,7 +114,7 @@ export default class App extends Component {
 
       this.setState({
         document: state.document,
-        messages: this.state.messages.concat(message)
+        messages: this.state.messages.push(message)
       });
     });
 
