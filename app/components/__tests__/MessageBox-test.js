@@ -1,6 +1,7 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { expect } from 'chai';
+import sinon from 'sinon';
 
 // see: https://github.com/mochajs/mocha/issues/1847
 const { describe, it } = global;
@@ -42,7 +43,7 @@ describe('<MessageBox />', () => {
 describe('<MessageBoxes />', () => {
 
   it('renders nothing if no messages', () => {
-    const wrapper = shallow(<MessageBoxes messages={[]} />);
+    const wrapper = shallow(<MessageBoxes messages={[]} closeMessageBox={() => {}} />);
 
     expect(wrapper.find('.message-boxes')).to.have.length(1);
     expect(wrapper.find('.message-box')).to.have.length(0);
@@ -55,12 +56,12 @@ describe('<MessageBoxes />', () => {
         type: 'error'
       }
     ];
-    const wrapper = mount(<MessageBoxes messages={messages} />);
+    const wrapper = mount(<MessageBoxes messages={messages} closeMessageBox={() => {}} />);
 
     expect(wrapper.find('.message-boxes')).to.have.length(1);
     expect(wrapper.find(MessageBox)).to.have.length(1);
     expect(wrapper.find('.message-box.error')).to.have.length(1);
-    expect(wrapper.html()).to.have.contain('<p>foo</p>');
+    expect(wrapper.find('.message-box.error').html()).to.contain('<p>foo</p>');
   });
 
   it('wraps many typed message boxes', () => {
@@ -78,19 +79,21 @@ describe('<MessageBoxes />', () => {
         type: 'info'
       }
     ];
-    const wrapper = mount(<MessageBoxes messages={messages} />);
+    const wrapper = mount(<MessageBoxes messages={messages} closeMessageBox={() => {}} />);
 
     expect(wrapper.find('.message-boxes')).to.have.length(1);
     expect(wrapper.find(MessageBox)).to.have.length(3);
     expect(wrapper.find('.message-box.warning')).to.have.length(1);
     expect(wrapper.find('.message-box.success')).to.have.length(1);
     expect(wrapper.find('.message-box.info')).to.have.length(1);
-    expect(wrapper.html()).to.have.contain('<p>foo</p>');
-    expect(wrapper.html()).to.have.contain('<p>bar</p>');
-    expect(wrapper.html()).to.have.contain('<p>lol</p>');
+    expect(wrapper.find('.message-box.warning').html()).to.contain('<p>foo</p>');
+    expect(wrapper.find('.message-box.success').html()).to.contain('<p>bar</p>');
+    expect(wrapper.find('.message-box.info').html()).to.contain('<p>lol</p>');
   });
 
-  it('closes message boxes', () => {
+  it('calls close message box handler', () => {
+    const spy = sinon.spy();
+
     const messages = [
       {
         content: 'foo',
@@ -105,33 +108,23 @@ describe('<MessageBoxes />', () => {
         type: 'info'
       }
     ];
-    const wrapper = mount(<MessageBoxes messages={messages} />);
-
-    expect(wrapper.find('.message-boxes')).to.have.length(1);
-    expect(wrapper.find(MessageBox)).to.have.length(3);
-    expect(wrapper.find('.message-box.warning')).to.have.length(1);
-    expect(wrapper.find('.message-box.success')).to.have.length(1);
-    expect(wrapper.find('.message-box.info')).to.have.length(1);
-
-    // Close the warning message
-    wrapper.find('.message-box.warning').children('.close-button').simulate('click');
-    expect(wrapper.find(MessageBox)).to.have.length(2);
-    expect(wrapper.find('.message-box.warning')).to.have.length(0);
-    expect(wrapper.find('.message-box.success')).to.have.length(1);
-    expect(wrapper.find('.message-box.info')).to.have.length(1);
-
-    // Close the success message
-    wrapper.find('.message-box.success').children('.close-button').simulate('click');
-    expect(wrapper.find(MessageBox)).to.have.length(1);
-    expect(wrapper.find('.message-box.warning')).to.have.length(0);
-    expect(wrapper.find('.message-box.success')).to.have.length(0);
-    expect(wrapper.find('.message-box.info')).to.have.length(1);
+    const wrapper = mount(<MessageBoxes messages={messages} closeMessageBox={spy} />);
 
     // Close the info message
     wrapper.find('.message-box.info').children('.close-button').simulate('click');
-    expect(wrapper.find(MessageBox)).to.have.length(0);
-    expect(wrapper.find('.message-box.warning')).to.have.length(0);
-    expect(wrapper.find('.message-box.success')).to.have.length(0);
-    expect(wrapper.find('.message-box.info')).to.have.length(0);
+    expect(spy.calledOnce).to.be.true;
+
+    // Close the warning message
+    wrapper.find('.message-box.warning').children('.close-button').simulate('click');
+    expect(spy.calledTwice).to.be.true;
+
+    // Close the success message
+    wrapper.find('.message-box.success').children('.close-button').simulate('click');
+    expect(spy.calledThrice).to.be.true;
+
+    // Check that the handler is called with proper arguments
+    expect(spy.withArgs(0).calledOnce).to.be.true;
+    expect(spy.withArgs(1).calledOnce).to.be.true;
+    expect(spy.withArgs(2).calledOnce).to.be.true;
   });
 });

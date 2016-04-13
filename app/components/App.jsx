@@ -142,11 +142,23 @@ export default class App extends Component {
     }
   }
 
+  removeMessage(index) {
+    this.state.messages.splice(index, 1);
+    this.setState({
+      document: this.state.document,
+      messages: this.state.messages,
+      loaded: this.state.loaded
+    });
+  }
+
   render() {
     return (
       <div className="layout">
         <Header />
-        <MessageBoxes messages={this.state.messages} />
+        <MessageBoxes
+          messages={this.state.messages}
+          closeMessageBox={this.removeMessage.bind(this)}
+        />
         <Editor
           loaded={this.state.loaded}
           content={this.state.document.get('content')}
