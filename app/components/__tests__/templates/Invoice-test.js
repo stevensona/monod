@@ -19,7 +19,7 @@ describe('<Invoice />', () => {
     );
     const html = wrapper.html();
 
-    expect(html).to.contain('FACTURE N°[reference]')
+    expect(html).to.contain('FACTURE N°[reference]');
     expect(html).to.contain('<strong>[companyAddress/name]</strong>');
     expect(html).to.contain('<strong>[customerAddress/name]</strong>');
     expect(html).to.contain('Facture n°[reference] du [date]');
@@ -42,7 +42,7 @@ describe('<Invoice />', () => {
     );
     const html = wrapper.html();
 
-    expect(html).to.contain('FACTURE N°DUMMY')
+    expect(html).to.contain('FACTURE N°DUMMY');
     expect(html).to.contain('<strong>John Doe</strong>');
     expect(html).to.contain('<strong>Jane Doe</strong>');
     expect(html).to.contain('Facture n°DUMMY du 01/04/2016');

@@ -19,12 +19,12 @@ describe('<Report />', () => {
     );
     const html = wrapper.html();
 
-    expect(html).to.contain('<td>[project]</td>')
-    expect(html).to.contain('<td>[reporter]</td>')
-    expect(html).to.contain('<td>[date]</td>')
-    expect(html).to.contain('<td>[location]</td>')
-    expect(html).to.contain('<td>[reference]</td>')
-    expect(html).to.contain('<td>[version]</td>')
+    expect(html).to.contain('<td>[project]</td>');
+    expect(html).to.contain('<td>[reporter]</td>');
+    expect(html).to.contain('<td>[date]</td>');
+    expect(html).to.contain('<td>[location]</td>');
+    expect(html).to.contain('<td>[reference]</td>');
+    expect(html).to.contain('<td>[version]</td>');
     expect(html).to.contain('this is content');
   });
 
@@ -44,12 +44,12 @@ describe('<Report />', () => {
     );
     const html = wrapper.html();
 
-    expect(html).to.contain('<td>Regulation of transcription</td>')
-    expect(html).to.contain('<td>François Jacob</td>')
-    expect(html).to.contain('<td>1965</td>')
-    expect(html).to.contain('<td>Paris</td>')
-    expect(html).to.contain('<td>NOBELPRIZE</td>')
-    expect(html).to.contain('<td>0.1</td>')
+    expect(html).to.contain('<td>Regulation of transcription</td>');
+    expect(html).to.contain('<td>François Jacob</td>');
+    expect(html).to.contain('<td>1965</td>');
+    expect(html).to.contain('<td>Paris</td>');
+    expect(html).to.contain('<td>NOBELPRIZE</td>');
+    expect(html).to.contain('<td>0.1</td>');
     expect(html).to.contain('this is content');
   });
 });

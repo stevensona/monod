@@ -7,11 +7,11 @@ const { func } = PropTypes;
 
 
 export const Templates = [
-  {id: '', name: 'No template', component: {}},
-  {id: 'letter', name: 'Letter', component: Letter},
-  {id: 'invoice', name: 'Invoice', component: Invoice},
-  {id: 'report', name: 'Report', component: Report}
-]
+  { id: '', name: 'No template', component: {} },
+  { id: 'letter', name: 'Letter', component: Letter },
+  { id: 'invoice', name: 'Invoice', component: Invoice },
+  { id: 'report', name: 'Report', component: Report }
+];
 
 export default class TemplateForm extends Component {
   constructor(props, context) {
@@ -23,7 +23,7 @@ export default class TemplateForm extends Component {
 
   handleTemplateChange(event) {
     const newTemplate = event.target.value;
-    this.setState({template: newTemplate});
+    this.setState({ template: newTemplate });
     this.props.doUpdateTemplate(newTemplate);
   }
 
@@ -31,7 +31,7 @@ export default class TemplateForm extends Component {
     const optionNodes = Templates.map((component, key) => {
       return (
         <option value={component.id} key={key}>{component.name}</option>
-      )
+      );
     });
 
     return (

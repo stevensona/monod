@@ -9,7 +9,7 @@ import Editor from './Editor';
 import Footer from './Footer';
 import MessageBoxes from './MessageBox';
 
-const { string } = PropTypes;
+const { object, string } = PropTypes;
 
 
 export default class App extends Component {
@@ -32,23 +32,6 @@ export default class App extends Component {
     };
   }
 
-  loadAndRedirect(document, uri, message) {
-    if (message) {
-      this.state.messages.push(message);
-    }
-    this.setState({
-      loaded: true,
-      document: document,
-      messages: this.state.messages
-    });
-
-    if (!window.history.state || !window.history.state.uuid ||
-      (window.history.state && window.history.state.uuid &&
-       document.get('uuid') !== window.history.state.uuid)) {
-      window.history.pushState({ uuid: document.get('uuid') }, `Monod - ${document.get('uuid')}`, uri);
-    }
-  }
-
   componentDidMount() {
     this.props.controller.on(Events.NO_DOCUMENT_ID, (state) => {
       this.setState({
@@ -65,7 +48,7 @@ export default class App extends Component {
           'We have redirected you to a new document.'
         ].join(' '),
         type: 'error'
-      }
+      };
 
       this.loadAndRedirect(state.document, '/', message);
     });
@@ -90,7 +73,7 @@ export default class App extends Component {
             The document you were working on has been updated by a third,
             and you are now working on a fork. You can still find the original
             (and updated) document:&nbsp;
-            <a href={'/' + state.document.uuid + '#' + state.secret}>here</a>.
+            <a href={`/${state.document.uuid}#${state.secret}`}>here</a>.
           </span>
         ),
         type: 'warning'
@@ -131,6 +114,25 @@ export default class App extends Component {
     });
   }
 
+  loadAndRedirect(doc, uri, message) {
+    if (message) {
+      this.state.messages.push(message);
+    }
+
+    this.setState({
+      loaded: true,
+      document: doc,
+      messages: this.state.messages
+    });
+
+    if (!window.history.state || !window.history.state.uuid ||
+        (window.history.state && window.history.state.uuid &&
+        doc.get('uuid') !== window.history.state.uuid)
+    ) {
+      window.history.pushState({ uuid: doc.get('uuid') }, `Monod - ${doc.get('uuid')}`, uri);
+    }
+  }
+
   updateContent(newContent) {
     const doc = this.state.document;
 
@@ -169,9 +171,10 @@ export default class App extends Component {
 }
 
 App.propTypes = {
-  version: string.isRequired
+  version: string.isRequired,
+  controller: object.isRequired
 };
 
 App.childContextTypes = {
-  controller: PropTypes.object
+  controller: object
 };

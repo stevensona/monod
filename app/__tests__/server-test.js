@@ -7,9 +7,9 @@ import fs from 'fs';
 const { before, after, describe, it } = global;
 
 describe('Express app', () => {
-  const DOCUMENTS_ENDPOINT     = '/documents';
-  const VALID_DOCUMENT_UUID    = '9950e80b-f214-45d0-a98c-bffee2582c71';
-  const NEW_DOCUMENT_UUID      = '0000e80b-f214-45d0-a98c-bffee2581234';
+  const DOCUMENTS_ENDPOINT = '/documents';
+  const VALID_DOCUMENT_UUID = '9950e80b-f214-45d0-a98c-bffee2582c71';
+  const NEW_DOCUMENT_UUID = '0000e80b-f214-45d0-a98c-bffee2581234';
   const EXISTING_DOCUMENT_UUID = '1111e81b-f214-45d1-a98c-bffee2581234';
 
   const api = request.agent(server);
@@ -17,7 +17,7 @@ describe('Express app', () => {
   it('calls /', (done) => {
     api
       .get('/')
-      .expect('Content-type',/html/)
+      .expect('Content-type', /html/)
       .expect(200, done);
   });
 

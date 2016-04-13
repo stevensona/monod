@@ -1,3 +1,4 @@
+/* eslint max-len: 0 */
 export const Config = {
   APP_NAME: 'monod',
   DEFAULT_CONTENT: [

@@ -22,7 +22,7 @@ describe('<Preview />', () => {
         markdownIt: mdit,
         hljs: hljs,
         emojione: emojione
-      })
+      });
     };
   });
 
@@ -330,7 +330,7 @@ describe('<Preview />', () => {
       const preview = wrapper.instance();
       expect(preview.matter).to.have.property('content', '*italic*');
       expect(preview.matter).to.have.property('data');
-      expect(preview.matter.data).to.deep.equal({toto:1});
+      expect(preview.matter.data).to.deep.equal({ toto:1 });
 
       done();
     }, 5);
@@ -352,14 +352,14 @@ describe('<Preview />', () => {
       expect(html).to.contain('<span>Foo</span>');
       expect(html).to.contain('<div>John Doe</div>');
       expect(html).to.contain([
-          '<div class="chunk">',
-          '<span>',
-          '<p>',
-          'This is content',
-          '</p>\n',
-          '</span>',
-          '</div>'
-        ].join(''));
+        '<div class="chunk">',
+        '<span>',
+        '<p>',
+        'This is content',
+        '</p>\n',
+        '</span>',
+        '</div>'
+      ].join(''));
 
       done();
     }, 5);
@@ -381,14 +381,14 @@ describe('<Preview />', () => {
       expect(html).not.to.contain('Foo</h1>');
       expect(html).not.to.contain('John Doe</div>');
       expect(html).to.contain([
-          '<div class="chunk">',
-          '<span>',
-          '<p>',
-          'This is content',
-          '</p>\n',
-          '</span>',
-          '</div>'
-        ].join(''));
+        '<div class="chunk">',
+        '<span>',
+        '<p>',
+        'This is content',
+        '</p>\n',
+        '</span>',
+        '</div>'
+      ].join(''));
 
       done();
     }, 5);

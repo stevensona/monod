@@ -1,3 +1,4 @@
+/* eslint one-var: 0 */
 import React from 'react';
 import BaseTemplate from './Base';
 
@@ -27,7 +28,7 @@ export default class Invoice extends BaseTemplate {
         country: '[customerAddress/country]',
         businessID: '[customerAddress/businessID]'
       }
-    }
+    };
   }
 
   render() {
@@ -90,22 +91,22 @@ export default class Invoice extends BaseTemplate {
             FACTURE N°{data.reference}
           </div>
           <div style={logoStyle}>
-            <img src="http://clermontech.org/images/clermontech_logo_200px.png" alt="Logo Clermont'ech"/>
+            <img src="http://clermontech.org/images/clermontech_logo_200px.png" alt="Logo Clermont'ech" />
           </div>
           <address style={companyAddressStyle}>
-            <strong>{data.companyAddress.name}</strong><br/>
-            {data.companyAddress.street}<br/>
+            <strong>{data.companyAddress.name}</strong><br />
+            {data.companyAddress.street}<br />
             {data.companyAddress.zipCode}&nbsp;
-            {data.companyAddress.city}<br/>
-            {data.companyAddress.country}<br/>
+            {data.companyAddress.city}<br />
+            {data.companyAddress.country}<br />
             {data.companyAddress.businessID}
           </address>
           <address style={customerAddressStyle}>
-            <strong>{data.customerAddress.name}</strong><br/>
-            {data.customerAddress.street}<br/>
+            <strong>{data.customerAddress.name}</strong><br />
+            {data.customerAddress.street}<br />
             {data.customerAddress.zipCode}&nbsp;
-            {data.customerAddress.city}<br/>
-            {data.customerAddress.country}<br/>
+            {data.customerAddress.city}<br />
+            {data.customerAddress.country}<br />
             {data.customerAddress.businessID}
           </address>
           <h1 style={mainTitleStyle}>Facture n°{data.reference} du {data.date}</h1>
@@ -137,6 +138,6 @@ export default class Invoice extends BaseTemplate {
           </pre>
         </section>
       </article>
-    )
+    );
   }
 }

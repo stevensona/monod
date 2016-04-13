@@ -1,3 +1,4 @@
+/* eslint one-var: 0 */
 import React from 'react';
 import BaseTemplate from './Base';
 
@@ -23,7 +24,7 @@ export default class Letter extends BaseTemplate {
         city: '[addressTo/city]'
       },
       signature: '[signature]'
-    }
+    };
   }
 
   render() {
@@ -58,17 +59,17 @@ export default class Letter extends BaseTemplate {
       <article style={letterStyle}>
         <header>
           <address style={addressFromStyle}>
-            <strong>{data.addressFrom.name}</strong><br/>
-            {data.addressFrom.street}<br/>
+            <strong>{data.addressFrom.name}</strong><br />
+            {data.addressFrom.street}<br />
             {data.addressFrom.zipCode}&nbsp;
-            {data.addressFrom.city}<br/>
+            {data.addressFrom.city}<br />
             {data.addressFrom.country}
           </address>
           <address style={addressToStyle}>
-            <strong>{data.addressTo.name}</strong><br/>
-            {data.addressTo.street}<br/>
+            <strong>{data.addressTo.name}</strong><br />
+            {data.addressTo.street}<br />
             {data.addressTo.zipCode}&nbsp;
-            {data.addressTo.city}<br/>
+            {data.addressTo.city}<br />
             {data.addressTo.country}
           </address>
           <div style={locationDateStyle}>
@@ -84,6 +85,6 @@ export default class Letter extends BaseTemplate {
           </div>
         </footer>
       </article>
-    )
+    );
   }
 }

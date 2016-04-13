@@ -13,7 +13,7 @@ import MessageBoxes, { MessageBox } from '../MessageBox';
 describe('<MessageBox />', () => {
 
   it('renders nothing if no props', () => {
-    const wrapper = shallow(<MessageBox message={{}} doClose={() => {}} />);
+    const wrapper = shallow(<MessageBox message={{}} doClose={() => {}} index={0} />);
 
     expect(wrapper.find('.message-box')).to.have.length(0);
   });
@@ -22,7 +22,7 @@ describe('<MessageBox />', () => {
     const message = {
       content: 'hello.'
     };
-    const wrapper = shallow(<MessageBox message={message} doClose={() => {}} />);
+    const wrapper = shallow(<MessageBox message={message} doClose={() => {}} index={0} />);
 
     expect(wrapper.find('.message-box')).to.have.length(1);
     expect(wrapper.text()).to.equal('hello.×');
@@ -33,7 +33,7 @@ describe('<MessageBox />', () => {
       content: 'hello.',
       type: 'info'
     };
-    const wrapper = shallow(<MessageBox message={message} doClose={() => {}} />);
+    const wrapper = shallow(<MessageBox message={message} doClose={() => {}} index={0} />);
 
     expect(wrapper.find('.message-box.info')).to.have.length(1);
     expect(wrapper.text()).to.equal('hello.×');
