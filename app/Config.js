@@ -2,6 +2,10 @@
 export const Config = {
   APP_NAME: 'monod',
   DEFAULT_CONTENT: [
+    '---',
+    'hello: world! # YAML Front Matter (for templates)',
+    '---',
+    '',
     'Introducing Monod',
     '=================',
     '',
