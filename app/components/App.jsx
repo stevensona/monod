@@ -1,3 +1,4 @@
+import Immutable from 'immutable';
 import React, { Component, PropTypes } from 'react';
 import { Events } from '../Store';
 import Document from '../Document';
@@ -6,7 +7,7 @@ import debounce from 'lodash.debounce';
 import Header from './Header';
 import Editor from './Editor';
 import Footer from './Footer';
-import MessageBox from './MessageBox';
+import MessageBoxes from './MessageBox';
 
 const { string } = PropTypes;
 
@@ -17,6 +18,7 @@ export default class App extends Component {
 
     this.state = {
       document: new Document(),
+      messages: new Immutable.List(),
       loaded: false
     };
 
@@ -31,10 +33,13 @@ export default class App extends Component {
   }
 
   loadAndRedirect(document, uri, message) {
+    if (message) {
+      this.state.messages.push(message);
+    }
     this.setState({
       loaded: true,
       document: document,
-      message: message || false
+      messages: this.state.messages
     });
 
     if (!window.history.state || !window.history.state.uuid ||
@@ -99,15 +104,17 @@ export default class App extends Component {
     });
 
     this.props.controller.on(Events.UPDATE_WITHOUT_CONFLICT, (state) => {
+      const message = {
+        content: [
+          'We have updated the document you are viewing to its latest revision.',
+          'Happy reading/working!'
+        ].join(' '),
+        type: 'info'
+      };
+
       this.setState({
         document: state.document,
-        message: {
-          content: [
-            'We have updated the document you are viewing to its latest revision.',
-            'Happy reading/working!'
-          ].join(' '),
-          type: 'info'
-        }
+        messages: this.state.messages.push(message)
       });
     });
 
@@ -136,11 +143,20 @@ export default class App extends Component {
     }
   }
 
+  removeMessage(index) {
+    this.setState({
+      messages: this.state.messages.delete(index)
+    });
+  }
+
   render() {
     return (
       <div className="layout">
         <Header />
-        <MessageBox message={this.state.message || {}} />
+        <MessageBoxes
+          messages={this.state.messages}
+          closeMessageBox={this.removeMessage.bind(this)}
+        />
         <Editor
           loaded={this.state.loaded}
           content={this.state.document.get('content')}
