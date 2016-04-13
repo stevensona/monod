@@ -1,3 +1,4 @@
+import Immutable from 'immutable';
 import React, { Component, PropTypes } from 'react';
 import { Events } from '../Store';
 import Document from '../Document';
@@ -17,7 +18,7 @@ export default class App extends Component {
 
     this.state = {
       document: new Document(),
-      messages: [],
+      messages: new Immutable.List(),
       loaded: false
     };
 
@@ -143,11 +144,8 @@ export default class App extends Component {
   }
 
   removeMessage(index) {
-    this.state.messages.splice(index, 1);
     this.setState({
-      document: this.state.document,
-      messages: this.state.messages,
-      loaded: this.state.loaded
+      messages: this.state.messages.delete(index)
     });
   }
 

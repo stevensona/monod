@@ -1,3 +1,4 @@
+import Immutable from 'immutable';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { expect } from 'chai';
@@ -43,19 +44,19 @@ describe('<MessageBox />', () => {
 describe('<MessageBoxes />', () => {
 
   it('renders nothing if no messages', () => {
-    const wrapper = shallow(<MessageBoxes messages={[]} closeMessageBox={() => {}} />);
+    const wrapper = shallow(<MessageBoxes messages={Immutable.List()} closeMessageBox={() => {}} />);
 
     expect(wrapper.find('.message-boxes')).to.have.length(1);
     expect(wrapper.find('.message-box')).to.have.length(0);
   });
 
   it('wraps a typed message box', () => {
-    const messages = [
+    const messages = Immutable.List([
       {
         content: 'foo',
         type: 'error'
       }
-    ];
+    ]);
     const wrapper = mount(<MessageBoxes messages={messages} closeMessageBox={() => {}} />);
 
     expect(wrapper.find('.message-boxes')).to.have.length(1);
@@ -65,7 +66,7 @@ describe('<MessageBoxes />', () => {
   });
 
   it('wraps many typed message boxes', () => {
-    const messages = [
+    const messages = Immutable.List([
       {
         content: 'foo',
         type: 'warning'
@@ -78,7 +79,7 @@ describe('<MessageBoxes />', () => {
         content: 'lol',
         type: 'info'
       }
-    ];
+    ]);
     const wrapper = mount(<MessageBoxes messages={messages} closeMessageBox={() => {}} />);
 
     expect(wrapper.find('.message-boxes')).to.have.length(1);
@@ -94,7 +95,7 @@ describe('<MessageBoxes />', () => {
   it('calls close message box handler', () => {
     const spy = sinon.spy();
 
-    const messages = [
+    const messages = Immutable.List([
       {
         content: 'foo',
         type: 'warning'
@@ -107,7 +108,7 @@ describe('<MessageBoxes />', () => {
         content: 'lol',
         type: 'info'
       }
-    ];
+    ]);
     const wrapper = mount(<MessageBoxes messages={messages} closeMessageBox={spy} />);
 
     // Close the info message

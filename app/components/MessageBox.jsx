@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-const { array, func, object } = PropTypes;
+const { func, object } = PropTypes;
 
 
 export const MessageBox = (props) => {
@@ -47,7 +47,7 @@ const MessageBoxes = (props) => {
 }
 
 MessageBoxes.propTypes = {
-  messages: array.isRequired,
+  messages: object.isRequired,
   closeMessageBox: func.isRequired
 }
 

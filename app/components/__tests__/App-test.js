@@ -1,3 +1,4 @@
+import Immutable from 'immutable';
 import React from 'react';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
@@ -50,7 +51,7 @@ describe('<App />', () => {
   });
 
   it('removes messages', () => {
-    const messages = [
+    const messages = Immutable.List([
       {
         content: 'foo',
         type: 'warning'
@@ -63,7 +64,7 @@ describe('<App />', () => {
         content: 'lol',
         type: 'info'
       }
-    ];
+    ]);
     const wrapper = shallow(<App version={version} />);
     const inst = wrapper.instance();
 
@@ -71,12 +72,12 @@ describe('<App />', () => {
       messages: messages
     });
 
-    expect(wrapper.state('messages')).to.have.length(3);
+    expect(wrapper.state('messages').size).to.equal(3);
     inst.removeMessage(2);
-    expect(wrapper.state('messages')).to.have.length(2);
+    expect(wrapper.state('messages').size).to.equal(2);
     inst.removeMessage(1);
-    expect(wrapper.state('messages')).to.have.length(1);
+    expect(wrapper.state('messages').size).to.equal(1);
     inst.removeMessage(0);
-    expect(wrapper.state('messages')).to.have.length(0);
+    expect(wrapper.state('messages').size).to.equal(0);
   });
 });
