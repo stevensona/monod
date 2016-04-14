@@ -25,6 +25,7 @@ export default class Sync extends Component {
         this.setState({ counter: counter });
 
         if (0 === counter) {
+          this.setState({ counter: DEFAULT_DURATION });
           this.context.controller.dispatch('action:sync');
         }
       }
