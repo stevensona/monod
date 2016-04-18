@@ -2,6 +2,7 @@
   "name": "monod",
   "version": "2.0.0",
   "private": true,
+  "repository": "https://github.com/TailorDev/monod",
   "author": "TailorDev SAS",
   "license": "MIT",
   "description": "TailorDev Cool, Secure, and Offline-First Markdown Editor.",
