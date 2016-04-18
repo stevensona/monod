@@ -1,0 +1,18 @@
+{
+  "name": "monod",
+  "description": "TailorDev Cool, Secure, and Offline-First Markdown Editor.",
+  "website": "https://github.com/TailorDev/monod",
+  "repository": "https://github.com/TailorDev/monod",
+  "success_url": "/",
+  "env": {
+    "MONOD_DATA_DIR": {
+      "description": "Where the API reads/writes Monod's data",
+      "required": false
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-nodejs"
+    }
+  ]
+}

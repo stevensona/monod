@@ -18,6 +18,9 @@ to this project:
 Either you use our public instance at: https://monod.lelab.tailordev.fr/, or you
 host Monod at home, on your server, or on Heroku.
 
+[![Deploy to
+Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+
 ## Installation
 
 
