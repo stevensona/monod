@@ -1,7 +1,7 @@
 Monod
 =====
 
-[![Circle CI](https://circleci.com/gh/TailorDev/monod.svg?style=svg&circle-token=6aa578e2ce718d2dc620f37ba077da016c76f876)](https://circleci.com/gh/TailorDev/monod)
+[![Circle CI](https://circleci.com/gh/TailorDev/monod.svg?style=svg)](https://circleci.com/gh/TailorDev/monod)
 
 Monod is a (relatively) secure and offline-first Markdown editor we built at
 TailorDev in order to learn [React.js](https://facebook.github.io/react/) (and a
