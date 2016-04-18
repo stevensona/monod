@@ -1,6 +1,6 @@
 import request from 'supertest';
 import path from 'path';
-import server from '../server';
+import server from '../../server';
 import fs from 'fs';
 
 // see: https://github.com/mochajs/mocha/issues/1847

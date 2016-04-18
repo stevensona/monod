@@ -15,7 +15,7 @@
     "test:watch": "npm run test -- --watch --reporter min",
     "test:ci": "npm run test -- --reporter mocha-circleci-reporter",
     "postinstall": "npm run build",
-    "start": "NODE_ENV=production node app/server.js",
+    "start": "NODE_ENV=production node server.js",
     "cov": "nyc --extension .jsx npm run test"
   },
   "devDependencies": {
