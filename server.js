@@ -8,8 +8,8 @@ const app = express();
 const api = express.Router();
 
 // config
-const staticPath = path.join(__dirname, '/../build');
-const dataDir = process.env.MONOD_DATA_DIR || path.join(__dirname, '/../data');
+const staticPath = path.join(__dirname, '/build');
+const dataDir = process.env.MONOD_DATA_DIR || path.join(__dirname, '/data');
 
 app.set('port', process.env.PORT || 3000);
 app.set('etag', false);
