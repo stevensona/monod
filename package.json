@@ -21,6 +21,7 @@
     "cov": "nyc --extension .jsx npm run test"
   },
   "devDependencies": {
+    "@tanepiper/webpack-robotstxt": "^0.2.0",
     "babel-core": "^6.6.4",
     "babel-loader": "^6.2.4",
     "babel-polyfill": "^6.7.4",

@@ -8,6 +8,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const OfflinePlugin = require('offline-plugin');
+const WebpackRobots = require('@tanepiper/webpack-robotstxt');
 
 // Read `package.json` file
 const pkg = require('./package.json');
@@ -229,7 +230,8 @@ if (TARGET === 'build') {
                     // Ignore warning messages are they are pretty useless
                     warnings: false
                 }
-            })
+            }),
+            new WebpackRobots()
         ]
     });
 }
