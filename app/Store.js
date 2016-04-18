@@ -198,8 +198,8 @@ export default class Store {
               });
           }
 
-          // someone fucking modified my document!
-          // but I also modified it so... let's fork \o/
+          // someone modified my document!
+          // ... but I also modified it so... let's fork \o/
 
           // generate a new secret for fork'ed document
           const forkSecret = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0);
