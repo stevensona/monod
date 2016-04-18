@@ -3,10 +3,10 @@ Monod
 
 [![Circle CI](https://circleci.com/gh/TailorDev/monod.svg?style=svg&circle-token=6aa578e2ce718d2dc620f37ba077da016c76f876)](https://circleci.com/gh/TailorDev/monod)
 
-Monod is a (relatively) secured Markdown editor we built at TailorDev in order
-to learn [React.js](https://facebook.github.io/react/) (and a bunch of
-JavaScript tools/libraries). We mainly dedicated two **Le lab** sessions to this
-project:
+Monod is a (relatively) secure and offline-first Markdown editor we built at
+TailorDev in order to learn [React.js](https://facebook.github.io/react/) (and a
+bunch of JavaScript tools/libraries). We mainly dedicated two **Le lab** sessions
+to this project:
 
 * [Introducing Le lab with “Monod”, our Markdown
   Editor](https://tailordev.fr/blog/2016/03/11/introducing-le-lab-with-monod-our-markdown-editor/)
