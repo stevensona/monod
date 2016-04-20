@@ -9,7 +9,7 @@
       "value":"false"
     },
     "MONOD_DATA_DIR": {
-      "description": "Where the API reads/writes Monod's data",
+      "description": "Where the API reads/writes Monod's data (optional)",
       "required": false
     }
   },
