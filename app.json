@@ -5,6 +5,9 @@
   "repository": "https://github.com/TailorDev/monod",
   "success_url": "/",
   "env": {
+    "NPM_CONFIG_PRODUCTION": {
+      "value":"false"
+    },
     "MONOD_DATA_DIR": {
       "description": "Where the API reads/writes Monod's data",
       "required": false
