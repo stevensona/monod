@@ -8,6 +8,10 @@ export default () => {
       resolve({
         hljs: require('highlight.js'),
         markdownIt: require('markdown-it'),
+        markdownItPlugins: [
+          require('markdown-it-fontawesome'),
+          require('markdown-it-modify-token'),
+        ],
         emojione: require('emojione')
       });
     });

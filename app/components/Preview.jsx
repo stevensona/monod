@@ -5,7 +5,6 @@ import PreviewLoader from './loaders/Preview';
 import { Templates } from './TemplateForm';
 import grayMatter from 'gray-matter';
 import isEqual from 'lodash.isequal';
-import sanitizeHtml from 'sanitize-html';
 
 
 const { array, func, number, object, string } = PropTypes;
@@ -70,8 +69,8 @@ export default class Preview extends Component {
 
   componentWillMount() {
     this.props.previewLoader().then((deps) => {
-      this.markdownIt = deps.markdownIt({
-        html: true,
+      this.markdownIt = deps.markdownIt('commonmark', {
+        html: false,
         linkify: true,
         typographer: true,
         highlight: (str, lang) => {
@@ -84,7 +83,21 @@ export default class Preview extends Component {
           }
 
           return ''; // use external default escaping
+        },
+        modifyToken: (token) => {
+          switch (token.type) {
+            case 'link_open':
+              token.attrObj.rel = 'noreferrer noopener';
+              break;
+
+            default:
+          }
         }
+      })
+      .enable('linkify');
+
+      deps.markdownItPlugins.forEach((plugin) => {
+        this.markdownIt.use(plugin);
       });
 
       this.emojione = deps.emojione;
@@ -129,19 +142,9 @@ export default class Preview extends Component {
    */
   getChunks(raw, env) {
     // Parse the whole markdown document and get tokens
-    let tokens = this.markdownIt.parse(raw, env);
-
-    // Sanitize html chunks to avoid browser DOM manipulation
-    // that could possibly crash the app (because of React)
-    tokens = tokens.map((token) => {
-      if (token.type === 'html_block') {
-        token.content = sanitizeHtml(token.content);
-      }
-
-      return token;
-    });
-
+    const tokens = this.markdownIt.parse(raw, env);
     const chunks = [];
+
     let start = 0;
     let stop = 0;
 
