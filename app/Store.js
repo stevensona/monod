@@ -60,7 +60,7 @@ export default class Store {
     if (!id) {
       this.events.emit(Events.NO_DOCUMENT_ID, this.state);
 
-      return Promise.reject('No document id');
+      return Promise.reject(new Error('No document id'));
     }
 
     return this
@@ -68,7 +68,7 @@ export default class Store {
       .getItem(id)
       .then((document) => {
         if (null === document) {
-          return Promise.reject('document not found');
+          return Promise.reject(new Error('document not found'));
         }
 
         return Promise.resolve(Immutable.fromJS(document));
@@ -270,7 +270,7 @@ export default class Store {
     } catch (e) {
       this.events.emit(Events.DECRYPTION_FAILED, this.state);
 
-      return Promise.reject('decryption failed');
+      return Promise.reject(new Error('decryption failed'));
     }
   }
 
@@ -349,12 +349,12 @@ export default class Store {
     if (err.response && 404 === err.response.statusCode) {
       this.events.emit(Events.DOCUMENT_NOT_FOUND, this.state);
 
-      return Promise.reject('document not found');
+      return Promise.reject(new Error('document not found'));
     }
 
     this.events.emit(Events.APP_IS_OFFLINE);
 
-    return Promise.reject('request failed (network)');
+    return Promise.reject(new Error('request failed (network)'));
   }
 
   _setState(newState, eventName, eventState) {
