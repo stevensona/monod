@@ -10,6 +10,7 @@ import mdit from 'markdown-it';
 import mditFontAwesome from 'markdown-it-fontawesome';
 import mditModifyToken from 'markdown-it-modify-token';
 import mditSup from 'markdown-it-sup';
+import mditMark from 'markdown-it-mark';
 
 // see: https://github.com/mochajs/mocha/issues/1847
 const { before, describe, it, Promise } = global;
@@ -30,6 +31,7 @@ describe('<Preview />', () => {
           mditFontAwesome,
           mditModifyToken,
           mditSup,
+          mditMark,
         ],
         hljs: hljs,
         emojione: emojione
@@ -435,6 +437,23 @@ describe('<Preview />', () => {
 
     setTimeout(() => {
       expect(wrapper.html()).to.contain('<p>29<sup>th</sup></p>');
+
+      done();
+    }, 5);
+  });
+
+  it('supports <mark> tag with ==text==', (done) => {
+    const wrapper = mount(
+      <Preview
+        raw={'==marked=='}
+        pos={0}
+        previewLoader={previewLoader}
+        template={''}
+      />
+    );
+
+    setTimeout(() => {
+      expect(wrapper.html()).to.contain('<p><mark>marked</mark></p>');
 
       done();
     }, 5);
