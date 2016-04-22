@@ -113,7 +113,7 @@ export default class Store {
    */
   update(document) {
     // we don't want to store default content
-    if (document.hasDefaultContent() && document.isNew()) {
+    if (document.isNew()) {
       return Promise.resolve(this.state);
     }
 
@@ -134,12 +134,11 @@ export default class Store {
    * Synchronize current document between local and server databases
    */
   sync() {
-    if (this.state.document.hasDefaultContent() && this.state.document.isNew()) {
+    if (this.state.document.isNew()) {
       return Promise.resolve(this.state);
     }
 
-    // document is new
-    if (this.state.document.isNew()) {
+    if (this.state.document.hasNeverBeenSync()) {
       return this._serverPersist();
     }
 

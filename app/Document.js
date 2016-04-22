@@ -13,11 +13,15 @@ export default class Document extends Record({
     return Config.DEFAULT_CONTENT === this.content;
   }
 
-  isNew() {
+  hasNeverBeenSync() {
     return null === this.last_modified;
   }
 
   hasNoLocalChanges() {
     return null === this.last_modified_locally;
+  }
+
+  isNew() {
+    return this.hasDefaultContent() && this.hasNeverBeenSync() && this.hasNoLocalChanges();
   }
 }

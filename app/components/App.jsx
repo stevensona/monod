@@ -140,7 +140,8 @@ export default class App extends Component {
       this.props.controller.dispatch('action:update', new Document({
         uuid: doc.get('uuid'),
         content: newContent,
-        last_modified: doc.get('last_modified')
+        last_modified: doc.get('last_modified'),
+        last_modified_locally: doc.get('last_modified_locally')
       }));
     }
   }

@@ -214,6 +214,20 @@ describe('Store', () => {
         expect(eventEmitterSpy.calledWith(Events.CHANGE)).to.be.true;
       });
     });
+
+    describe('with NO Internet connection', () => {
+      it('should not persist a default document except when it is not a new document', () => {
+        const initialState = store.state;
+        const promise = store.update(new Document({ last_modified_locally: new Date() }));
+
+        return promise.then((state) => {
+          expect(state).not.to.be.equal(initialState);
+
+          expect(eventEmitterSpy.calledOnce).to.be.true;
+          expect(eventEmitterSpy.calledWith(Events.CHANGE)).to.be.true;
+        });
+      });
+    });
   });
 
   describe('sync', () => {
