@@ -1,9 +1,16 @@
 import React from 'react';
 import { mount, shallow, render } from 'enzyme';
 import { expect } from 'chai';
-import mdit from 'markdown-it';
 import emojione from 'emojione';
 import hljs from 'highlight.js';
+import mdit from 'markdown-it';
+
+// plugins loaded in the PreviewLoader, which we cannot use in the test suite
+// since it is tied to webpack's require feature...
+import mditFontAwesome from 'markdown-it-fontawesome';
+import mditModifyToken from 'markdown-it-modify-token';
+import mditSup from 'markdown-it-sup';
+import mditMark from 'markdown-it-mark';
 
 // see: https://github.com/mochajs/mocha/issues/1847
 const { before, describe, it, Promise } = global;
@@ -20,6 +27,12 @@ describe('<Preview />', () => {
 
       return Promise.resolve({
         markdownIt: mdit,
+        markdownItPlugins: [
+          mditFontAwesome,
+          mditModifyToken,
+          mditSup,
+          mditMark,
+        ],
         hljs: hljs,
         emojione: emojione
       });
@@ -229,76 +242,6 @@ describe('<Preview />', () => {
     }, 5);
   });
 
-
-  it('handles html block chunks', (done) => {
-    let chunks;
-    const wrapper = shallow(
-      <Preview
-        raw={''}
-        pos={0}
-        previewLoader={previewLoader}
-        template={''}
-      />
-    );
-
-    let html = [
-      '<div class="foo">',
-      '  <h3>sub-section</h3>',
-      '  <p>lorem ipsum</p>',
-      '</div>'
-    ];
-
-    setTimeout(() => {
-      const preview = wrapper.instance();
-
-      // raw html block
-      chunks = preview.getChunks(html.join('\n'), {});
-      expect(chunks).to.have.lengthOf(1);
-      expect(chunks[0]).to.have.lengthOf(1);
-      expect(chunks[0][0]).to.have.property('type', 'html_block');
-
-      // Insert an empty row
-      html.splice(2, 0, '\n');
-      chunks = preview.getChunks(html.join('\n'), {});
-      expect(chunks).to.have.lengthOf(2);
-      expect(chunks[0]).to.have.lengthOf(1);
-      expect(chunks[0][0]).to.have.property('type', 'html_block');
-      expect(chunks[1][0]).to.have.property('type', 'html_block');
-
-      done();
-    }, 5);
-  });
-
-  it('sanitizes incomplete html blocks', (done) => {
-    let chunks;
-    const wrapper = shallow(
-      <Preview
-        raw={''}
-        pos={0}
-        previewLoader={previewLoader}
-        template={''}
-      />
-    );
-
-    setTimeout(() => {
-      const preview = wrapper.instance();
-
-      chunks = preview.getChunks('<div class="foo">', {});
-      expect(chunks).to.have.lengthOf(1);
-      expect(chunks[0]).to.have.lengthOf(1);
-      expect(chunks[0][0]).to.have.property('type', 'html_block');
-      expect(chunks[0][0]).to.have.property('content', '<div></div>');
-
-      chunks = preview.getChunks('</div>', {});
-      expect(chunks).to.have.lengthOf(1);
-      expect(chunks[0]).to.have.lengthOf(1);
-      expect(chunks[0][0]).to.have.property('type', 'html_block');
-      expect(chunks[0][0]).to.have.property('content', '');
-
-      done();
-    }, 5);
-  });
-
   it('removes front-matter YAML header from preview', (done) => {
     const wrapper = mount(
       <Preview
@@ -389,6 +332,128 @@ describe('<Preview />', () => {
         '</span>',
         '</div>'
       ].join(''));
+
+      done();
+    }, 5);
+  });
+
+  it('should not display iframes (#122)', (done) => {
+    const content = '<a href=""><iframe src="javascript:alert(1)"></iframe></a>';
+    const wrapper = mount(
+      <Preview
+        raw={content}
+        pos={0}
+        previewLoader={previewLoader}
+        template={''}
+      />
+    );
+
+    setTimeout(() => {
+      expect(wrapper.html()).not.to.contain(content);
+
+      done();
+    }, 5);
+  });
+
+  it('should not render bad input tag (#122)', (done) => {
+    const content = '<input onfocus=alert(1) autofocus>>';
+    const wrapper = mount(
+      <Preview
+        raw={content}
+        pos={0}
+        previewLoader={previewLoader}
+        template={''}
+      />
+    );
+
+    setTimeout(() => {
+      expect(wrapper.html()).not.to.contain('input onfocus="alert(1)" autofocus=""');
+
+      done();
+    }, 5);
+  });
+
+  it('should not render bad HTML tag (#122)', (done) => {
+    const content = '<<img onerror=alert(1) src=x/>>';
+    const wrapper = mount(
+      <Preview
+        raw={content}
+        pos={0}
+        previewLoader={previewLoader}
+        template={''}
+      />
+    );
+
+    setTimeout(() => {
+      expect(wrapper.html()).not.to.contain('img onerror="alert(1)" src="x/"');
+
+      done();
+    }, 5);
+  });
+
+  it('supports FontAwesome', (done) => {
+    const wrapper = mount(
+      <Preview
+        raw={':fa-globe:'}
+        pos={0}
+        previewLoader={previewLoader}
+        template={''}
+      />
+    );
+
+    setTimeout(() => {
+      expect(wrapper.html()).to.contain('<i class="fa fa-globe"></i>');
+
+      done();
+    }, 5);
+  });
+
+  it('should display links with rel="noopener"', (done) => {
+    const wrapper = mount(
+      <Preview
+        raw={'[foo](/url)'}
+        pos={0}
+        previewLoader={previewLoader}
+        template={''}
+      />
+    );
+
+    setTimeout(() => {
+      expect(wrapper.html()).to.contain('<a href="/url" rel="noreferrer noopener">foo</a>');
+
+      done();
+    }, 5);
+  });
+
+  it('supports <sup> tag with ^text^', (done) => {
+    const wrapper = mount(
+      <Preview
+        raw={'29^th^'}
+        pos={0}
+        previewLoader={previewLoader}
+        template={''}
+      />
+    );
+
+    setTimeout(() => {
+      expect(wrapper.html()).to.contain('<p>29<sup>th</sup></p>');
+
+      done();
+    }, 5);
+  });
+
+  it('supports <mark> tag with ==text==', (done) => {
+    const wrapper = mount(
+      <Preview
+        raw={'==marked=='}
+        pos={0}
+        previewLoader={previewLoader}
+        template={''}
+      />
+    );
+
+    setTimeout(() => {
+      expect(wrapper.html()).to.contain('<p><mark>marked</mark></p>');
 
       done();
     }, 5);
