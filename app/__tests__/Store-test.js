@@ -195,13 +195,33 @@ describe('Store', () => {
       expect(eventEmitterSpy.calledOnce).to.be.true;
       expect(eventEmitterSpy.calledWith(Events.CHANGE)).to.be.true;
     });
+
+    it('should not persist a default document', () => {
+      const initialState = store.state;
+      const promise = store.update(new Document());
+
+      return expect(promise).to.be.eventually.equal(initialState);
+    });
+
+    it('should not persist a default document except when it is not a new document', () => {
+      const initialState = store.state;
+      const promise = store.update(new Document({ last_modified: new Date() }));
+
+      return promise.then((state) => {
+        expect(state).not.to.be.equal(initialState);
+
+        expect(eventEmitterSpy.calledOnce).to.be.true;
+        expect(eventEmitterSpy.calledWith(Events.CHANGE)).to.be.true;
+      });
+    });
   });
 
   describe('sync', () => {
     it('should not sync if the document has default content', () => {
-      const promise = store.sync();
+      const initialState = store.state;
+      const promise      = store.sync();
 
-      return expect(promise).to.be.eventually.equal('No need to sync');
+      return expect(promise).to.be.eventually.equal(initialState);
     });
 
     describe('with Internet connection', () => {
@@ -261,10 +281,12 @@ describe('Store', () => {
         });
 
         store.update(doc);
+        const storeStateBeforeSync = store.state;
+
         eventEmitterSpy.reset();
 
         // test
-        return expect(store.sync()).to.eventually.equal('nothing to do');
+        return expect(store.sync()).to.eventually.equal(storeStateBeforeSync);
       });
 
       it([
