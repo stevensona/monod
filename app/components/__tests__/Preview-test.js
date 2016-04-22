@@ -1,11 +1,15 @@
 import React from 'react';
 import { mount, shallow, render } from 'enzyme';
 import { expect } from 'chai';
-import mdit from 'markdown-it';
-import mditfa from 'markdown-it-fontawesome';
-import mditmt from 'markdown-it-modify-token';
 import emojione from 'emojione';
 import hljs from 'highlight.js';
+import mdit from 'markdown-it';
+
+// plugins loaded in the PreviewLoader, which we cannot use in the test suite
+// since it is tied to webpack's require feature...
+import mditFontAwesome from 'markdown-it-fontawesome';
+import mditModifyToken from 'markdown-it-modify-token';
+import mditSup from 'markdown-it-sup';
 
 // see: https://github.com/mochajs/mocha/issues/1847
 const { before, describe, it, Promise } = global;
@@ -23,8 +27,9 @@ describe('<Preview />', () => {
       return Promise.resolve({
         markdownIt: mdit,
         markdownItPlugins: [
-          mditfa,
-          mditmt,
+          mditFontAwesome,
+          mditModifyToken,
+          mditSup,
         ],
         hljs: hljs,
         emojione: emojione
@@ -413,6 +418,23 @@ describe('<Preview />', () => {
 
     setTimeout(() => {
       expect(wrapper.html()).to.contain('<a href="/url" rel="noreferrer noopener">foo</a>');
+
+      done();
+    }, 5);
+  });
+
+  it('supports <sup> tag with ^text^', (done) => {
+    const wrapper = mount(
+      <Preview
+        raw={'29^th^'}
+        pos={0}
+        previewLoader={previewLoader}
+        template={''}
+      />
+    );
+
+    setTimeout(() => {
+      expect(wrapper.html()).to.contain('<p>29<sup>th</sup></p>');
 
       done();
     }, 5);

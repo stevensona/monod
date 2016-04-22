@@ -11,6 +11,7 @@ export default () => {
         markdownItPlugins: [
           require('markdown-it-fontawesome'),
           require('markdown-it-modify-token'),
+          require('markdown-it-sup'),
         ],
         emojione: require('emojione')
       });
