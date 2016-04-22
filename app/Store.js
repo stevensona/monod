@@ -60,7 +60,7 @@ export default class Store {
     if (!id) {
       this.events.emit(Events.NO_DOCUMENT_ID, this.state);
 
-      return Promise.reject(new Error('No document id'));
+      return Promise.resolve(this.state);
     }
 
     return this
@@ -113,8 +113,8 @@ export default class Store {
    */
   update(document) {
     // we don't want to store default content
-    if (document.hasDefaultContent()) {
-      return;
+    if (document.hasDefaultContent() && document.isNew()) {
+      return Promise.resolve(this.state);
     }
 
     this._setState({
@@ -134,8 +134,8 @@ export default class Store {
    * Synchronize current document between local and server databases
    */
   sync() {
-    if (this.state.document.hasDefaultContent()) {
-      return Promise.resolve('No need to sync');
+    if (this.state.document.hasDefaultContent() && this.state.document.isNew()) {
+      return Promise.resolve(this.state);
     }
 
     // document is new
@@ -164,7 +164,7 @@ export default class Store {
             return this._serverPersist();
           }
 
-          return Promise.resolve('nothing to do');
+          return Promise.resolve(this.state);
         }
 
         // In theory, it should never happened, but... what happens if:
