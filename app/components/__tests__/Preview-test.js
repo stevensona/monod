@@ -458,4 +458,21 @@ describe('<Preview />', () => {
       done();
     }, 5);
   });
+
+  it('supports strikethrough with ~~text~~', (done) => {
+    const wrapper = mount(
+      <Preview
+        raw={'~~Strikethrough~~'}
+        pos={0}
+        previewLoader={previewLoader}
+        template={''}
+      />
+    );
+
+    setTimeout(() => {
+      expect(wrapper.html()).to.contain('<p><s>Strikethrough</s></p>');
+
+      done();
+    }, 5);
+  });
 });
