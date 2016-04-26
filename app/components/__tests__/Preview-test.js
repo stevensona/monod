@@ -475,4 +475,23 @@ describe('<Preview />', () => {
       done();
     }, 5);
   });
+
+  it('has linkify plugin enabled', (done) => {
+    const wrapper = mount(
+      <Preview
+        raw={'http://example.org'}
+        pos={0}
+        previewLoader={previewLoader}
+        template={''}
+      />
+    );
+
+    setTimeout(() => {
+      expect(wrapper.html()).to.contain(
+        '<a href="http://example.org" rel="noreferrer noopener">http://example.org</a>'
+      );
+
+      done();
+    }, 5);
+  });
 });

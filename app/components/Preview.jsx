@@ -93,8 +93,7 @@ export default class Preview extends Component {
             default:
           }
         }
-      })
-      .enable('linkify');
+      });
 
       deps.markdownItPlugins.forEach((plugin) => {
         this.markdownIt.use(plugin);
