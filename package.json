@@ -62,6 +62,7 @@
     "markdown-it-fontawesome": "^0.2.0",
     "markdown-it-mark": "^2.0.0",
     "markdown-it-modify-token": "^1.0.2",
+    "markdown-it-sub": "^1.0.0",
     "markdown-it-sup": "^1.0.0",
     "mocha": "^2.4.5",
     "mocha-circleci-reporter": "0.0.1",
