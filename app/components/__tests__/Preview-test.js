@@ -10,6 +10,7 @@ import mdit from 'markdown-it';
 import mditFontAwesome from 'markdown-it-fontawesome';
 import mditModifyToken from 'markdown-it-modify-token';
 import mditSup from 'markdown-it-sup';
+import mditSub from 'markdown-it-sub';
 import mditMark from 'markdown-it-mark';
 
 // see: https://github.com/mochajs/mocha/issues/1847
@@ -32,6 +33,7 @@ describe('<Preview />', () => {
           mditModifyToken,
           mditSup,
           mditMark,
+          mditSub,
         ],
         hljs: hljs,
         emojione: emojione
@@ -490,6 +492,23 @@ describe('<Preview />', () => {
       expect(wrapper.html()).to.contain(
         '<a href="http://example.org" rel="noreferrer noopener">http://example.org</a>'
       );
+
+      done();
+    }, 5);
+  });
+
+  it('supports <sub> tag with ~text~', (done) => {
+    const wrapper = mount(
+      <Preview
+        raw={'H~2~O'}
+        pos={0}
+        previewLoader={previewLoader}
+        template={''}
+      />
+    );
+
+    setTimeout(() => {
+      expect(wrapper.html()).to.contain('<p>H<sub>2</sub>O</p>');
 
       done();
     }, 5);
