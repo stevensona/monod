@@ -69,7 +69,7 @@ export default class Preview extends Component {
 
   componentWillMount() {
     this.props.previewLoader().then((deps) => {
-      this.markdownIt = deps.markdownIt('commonmark', {
+      this.markdownIt = deps.markdownIt('default', {
         html: false,
         linkify: true,
         typographer: true,
