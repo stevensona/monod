@@ -4,6 +4,7 @@ import { expect } from 'chai';
 import emojione from 'emojione';
 import hljs from 'highlight.js';
 import mdit from 'markdown-it';
+import katex from 'katex';
 
 // plugins loaded in the PreviewLoader, which we cannot use in the test suite
 // since it is tied to webpack's require feature...
@@ -14,6 +15,7 @@ import mditSub from 'markdown-it-sub';
 import mditMark from 'markdown-it-mark';
 import mditIns from 'markdown-it-ins';
 import mditAbbr from 'markdown-it-abbr';
+import mditKatex from 'markdown-it-katex';
 
 // see: https://github.com/mochajs/mocha/issues/1847
 const { before, describe, it, Promise } = global;
@@ -38,6 +40,7 @@ describe('<Preview />', () => {
           mditSub,
           mditIns,
           mditAbbr,
+          mditKatex,
         ],
         hljs: hljs,
         emojione: emojione
@@ -557,6 +560,23 @@ describe('<Preview />', () => {
         'specification is maintained by the <abbr title="World Wide',
         'Web Consortium">W3C</abbr>.</p'
       ].join(' '));
+
+      done();
+    }, 5);
+  });
+
+  it('supports Math expressions', (done) => {
+    const wrapper = mount(
+      <Preview
+        raw={'$Sut \leq_{ct} S^N =_{def} CTraces(Sut) \subseteq Traces_{Pass}(R(S^N))$'}
+        pos={0}
+        previewLoader={previewLoader}
+        template={''}
+      />
+    );
+
+    setTimeout(() => {
+      expect(wrapper.html()).to.contain('class="katex"');
 
       done();
     }, 5);

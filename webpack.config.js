@@ -88,11 +88,14 @@ const common = {
                 // result in an error.
                 include: PATHS.app
             },
-            // FontAwesome
+            // FontAwesome, KaTeX
             {
                 test: /\.(ttf|eot|svg|woff(2)?)(\?v=.+)?$/,
-                loaders: ['file?name=[path][name].[ext]&context=./node_modules'],
-                include: path.join(__dirname, 'node_modules/font-awesome/')
+                loaders: ['file?name=fonts/[name].[ext]'],
+                include: [
+                  path.join(__dirname, 'node_modules/font-awesome/fonts/'),
+                  path.join(__dirname, 'node_modules/katex/dist/fonts/')
+                ]
             },
             // Monod fonts
             {
