@@ -13,6 +13,7 @@ import mditSup from 'markdown-it-sup';
 import mditSub from 'markdown-it-sub';
 import mditMark from 'markdown-it-mark';
 import mditIns from 'markdown-it-ins';
+import mditAbbr from 'markdown-it-abbr';
 
 // see: https://github.com/mochajs/mocha/issues/1847
 const { before, describe, it, Promise } = global;
@@ -36,6 +37,7 @@ describe('<Preview />', () => {
           mditMark,
           mditSub,
           mditIns,
+          mditAbbr,
         ],
         hljs: hljs,
         emojione: emojione
@@ -528,6 +530,33 @@ describe('<Preview />', () => {
 
     setTimeout(() => {
       expect(wrapper.html()).to.contain('<p><ins>inserted</ins></p>');
+
+      done();
+    }, 5);
+  });
+
+  it('supports <abbr> tags', (done) => {
+    const content = [
+      '*[HTML]: Hyper Text Markup Language',
+      '*[W3C]:  World Wide Web Consortium',
+      'The HTML specification is maintained by the W3C.'
+    ].join("\n");
+
+    const wrapper = mount(
+      <Preview
+        raw={content}
+        pos={0}
+        previewLoader={previewLoader}
+        template={''}
+      />
+    );
+
+    setTimeout(() => {
+      expect(wrapper.html()).to.contain([
+        '<p>The <abbr title="Hyper Text Markup Language">HTML</abbr>',
+        'specification is maintained by the <abbr title="World Wide',
+        'Web Consortium">W3C</abbr>.</p'
+      ].join(' '));
 
       done();
     }, 5);
