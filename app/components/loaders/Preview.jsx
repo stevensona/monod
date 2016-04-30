@@ -14,6 +14,7 @@ export default () => {
           require('markdown-it-sup'),
           require('markdown-it-sub'),
           require('markdown-it-mark'),
+          require('markdown-it-ins'),
         ],
         emojione: require('emojione')
       });

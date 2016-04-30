@@ -12,6 +12,7 @@ import mditModifyToken from 'markdown-it-modify-token';
 import mditSup from 'markdown-it-sup';
 import mditSub from 'markdown-it-sub';
 import mditMark from 'markdown-it-mark';
+import mditIns from 'markdown-it-ins';
 
 // see: https://github.com/mochajs/mocha/issues/1847
 const { before, describe, it, Promise } = global;
@@ -34,6 +35,7 @@ describe('<Preview />', () => {
           mditSup,
           mditMark,
           mditSub,
+          mditIns,
         ],
         hljs: hljs,
         emojione: emojione
@@ -509,6 +511,23 @@ describe('<Preview />', () => {
 
     setTimeout(() => {
       expect(wrapper.html()).to.contain('<p>H<sub>2</sub>O</p>');
+
+      done();
+    }, 5);
+  });
+
+  it('supports insert (<ins>) tag with ++text++', (done) => {
+    const wrapper = mount(
+      <Preview
+        raw={'++inserted++'}
+        pos={0}
+        previewLoader={previewLoader}
+        template={''}
+      />
+    );
+
+    setTimeout(() => {
+      expect(wrapper.html()).to.contain('<p><ins>inserted</ins></p>');
 
       done();
     }, 5);
