@@ -1,9 +1,9 @@
-import React, { Component, PropTypes } from 'react';
+import React, { PropTypes } from 'react';
 import Letter from './templates/Letter';
 import Invoice from './templates/Invoice';
 import Report from './templates/Report';
 
-const { func } = PropTypes;
+const { string, func } = PropTypes;
 
 
 export const Templates = [
@@ -13,37 +13,30 @@ export const Templates = [
   { id: 'report', name: 'Report', component: Report }
 ];
 
-export default class TemplateForm extends Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {
-      template: ''
-    };
-  }
-
-  handleTemplateChange(event) {
-    const newTemplate = event.target.value;
-    this.setState({ template: newTemplate });
-    this.props.doUpdateTemplate(newTemplate);
-  }
-
-  render() {
-    const optionNodes = Templates.map((component, key) => {
-      return (
-        <option value={component.id} key={key}>{component.name}</option>
-      );
-    });
-
-    return (
-      <form id="templateForm">
-        <select name="template" onChange={this.handleTemplateChange.bind(this)}>
-          {optionNodes}
-        </select>
-      </form>
-    );
-  }
-}
+const TemplateForm = (props) =>
+  <form id="templateForm">
+    <select
+      name="template"
+      onChange={props.doUpdateTemplate}
+      value={props.template}
+    >
+      {Templates.map((component, key) => {
+        return (
+          <option
+            value={component.id}
+            key={key}
+          >
+            {component.name}
+          </option>
+        );
+      })}
+    </select>
+  </form>
+;
 
 TemplateForm.propTypes = {
+  template: string.isRequired,
   doUpdateTemplate: func.isRequired
 };
+
+export default TemplateForm;

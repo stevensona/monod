@@ -513,4 +513,36 @@ describe('Store', () => {
       });
     });
   });
+
+  describe('updateTemplate', () => {
+    it('should update the template associated to a persisted document', () => {
+      const doc = new Document({ uuid: 'foo', content: 'bar' });
+
+      store.update(doc);
+      eventEmitterSpy.reset();
+
+      return store.updateTemplate('letter').then((state) => {
+        expect(eventEmitterSpy.calledOnce).to.be.true;
+        expect(eventEmitterSpy.calledWith(Events.CHANGE)).to.be.true;
+
+        expect(state.document.template).to.equal('letter');
+      });
+    });
+  });
+
+  describe('updateContent', () => {
+    it('should update the content of a persisted document', () => {
+      const doc = new Document({ uuid: 'foo', content: 'bar' });
+
+      store.update(doc);
+      eventEmitterSpy.reset();
+
+      return store.updateContent('babar').then((state) => {
+        expect(eventEmitterSpy.calledOnce).to.be.true;
+        expect(eventEmitterSpy.calledWith(Events.CHANGE)).to.be.true;
+
+        expect(state.document.content).to.equal('babar');
+      });
+    });
+  });
 });

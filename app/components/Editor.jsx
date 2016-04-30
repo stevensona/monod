@@ -17,44 +17,19 @@ export const EditorModes = {
 export default class Editor extends Component {
   constructor(props, context) {
     super(props, context);
+
     this.state = {
-      template: '',
       pos: 0,
       mode: EditorModes.PREVIEW
     };
   }
 
   updatePosition(newPos) {
-    this.setState((previousState) => {
-      return {
-        template: previousState.template,
-        pos: newPos,
-        loaded: previousState.loaded,
-        mode: previousState.mode
-      };
-    });
+    this.setState({ pos: newPos });
   }
 
   updateMode(newMode) {
-    this.setState((previousState) => {
-      return {
-        template: previousState.template,
-        pos: previousState.pos,
-        loaded: previousState.loaded,
-        mode: newMode
-      };
-    });
-  }
-
-  updateTemplate(newTemplate) {
-    this.setState((previousState) => {
-      return {
-        template: newTemplate,
-        pos: previousState.pos,
-        loaded: previousState.loaded,
-        mode: previousState.mode
-      };
-    });
+    this.setState({ mode: newMode });
   }
 
   handleOnClick(e) {
@@ -80,11 +55,12 @@ export default class Editor extends Component {
         loadedClassName={`editor ${this.state.mode}`}
       >
         <TemplateForm
-          doUpdateTemplate={this.updateTemplate.bind(this)}
+          template={this.props.template}
+          doUpdateTemplate={this.props.onUpdateTemplate}
         />
         <Markdown
           raw={this.props.content}
-          onChange={this.props.onContentUpdate}
+          onChange={this.props.onUpdateContent}
           doUpdatePosition={this.updatePosition.bind(this)}
         />
         <VerticalHandler
@@ -94,7 +70,7 @@ export default class Editor extends Component {
         <Preview
           raw={this.props.content}
           pos={this.state.pos}
-          template={this.state.template}
+          template={this.props.template}
         />
       </Loader>
     );
@@ -104,7 +80,9 @@ export default class Editor extends Component {
 Editor.propTypes = {
   loaded: bool.isRequired,
   content: string.isRequired,
-  onContentUpdate: func.isRequired
+  template: string.isRequired,
+  onUpdateContent: func.isRequired,
+  onUpdateTemplate: func.isRequired
 };
 
 Editor.contextTypes = {

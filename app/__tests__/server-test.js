@@ -93,6 +93,7 @@ describe('Express app', () => {
         .expect(201, {
           content: content,
           uuid: NEW_DOCUMENT_UUID,
+          template: '',
           last_modified: 'date'
         }, done);
     });
@@ -114,6 +115,7 @@ describe('Express app', () => {
         .expect(200, {
           content: content,
           uuid: EXISTING_DOCUMENT_UUID,
+          template: '',
           last_modified: 'date'
         }, done);
     });

@@ -30,7 +30,9 @@ describe('<Editor />', () => {
       <Editor
         loaded
         content={''}
-        onContentUpdate={() => {}}
+        onUpdateContent={() => {}}
+        template={''}
+        onUpdateTemplate={() => {}}
       />,
       { context }
     );
@@ -42,21 +44,25 @@ describe('<Editor />', () => {
       <Editor
         loaded
         content={''}
-        onContentUpdate={() => {}}
+        onUpdateContent={() => {}}
+        template={''}
+        onUpdateTemplate={() => {}}
       />,
       { context }
     );
     expect(wrapper.find(Preview)).to.have.length(1);
   });
 
-  it('calls onContentUpdate() when text is entered in Markdown component', () => {
+  it('calls onUpdateContent() when text is entered in Markdown component', () => {
     const spy = sinon.spy();
 
     const wrapper = shallow(
       <Editor
         loaded
         content={''}
-        onContentUpdate={spy}
+        onUpdateContent={spy}
+        template={''}
+        onUpdateTemplate={() => {}}
       />,
       { context }
     );
@@ -72,7 +78,9 @@ describe('<Editor />', () => {
       <Editor
         loaded
         content={''}
-        onContentUpdate={() => {}}
+        onUpdateContent={() => {}}
+        template={''}
+        onUpdateTemplate={() => {}}
       />,
       { context }
     );
@@ -85,7 +93,9 @@ describe('<Editor />', () => {
       <Editor
         loaded={false}
         content={''}
-        onContentUpdate={() => {}}
+        onUpdateContent={() => {}}
+        template={''}
+        onUpdateTemplate={() => {}}
       />,
       { context }
     );
@@ -98,7 +108,9 @@ describe('<Editor />', () => {
       <Editor
         loaded
         content={''}
-        onContentUpdate={() => {}}
+        onUpdateContent={() => {}}
+        template={''}
+        onUpdateTemplate={() => {}}
       />,
       { context }
     );
@@ -106,13 +118,15 @@ describe('<Editor />', () => {
     expect(wrapper.find('.editor')).to.have.length(1);
   });
 
-  it('calls onContentUpdate prop on change', () => {
+  it('calls onUpdateContent prop on change', () => {
     const spy = sinon.spy();
     const wrapper = shallow(
       <Editor
         loaded
         content={''}
-        onContentUpdate={spy}
+        onUpdateContent={spy}
+        template={''}
+        onUpdateTemplate={() => {}}
       />,
       { context }
     );
@@ -127,7 +141,9 @@ describe('<Editor />', () => {
       <Editor
         loaded
         content={''}
-        onContentUpdate={() => {}}
+        onUpdateContent={() => {}}
+        template={''}
+        onUpdateTemplate={() => {}}
       />,
       { context }
     );
@@ -146,7 +162,9 @@ describe('<Editor />', () => {
       <Editor
         loaded
         content={''}
-        onContentUpdate={() => {}}
+        onUpdateContent={() => {}}
+        template={''}
+        onUpdateTemplate={() => {}}
       />,
       { context }
     );
@@ -171,7 +189,9 @@ describe('<Editor />', () => {
       <Editor
         loaded
         content={''}
-        onContentUpdate={() => {}}
+        onUpdateContent={() => {}}
+        template={''}
+        onUpdateTemplate={() => {}}
       />,
       { context }
     );
@@ -190,7 +210,9 @@ describe('<Editor />', () => {
       <Editor
         loaded
         content={''}
-        onContentUpdate={() => {}}
+        onUpdateContent={() => {}}
+        template={''}
+        onUpdateTemplate={() => {}}
       />,
       { context }
     );
