@@ -55,6 +55,11 @@
     // Override styles
     a {
         border: 0 !important;
+
+        &:link:after,
+        &:visited:after {
+            content: "" !important;
+        }
     }
 
     pre, blockquote {
