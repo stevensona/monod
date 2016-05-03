@@ -88,4 +88,13 @@
     li {
         font-size: 11pt !important;
     }
+
+    span {
+
+        &.emojione {
+            transform: scale(0.35, 0.35) !important;
+            margin-left: -20px !important;
+            margin-right: -20px !important;
+        }
+    }
 }
