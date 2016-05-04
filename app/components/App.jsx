@@ -134,16 +134,15 @@ export default class App extends Component {
   }
 
   updateContent(newContent) {
-    const doc = this.state.document;
-
-    if (doc.content !== newContent) {
-      this.props.controller.dispatch('action:update', new Document({
-        uuid: doc.get('uuid'),
-        content: newContent,
-        last_modified: doc.get('last_modified'),
-        last_modified_locally: doc.get('last_modified_locally')
-      }));
+    if (this.state.document.content !== newContent) {
+      this.props.controller.dispatch('action:update-content', newContent);
     }
+  }
+
+  updateTemplate(event) {
+    const newTemplate = event.target.value;
+
+    this.props.controller.dispatch('action:update-template', newTemplate);
   }
 
   removeMessage(index) {
@@ -163,7 +162,9 @@ export default class App extends Component {
         <Editor
           loaded={this.state.loaded}
           content={this.state.document.get('content')}
-          onContentUpdate={this.updateContent.bind(this)}
+          template={this.state.document.get('template')}
+          onUpdateContent={this.updateContent.bind(this)}
+          onUpdateTemplate={this.updateTemplate.bind(this)}
         />
         <Footer version={this.props.version} />
       </div>

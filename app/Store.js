@@ -84,7 +84,8 @@ export default class Store {
             return Promise.resolve(new Document({
               uuid: res.body.uuid,
               content: res.body.content,
-              last_modified: res.body.last_modified
+              last_modified: res.body.last_modified,
+              template: res.body.template || ''
             }));
           });
       })
@@ -97,7 +98,8 @@ export default class Store {
                 uuid: document.get('uuid'),
                 content: decryptedContent,
                 last_modified: document.get('last_modified'),
-                last_modified_locally: document.get('last_modified_locally')
+                last_modified_locally: document.get('last_modified_locally'),
+                template: document.get('template')
               }),
               secret: secret
             });
@@ -122,12 +124,41 @@ export default class Store {
         uuid: document.get('uuid'),
         content: document.get('content'),
         last_modified: document.get('last_modified'),
-        last_modified_locally: Date.now()
+        last_modified_locally: Date.now(),
+        template: document.get('template')
       }),
       secret: this.state.secret
     });
 
     return this._localPersist();
+  }
+
+  updateContent(content) {
+    const previousDocument = this.state.document;
+
+    return this.update(
+      new Document({
+        uuid: previousDocument.get('uuid'),
+        content: content,
+        last_modified: previousDocument.get('last_modified'),
+        last_modified_locally: previousDocument.get('last_modified_locally'),
+        template: previousDocument.get('template'),
+      })
+    );
+  }
+
+  updateTemplate(template) {
+    const previousDocument = this.state.document;
+
+    return this.update(
+      new Document({
+        uuid: previousDocument.get('uuid'),
+        content: previousDocument.get('content'),
+        last_modified: previousDocument.get('last_modified'),
+        last_modified_locally: previousDocument.get('last_modified_locally'),
+        template: template
+      })
+    );
   }
 
   /**
@@ -153,7 +184,8 @@ export default class Store {
         const serverDoc = new Document({
           uuid: res.body.uuid,
           content: res.body.content,
-          last_modified: res.body.last_modified
+          last_modified: res.body.last_modified,
+          template: res.body.template || ''
         });
 
         if (serverDoc.get('last_modified') === localDoc.get('last_modified')) {
@@ -178,7 +210,8 @@ export default class Store {
                 const updatedDocument = new Document({
                   uuid: serverDoc.get('uuid'),
                   content: decryptedContent,
-                  last_modified: serverDoc.get('last_modified')
+                  last_modified: serverDoc.get('last_modified'),
+                  template: serverDoc.get('template')
                 });
 
                 this._setState(
@@ -209,7 +242,8 @@ export default class Store {
             .then((encryptedContent) => {
               const fork = new Document({
                 uuid: uuid.v4(),
-                content: localDoc.content
+                content: localDoc.content,
+                template: localDoc.template
               });
 
               // persist fork'ed document
@@ -217,7 +251,8 @@ export default class Store {
                 fork.get('uuid'),
                 new Document({
                   uuid: fork.get('uuid'),
-                  content: encryptedContent
+                  content: encryptedContent,
+                  template: fork.get('template')
                 }).toJS()
               )
               .then(() => {
@@ -229,7 +264,8 @@ export default class Store {
               const former = new Document({
                 uuid: serverDoc.get('uuid'),
                 content: serverDoc.get('content'),
-                last_modified: serverDoc.get('last_modified')
+                last_modified: serverDoc.get('last_modified'),
+                template: serverDoc.get('template')
               });
 
               return this
@@ -262,7 +298,6 @@ export default class Store {
       });
   }
 
-  // Pure / side-effect free method
   decrypt(content, secret) {
     try {
       return Promise.resolve(sjcl.decrypt(secret, content));
@@ -273,12 +308,10 @@ export default class Store {
     }
   }
 
-  // Pure / side-effect free method
   encrypt(content, secret) {
     return Promise.resolve(sjcl.encrypt(secret, content, { ks: 256 }));
   }
 
-  // Impure / side-effect free method
   _localPersist() {
     const doc = this.state.document;
     const secret = this.state.secret;
@@ -292,7 +325,8 @@ export default class Store {
             uuid: doc.get('uuid'),
             content: encryptedContent,
             last_modified: doc.get('last_modified'),
-            last_modified_locally: doc.get('last_modified_locally')
+            last_modified_locally: doc.get('last_modified_locally'),
+            template: doc.get('template')
           }).toJS()
         );
       })
@@ -301,7 +335,6 @@ export default class Store {
       });
   }
 
-  // Impure / side-effect free method
   _serverPersist() {
     const doc = this.state.document;
     const secret = this.state.secret;
@@ -314,7 +347,8 @@ export default class Store {
           .set('Accept', 'application/json')
           .set('Content-Type', 'application/json')
           .send({
-            content: encryptedContent
+            content: encryptedContent,
+            template: doc.get('template')
           })
           .then(this._handleRequestSuccess.bind(this))
           .catch(this._handleRequestError.bind(this))
@@ -325,7 +359,8 @@ export default class Store {
                   uuid: doc.get('uuid'),
                   content: doc.get('content'),
                   last_modified: res.body.last_modified,
-                  last_modified_locally: null
+                  last_modified_locally: null,
+                  template: res.body.template || ''
                 }),
                 secret: secret
               },

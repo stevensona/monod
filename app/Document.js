@@ -6,7 +6,8 @@ export default class Document extends Record({
   uuid: uuid.v4(),
   content: Config.DEFAULT_CONTENT,
   last_modified: null, // defined by the server
-  last_modified_locally: null
+  last_modified_locally: null,
+  template: ''
 }) {
 
   hasDefaultContent() {
@@ -22,6 +23,7 @@ export default class Document extends Record({
   }
 
   isNew() {
-    return this.hasDefaultContent() && this.hasNeverBeenSync() && this.hasNoLocalChanges();
+    return this.hasDefaultContent() && this.hasNeverBeenSync()
+      && this.hasNoLocalChanges() && '' === this.template;
   }
 }

@@ -5,7 +5,8 @@ export default class Controller {
     this.events = events;
 
     this.events.on('action:init', this.onInit.bind(this));
-    this.events.on('action:update', this.onUpdate.bind(this));
+    this.events.on('action:update-content', this.onUpdateContent.bind(this));
+    this.events.on('action:update-template', this.onUpdateTemplate.bind(this));
     this.events.on('action:sync', this.onSync.bind(this));
   }
 
@@ -23,8 +24,12 @@ export default class Controller {
     this.store.load(id, secret);
   }
 
-  onUpdate(document) {
-    this.store.update(document);
+  onUpdateContent(content) {
+    this.store.updateContent(content);
+  }
+
+  onUpdateTemplate(template) {
+    this.store.updateTemplate(template);
   }
 
   onSync() {
