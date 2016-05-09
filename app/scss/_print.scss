@@ -55,6 +55,11 @@
     // Override styles
     a {
         border: 0 !important;
+
+        &:link:after,
+        &:visited:after {
+            content: "" !important;
+        }
     }
 
     pre, blockquote {
@@ -79,7 +84,16 @@
         }
     }
 
-    p {
+    p,
+    li {
         font-size: 11pt !important;
+    }
+
+    span {
+
+        &.emojione {
+            transform: scale(0.2, 0.2) !important;
+            margin: -20px !important;
+        }
     }
 }
