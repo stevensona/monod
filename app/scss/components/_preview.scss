@@ -102,5 +102,19 @@
                 margin-top: 1.6rem;
             }
         }
+
+        .reveal {
+            p {
+                text-align: inherit!important;
+            }
+
+            .controls {
+                bottom: 40px;
+            }
+
+            .slide-number {
+                bottom: 43px;
+            }
+        }
     }
 }
