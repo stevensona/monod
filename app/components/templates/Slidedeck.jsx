@@ -47,7 +47,7 @@ export default class Slidedeck extends BaseTemplate {
     Reveal.initialize({
       embedded: true,
       fragments: false,
-      slideid: true,
+      slideNumber: true,
       progress: false,
       help: false,
       margin: 0,
