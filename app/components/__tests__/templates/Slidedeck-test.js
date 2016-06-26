@@ -101,7 +101,7 @@ describe('<Slidedeck />', () => {
 
     expect(wrapper.find('Section')).to.have.length(1);
     expect(wrapper.html()).to.contain(
-      '<section data-transition="zoom"><section data-transition="zoom">'
+      '<section data-transition="default"><section data-transition="default">'
     );
   });
 

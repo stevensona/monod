@@ -8,6 +8,7 @@ import '../../scss/reveal-theme.css';
 
 const { number, array, string } = React.PropTypes;
 
+// transforms a chunk set into subsets for Reveal sections
 const splitContentIntoSections = (content, separator) => {
   const sections = [];
 
@@ -38,7 +39,7 @@ export default class Slidedeck extends BaseTemplate {
 
   getDefaultData() {
     return {
-      transition: 'zoom',
+      transition: 'default',
     };
   }
 
