@@ -21,6 +21,7 @@ export default class Slidedeck extends BaseTemplate {
       fragments: false,
       slideNumber: true,
       progress: false,
+      help: false,
     });
   }
 
