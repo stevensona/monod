@@ -11,7 +11,7 @@ const { array, func, number, object, string } = PropTypes;
 
 import 'emojione/assets/sprites/emojione.sprites.css';
 
-class PreviewChunk extends Component {
+export class PreviewChunk extends Component {
 
   shouldComponentUpdate(nextProps) {
     // It looks like `attrs` is modified by hljs on `render()`, which

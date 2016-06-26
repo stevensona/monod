@@ -32,7 +32,7 @@ export default class Slidedeck extends BaseTemplate {
         return;
       }
 
-      if ('---' === c.props.chunk[0].markup) {
+      if (c.props && '---' === c.props.chunk[0].markup) {
         if (itemsInSection.length > 0) {
           sections.push(itemsInSection);
           itemsInSection = [];
@@ -46,8 +46,8 @@ export default class Slidedeck extends BaseTemplate {
     return (
       <div className="reveal">
         <div className="slides">
-          {sections.map((section) =>
-            <section>
+          {sections.map((section, index) =>
+            <section key={`section-${index}`}>
               {section}
             </section>
           )}
