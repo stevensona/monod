@@ -12,7 +12,9 @@ import '../../scss/reveal-theme.css';
 export default class Slidedeck extends BaseTemplate {
 
   getDefaultData() {
-    return {};
+    return {
+      transition: 'zoom',
+    };
   }
 
   componentDidMount() {
@@ -22,10 +24,13 @@ export default class Slidedeck extends BaseTemplate {
       slideNumber: true,
       progress: false,
       help: false,
+      margin: 0,
     });
   }
 
   render() {
+    const data = this.getData();
+
     const sections = [];
     let itemsInSection = [];
     this.props.content.forEach((c) => {
@@ -48,7 +53,7 @@ export default class Slidedeck extends BaseTemplate {
       <div className="reveal">
         <div className="slides">
           {sections.map((section, index) =>
-            <section key={`section-${index}`}>
+            <section key={`section-${index}`} data-transition={data.transition}>
               {section}
             </section>
           )}
