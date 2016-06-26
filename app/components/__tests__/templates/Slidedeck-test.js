@@ -62,4 +62,22 @@ describe('<Slidedeck />', () => {
 
     expect(wrapper.find('section')).to.have.length(2);
   });
+
+  it('configures transitions based on YAML front matter', () => {
+    const wrapper = shallow(
+      <Slidedeck
+        content={[
+          mockPreviewChunk('this is content')
+        ]}
+        data={{
+          transition: 'concave'
+        }}
+      />
+    );
+
+    const section = wrapper.find('section');
+
+    expect(section).to.have.length(1);
+    expect(section.prop('data-transition')).to.equal('concave');
+  });
 });
