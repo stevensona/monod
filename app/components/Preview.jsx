@@ -1,4 +1,4 @@
-/* eslint no-param-reassign: 1, array-callback-return: 1 */
+/* eslint no-param-reassign: 0, array-callback-return: 0, react/no-multi-comp: 0 */
 import React, { PropTypes, Component } from 'react';
 import ReactDOM from 'react-dom';
 import PreviewLoader from './loaders/Preview';
@@ -116,7 +116,7 @@ export default class Preview extends Component {
       return;
     }
 
-    if (this.props.pos !== nextProps.pos || nextProps.pos === 1) {
+    if (this.props.pos !== nextProps.pos || 1 === nextProps.pos) {
       if (this.requestAnimationId) {
         window.cancelAnimationFrame(this.requestAnimationId);
         this.requestAnimationId = false;
@@ -153,9 +153,9 @@ export default class Preview extends Component {
           i < start ||
           !(
             // We are (NOT) closing a nested block
-            (tokens[i].level === 0 && tokens[i].nesting === -1) ||
+            (0 === tokens[i].level && -1 === tokens[i].nesting) ||
             // We are (NOT) in a root block
-            (tokens[i].level === 0 && tokens[i].nesting === 0)
+            (0 === tokens[i].level && 0 === tokens[i].nesting)
           )) {
         continue;
       }

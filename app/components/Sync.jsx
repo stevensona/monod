@@ -22,7 +22,7 @@ export default class Sync extends Component {
 
       if (0 < counter) {
         counter--;
-        this.setState({ counter: counter });
+        this.setState({ counter });
 
         if (0 === counter) {
           this.setState({ counter: DEFAULT_DURATION });
@@ -52,9 +52,9 @@ export default class Sync extends Component {
 
       this.setState({
         counter: duration,
-        duration: duration,
+        duration,
         offline: true,
-        displayCounter: displayCounter
+        displayCounter
       });
     });
   }

@@ -101,7 +101,7 @@ export default class Store {
                 last_modified_locally: document.get('last_modified_locally'),
                 template: document.get('template')
               }),
-              secret: secret
+              secret
             });
           });
       })
@@ -139,7 +139,7 @@ export default class Store {
     return this.update(
       new Document({
         uuid: previousDocument.get('uuid'),
-        content: content,
+        content,
         last_modified: previousDocument.get('last_modified'),
         last_modified_locally: previousDocument.get('last_modified_locally'),
         template: previousDocument.get('template'),
@@ -156,7 +156,7 @@ export default class Store {
         content: previousDocument.get('content'),
         last_modified: previousDocument.get('last_modified'),
         last_modified_locally: previousDocument.get('last_modified_locally'),
-        template: template
+        template
       })
     );
   }
@@ -217,7 +217,7 @@ export default class Store {
                 this._setState(
                   {
                     document: updatedDocument,
-                    secret: secret
+                    secret
                   },
                   Events.UPDATE_WITHOUT_CONFLICT,
                   {
@@ -362,7 +362,7 @@ export default class Store {
                   last_modified_locally: null,
                   template: res.body.template || ''
                 }),
-                secret: secret
+                secret
               },
               Events.SYNCHRONIZE
             );

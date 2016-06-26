@@ -24,6 +24,12 @@ export default class Editor extends Component {
     };
   }
 
+  componentDidUpdate() {
+    if (window.Reveal) {
+      window.Reveal.sync();
+    }
+  }
+
   updatePosition(newPos) {
     this.setState({ pos: newPos });
   }
@@ -46,12 +52,6 @@ export default class Editor extends Component {
     }
 
     this.updateMode(newMode);
-  }
-
-  componentDidUpdate() {
-    if (window.Reveal) {
-      window.Reveal.sync();
-    }
   }
 
   render() {
