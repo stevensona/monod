@@ -16,8 +16,14 @@ describe('<Slidedeck />', () => {
     return (
       <PreviewChunk
         key={key++}
-        markdownIt={{}}
-        emojione={{}}
+        markdownIt={{
+          renderer: {
+            render: (content) => content
+          }
+        }}
+        emojione={{
+          toImage: (content) => content
+        }}
         chunk={[ { markup: content } ]}
         markdownItEnv={{}}
       />
@@ -45,7 +51,7 @@ describe('<Slidedeck />', () => {
       />
     );
 
-    expect(wrapper.find('section')).to.have.length(1);
+    expect(wrapper.find('Section')).to.have.length(1);
   });
 
   it('creates a new section after a separator', () => {
@@ -60,7 +66,7 @@ describe('<Slidedeck />', () => {
       />
     );
 
-    expect(wrapper.find('section')).to.have.length(2);
+    expect(wrapper.find('Section')).to.have.length(2);
   });
 
   it('configures transitions based on YAML front matter', () => {
@@ -75,9 +81,55 @@ describe('<Slidedeck />', () => {
       />
     );
 
-    const section = wrapper.find('section');
+    const section = wrapper.find('Section');
 
     expect(section).to.have.length(1);
-    expect(section.prop('data-transition')).to.equal('concave');
+    expect(section.prop('transition')).to.equal('concave');
+  });
+
+  it('supports vertical slides', () => {
+    const wrapper = shallow(
+      <Slidedeck
+        content={[
+          mockPreviewChunk('this is content'),
+          mockPreviewChunk('----'),
+          mockPreviewChunk('this is content')
+        ]}
+        data={{}}
+      />
+    );
+
+    expect(wrapper.find('Section')).to.have.length(1);
+    expect(wrapper.html()).to.contain(
+      '<section data-transition="zoom"><section data-transition="zoom">'
+    );
+  });
+
+  it('supports mixed horizontal and vertical slides', () => {
+    const wrapper = shallow(
+      <Slidedeck
+        content={[
+          mockPreviewChunk('Slide 1'),
+          mockPreviewChunk('---'),
+          mockPreviewChunk('Slide 2'),
+          mockPreviewChunk('----'),
+          mockPreviewChunk('Slide 2.1'),
+          mockPreviewChunk('---'),
+          mockPreviewChunk('Slide 3'),
+        ]}
+        data={{}}
+      />
+    );
+
+    expect(wrapper.find('Section')).to.have.length(3);
+    expect(wrapper.find('Section').at(0).html()).not.to.contain(
+      '</section></section>'
+    );
+    expect(wrapper.find('Section').at(1).html()).to.contain(
+      '</section></section>'
+    );
+    expect(wrapper.find('Section').at(2).html()).not.to.contain(
+      '</section></section>'
+    );
   });
 });

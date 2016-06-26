@@ -6,6 +6,31 @@ import Reveal from 'reveal.js';
 import '../../scss/reveal.css';
 import '../../scss/reveal-theme.css';
 
+const { number, array, string } = React.PropTypes;
+
+const splitContentIntoSections = (content, separator) => {
+  const sections = [];
+
+  let chunks = [];
+  content.forEach((chunk) => {
+    if ('preview-loader' === chunk.key) {
+      return;
+    }
+
+    if (chunk.props && separator === chunk.props.chunk[0].markup) {
+      if (0 < chunks.length) {
+        sections.push(chunks);
+        chunks = [];
+      }
+    } else {
+      chunks.push(chunk);
+    }
+  });
+  sections.push(chunks);
+
+  return sections;
+};
+
 /**
  * Slidedeck template
  */
@@ -21,7 +46,7 @@ export default class Slidedeck extends BaseTemplate {
     Reveal.initialize({
       embedded: true,
       fragments: false,
-      slideNumber: true,
+      slideid: true,
       progress: false,
       help: false,
       margin: 0,
@@ -30,35 +55,46 @@ export default class Slidedeck extends BaseTemplate {
 
   render() {
     const data = this.getData();
-
-    const sections = [];
-    let itemsInSection = [];
-    this.props.content.forEach((c) => {
-      if ('preview-loader' === c.key) {
-        return;
-      }
-
-      if (c.props && '---' === c.props.chunk[0].markup) {
-        if (itemsInSection.length > 0) {
-          sections.push(itemsInSection);
-          itemsInSection = [];
-        }
-      } else {
-        itemsInSection.push(c);
-      }
-    });
-    sections.push(itemsInSection);
+    const slides = splitContentIntoSections(this.props.content, '---');
 
     return (
       <div className="reveal">
         <div className="slides">
-          {sections.map((section, index) =>
-            <section key={`section-${index}`} data-transition={data.transition}>
-              {section}
-            </section>
+          {slides.map((section, index) =>
+            <Section
+              key={`section-${index}`}
+              id={index}
+              transition={data.transition}
+              content={section}
+            />
           )}
         </div>
       </div>
     );
   }
 }
+
+const Section = (props) => {
+  const slides = splitContentIntoSections(props.content, '----');
+
+  return (
+    <section
+      data-transition={props.transition}
+    >
+      {1 < slides.length ? slides.map((slide, index) =>
+        <section
+          key={`section-${props.id}-${index}`}
+          data-transition={props.transition}
+        >
+          {slide}
+        </section>
+      ) : slides}
+    </section>
+  );
+};
+
+Section.propTypes = {
+  content: array.isRequired,
+  transition: string.isRequired,
+  id: number.isRequired,
+};
