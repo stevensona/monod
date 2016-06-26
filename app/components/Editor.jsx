@@ -26,7 +26,7 @@ export default class Editor extends Component {
 
   componentDidUpdate() {
     if (window.Reveal) {
-      window.Reveal.sync();
+      window.Reveal.layout();
     }
   }
 
