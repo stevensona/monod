@@ -48,6 +48,12 @@ export default class Editor extends Component {
     this.updateMode(newMode);
   }
 
+  componentDidUpdate() {
+    if (window.Reveal) {
+      window.Reveal.sync();
+    }
+  }
+
   render() {
     return (
       <Loader

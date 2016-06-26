@@ -52,6 +52,8 @@ export default class Slidedeck extends BaseTemplate {
       help: false,
       margin: 0,
     });
+
+    window.Reveal = Reveal;
   }
 
   render() {
