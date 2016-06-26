@@ -4,6 +4,7 @@ Templates
 * [Letter](#letter)
 * [Invoice](#invoice)
 * [Report](#report)
+* [Slide deck](#slide-deck)
 
 
 ## Letter
@@ -76,6 +77,20 @@ date:
 location:
 reference:
 version:
+---
+```
+
+## Slide deck
+
+The "Slide deck" template helps you write awesome
+[Reveal.js](https://github.com/hakimel/reveal.js)-based slides. In your Markdown
+content, use a separator `---` to split your content into different slides.
+
+### YAML Front-Matter
+
+```
+---
+transition: zoom # None, Fade, Slide, Convex, Concave, Zoom
 ---
 ```
 
