@@ -3,7 +3,6 @@ import Loader from 'react-loader';
 
 import Markdown from './Markdown';
 import Preview from './Preview';
-import TemplateForm from './TemplateForm';
 import VerticalHandler from './VerticalHandler';
 
 const { bool, func, string } = PropTypes;
@@ -60,10 +59,6 @@ export default class Editor extends Component {
         loaded={this.props.loaded}
         loadedClassName={`editor ${this.state.mode}`}
       >
-        <TemplateForm
-          template={this.props.template}
-          doUpdateTemplate={this.props.onUpdateTemplate}
-        />
         <Markdown
           raw={this.props.content}
           onChange={this.props.onUpdateContent}
@@ -87,8 +82,7 @@ Editor.propTypes = {
   loaded: bool.isRequired,
   content: string.isRequired,
   template: string.isRequired,
-  onUpdateContent: func.isRequired,
-  onUpdateTemplate: func.isRequired
+  onUpdateContent: func.isRequired
 };
 
 Editor.contextTypes = {

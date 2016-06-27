@@ -154,7 +154,10 @@ export default class App extends Component {
   render() {
     return (
       <div className="layout">
-        <Header />
+        <Header
+          template={this.state.document.get('template')}
+          onUpdateTemplate={this.updateTemplate.bind(this)}
+        />
         <MessageBoxes
           messages={this.state.messages}
           closeMessageBox={this.removeMessage.bind(this)}
@@ -164,7 +167,6 @@ export default class App extends Component {
           content={this.state.document.get('content')}
           template={this.state.document.get('template')}
           onUpdateContent={this.updateContent.bind(this)}
-          onUpdateTemplate={this.updateTemplate.bind(this)}
         />
         <Footer version={this.props.version} />
       </div>
