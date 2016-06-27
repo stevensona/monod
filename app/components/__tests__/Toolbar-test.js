@@ -13,6 +13,7 @@ describe('<Toolbar />', () => {
   it('renders the application\'s toolbar', () => {
     const wrapper = shallow(
       <Toolbar
+        onTogglePresentationMode={() => {}}
         template={''}
         onUpdateTemplate={() => {}}
       />);

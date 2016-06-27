@@ -13,6 +13,7 @@ describe('<Header />', () => {
   it('renders a header element', () => {
     const wrapper = shallow(
       <Header
+        onTogglePresentationMode={() => {}}
         template={''}
         onUpdateTemplate={() => {}}
       />

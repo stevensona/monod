@@ -18,4 +18,12 @@
       padding-left: 0.5rem;
     }
   }
+
+  .actions {
+    @include button-group('.action');
+
+    .action {
+      @include button($background: darken($primary-color, 10%));
+    }
+  }
 }

@@ -28,7 +28,37 @@ $vertical-handler-width: 40px;
   @return calc(100vh - #{$header-footer-height});
 };
 
+@mixin fullscreen {
+  height: 100vh;
+  width: 100vw;
+  background-color: $alabaster;
+}
+
 /* -- styles -- */
+:-webkit-full-screen {
+  @include fullscreen;
+}
+
+:-webkit-full-screen {
+  @include fullscreen;
+}
+
+:-moz-full-screen {
+  @include fullscreen;
+}
+
+:-ms-fullscreen {
+  @include fullscreen;
+}
+
+:full-screen {
+  @include fullscreen;
+}
+
+:fullscreen {
+  @include fullscreen;
+}
+
 .layout {
   display: flex;
   flex-direction: column;
@@ -78,6 +108,8 @@ $vertical-handler-width: 40px;
       @include breakpoint(medium) {
         flex: 1 1 calc(50% - #{$vertical-handler-width / 2});
       }
+
+
     }
 
     &.focus {

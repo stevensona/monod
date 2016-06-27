@@ -114,6 +114,28 @@ export default class App extends Component {
     });
   }
 
+  togglePresentationMode() {
+    if (
+      (!document.fullscreenElement) &&
+      (!document.webkitFullscreenElement) &&
+      (!document.mozFullScreenElement) &&
+      (!document.msFullscreenElement)
+    ) {
+      const element = document.getElementsByClassName('preview')[0];
+
+      // Switch to fullscreen
+      const requestMethod = element.requestFullScreen ||
+                            element.webkitRequestFullscreen ||
+                            element.webkitRequestFullScreen ||
+                            element.mozRequestFullScreen ||
+                            element.msRequestFullscreen;
+
+      if (requestMethod) {
+        requestMethod.apply(element);
+      }
+    }
+  }
+
   loadAndRedirect(doc, uri, message) {
     if (message) {
       this.state.messages.push(message);
@@ -155,6 +177,7 @@ export default class App extends Component {
     return (
       <div className="layout">
         <Header
+          onTogglePresentationMode={this.togglePresentationMode.bind(this)}
           template={this.state.document.get('template')}
           onUpdateTemplate={this.updateTemplate.bind(this)}
         />

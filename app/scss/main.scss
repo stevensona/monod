@@ -11,6 +11,8 @@
 @include foundation-table;
 @include foundation-callout;
 @include foundation-close-button;
+@include foundation-button;
+@include foundation-button-group;
 
 /* -- FontAwesome -- */
 $fa-font-path: '~font-awesome/fonts';

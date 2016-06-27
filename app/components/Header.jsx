@@ -8,6 +8,7 @@ const Header = (props) =>
   <header className="main">
     <h1>Monod <small>The Markdown Editor</small></h1>
     <Toolbar
+      onTogglePresentationMode={props.onTogglePresentationMode}
       template={props.template}
       onUpdateTemplate={props.onUpdateTemplate}
     />
@@ -15,6 +16,7 @@ const Header = (props) =>
 ;
 
 Header.propTypes = {
+  onTogglePresentationMode: func.isRequired,
   template: string.isRequired,
   onUpdateTemplate: func.isRequired
 };
