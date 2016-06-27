@@ -51,6 +51,9 @@ export default class Slidedeck extends BaseTemplate {
       progress: false,
       help: false,
       margin: 0,
+      keyboard: {
+        70: null,
+      },
     });
 
     window.Reveal = Reveal;
