@@ -16,6 +16,7 @@ import mditMark from 'markdown-it-mark';
 import mditIns from 'markdown-it-ins';
 import mditAbbr from 'markdown-it-abbr';
 import mditKatex from 'markdown-it-katex';
+import mditContainer from 'markdown-it-container';
 
 // see: https://github.com/mochajs/mocha/issues/1847
 const { before, describe, it, Promise } = global;
@@ -42,6 +43,7 @@ describe('<Preview />', () => {
           mditAbbr,
           mditKatex,
         ],
+        markdownItContainer: mditContainer,
         hljs: hljs,
         emojione: emojione
       });
@@ -577,6 +579,23 @@ describe('<Preview />', () => {
 
     setTimeout(() => {
       expect(wrapper.html()).to.contain('class="katex"');
+
+      done();
+    }, 5);
+  });
+
+  it('supports custom container: small', (done) => {
+    const wrapper = mount(
+      <Preview
+        raw={':::small\nfoo\n:::'}
+        pos={0}
+        previewLoader={previewLoader}
+        template={''}
+      />
+    );
+
+    setTimeout(() => {
+      expect(wrapper.html()).to.contain('<small>\n<p>foo</p>\n</small>');
 
       done();
     }, 5);

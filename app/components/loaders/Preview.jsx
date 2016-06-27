@@ -21,6 +21,7 @@ export default () => {
           require('markdown-it-abbr'),
           require('markdown-it-katex'),
         ],
+        markdownItContainer: require('markdown-it-container'),
         emojione: require('emojione')
       });
     });

@@ -99,6 +99,13 @@ export default class Preview extends Component {
         this.markdownIt.use(plugin);
       });
 
+      // custom containers must be explicitly defined
+      this.markdownIt.use(deps.markdownItContainer, 'small', {
+        render: (tokens, idx) => {
+          return 1 === tokens[idx].nesting ? '<small>\n' : '</small>\n';
+        }
+      });
+
       this.emojione = deps.emojione;
       this.emojione.ascii = true;
       this.emojione.sprites = true;
