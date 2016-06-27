@@ -32,6 +32,17 @@ $vertical-handler-width: 40px;
   height: 100vh;
   width: 100vw;
   background-color: $alabaster;
+
+  .reveal {
+
+    .controls {
+      bottom: 10px !important;
+    }
+
+    .slide-number {
+      bottom: 8px !important;
+    }
+  }
 }
 
 /* -- styles -- */
