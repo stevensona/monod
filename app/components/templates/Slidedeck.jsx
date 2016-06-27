@@ -56,6 +56,10 @@ export default class Slidedeck extends BaseTemplate {
     window.Reveal = Reveal;
   }
 
+  componentDidUpdate() {
+    Reveal.layout();
+  }
+
   render() {
     const data = this.getData();
     const slides = splitContentIntoSections(this.props.content, '---');
