@@ -13,11 +13,14 @@ footer.main {
         float: left;
     }
 
-    .version {
+    .version,
+    .help {
         float: right;
         margin-top: 0.1rem;
+        margin-left: 0.1rem;
+        margin-right: 0.1rem;
 
-        .git-ref {
+        &> span {
             padding: 0.4rem 0.5rem 0.3rem;
             border-radius: $global-radius;
             background-color: darken($td-blue, 10%);
