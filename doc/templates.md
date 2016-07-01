@@ -94,5 +94,28 @@ transition: zoom # None, Fade, Slide, Convex, Concave, Zoom
 ---
 ```
 
+### Fragments
+
+[Fragments](https://github.com/hakimel/reveal.js#fragments) are used to
+highlight individual elements on a slide. You can use the `{fragment}` special
+notation below any sentence or paragraph, and it will become a fragment.
+
+``` markdown
+---
+transition: default
+---
+
+# Key metrics are:
+
+* Fragment 1
+{fragment}
+
+* Fragment 2
+{fragment}
+
+* Fragment 3
+{fragment}
+```
+
 ---
 Back to: [Writing Monod documents](writing.md)

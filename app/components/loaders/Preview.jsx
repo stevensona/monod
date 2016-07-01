@@ -20,6 +20,7 @@ export default () => {
           require('markdown-it-ins'),
           require('markdown-it-abbr'),
           require('markdown-it-katex'),
+          require('markdown-it-classy'),
         ],
         markdownItContainer: require('markdown-it-container'),
         emojione: require('emojione')
