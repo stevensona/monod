@@ -21,6 +21,10 @@ host Monod at home, on your server, or on Heroku.
 [![Deploy to
 Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
+## Documentation
+
+Documentation can be found in the [`doc/`](doc/writing.md) folder.
+
 ## Installation
 
 
