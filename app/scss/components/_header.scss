@@ -3,14 +3,19 @@
  */
 
 header.main {
-    background-color: $primary-color;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  background-color: $primary-color;
 
-    h1 {
-        margin-left: 1rem;
-        color: $white;
+  h1 {
+    flex-grow: 1;
+    padding: 0 1rem;
+    color: $white;
 
-        small {
-            color: darken($primary-color, 10%);
-        }
+    small {
+      color: darken($primary-color, 10%);
     }
+  }
 }

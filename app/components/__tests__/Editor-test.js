@@ -32,7 +32,6 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
-        onUpdateTemplate={() => {}}
       />,
       { context }
     );
@@ -46,7 +45,6 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
-        onUpdateTemplate={() => {}}
       />,
       { context }
     );
@@ -62,7 +60,6 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={spy}
         template={''}
-        onUpdateTemplate={() => {}}
       />,
       { context }
     );
@@ -80,7 +77,6 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
-        onUpdateTemplate={() => {}}
       />,
       { context }
     );
@@ -95,7 +91,6 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
-        onUpdateTemplate={() => {}}
       />,
       { context }
     );
@@ -110,7 +105,6 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
-        onUpdateTemplate={() => {}}
       />,
       { context }
     );
@@ -126,7 +120,6 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={spy}
         template={''}
-        onUpdateTemplate={() => {}}
       />,
       { context }
     );
@@ -143,7 +136,6 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
-        onUpdateTemplate={() => {}}
       />,
       { context }
     );
@@ -164,7 +156,6 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
-        onUpdateTemplate={() => {}}
       />,
       { context }
     );
@@ -191,7 +182,6 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
-        onUpdateTemplate={() => {}}
       />,
       { context }
     );
@@ -212,7 +202,6 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
-        onUpdateTemplate={() => {}}
       />,
       { context }
     );

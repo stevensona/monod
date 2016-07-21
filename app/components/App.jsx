@@ -114,6 +114,28 @@ export default class App extends Component {
     });
   }
 
+  togglePresentationMode() {
+    if (
+      (!document.fullscreenElement) &&
+      (!document.webkitFullscreenElement) &&
+      (!document.mozFullScreenElement) &&
+      (!document.msFullscreenElement)
+    ) {
+      const element = document.getElementsByClassName('preview')[0];
+
+      // Switch to fullscreen
+      const requestMethod = element.requestFullScreen ||
+                            element.webkitRequestFullscreen ||
+                            element.webkitRequestFullScreen ||
+                            element.mozRequestFullScreen ||
+                            element.msRequestFullscreen;
+
+      if (requestMethod) {
+        requestMethod.apply(element);
+      }
+    }
+  }
+
   loadAndRedirect(doc, uri, message) {
     if (message) {
       this.state.messages.push(message);
@@ -154,7 +176,11 @@ export default class App extends Component {
   render() {
     return (
       <div className="layout">
-        <Header />
+        <Header
+          onTogglePresentationMode={this.togglePresentationMode.bind(this)}
+          template={this.state.document.get('template')}
+          onUpdateTemplate={this.updateTemplate.bind(this)}
+        />
         <MessageBoxes
           messages={this.state.messages}
           closeMessageBox={this.removeMessage.bind(this)}
@@ -164,7 +190,6 @@ export default class App extends Component {
           content={this.state.document.get('content')}
           template={this.state.document.get('template')}
           onUpdateContent={this.updateContent.bind(this)}
-          onUpdateTemplate={this.updateTemplate.bind(this)}
         />
         <Footer version={this.props.version} />
       </div>

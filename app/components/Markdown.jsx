@@ -1,3 +1,4 @@
+/* eslint new-cap: 0 */
 import React, { Component, PropTypes } from 'react';
 import MarkdownLoader from './loaders/Markdown';
 import CodeMirror from 'codemirror';

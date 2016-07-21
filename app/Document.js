@@ -1,3 +1,4 @@
+/* eslint new-cap: 0 */
 import { Record } from 'immutable';
 import { Config } from './Config';
 import uuid from 'uuid';

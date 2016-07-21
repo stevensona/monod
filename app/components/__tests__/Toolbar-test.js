@@ -5,19 +5,19 @@ import { expect } from 'chai';
 // see: https://github.com/mochajs/mocha/issues/1847
 const { describe, it } = global;
 
-import Header from '../Header';
+import Toolbar from '../Toolbar';
 
 
-describe('<Header />', () => {
+describe('<Toolbar />', () => {
 
-  it('renders a header element', () => {
+  it('renders the application\'s toolbar', () => {
     const wrapper = shallow(
-      <Header
+      <Toolbar
         onTogglePresentationMode={() => {}}
         template={''}
         onUpdateTemplate={() => {}}
-      />
-    );
-    expect(wrapper.find('header')).to.have.length(1);
+      />);
+
+    expect(wrapper.find('#toolbar')).to.have.length(1);
   });
 });

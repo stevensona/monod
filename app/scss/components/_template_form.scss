@@ -3,13 +3,11 @@
  */
 
 #templateForm {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
+  vertical-align: top;
 
-    select {
-        margin-right: 1rem;
+  select {
+    min-width: 8rem;
 
-        option {}
-    }
+    option {}
+  }
 }

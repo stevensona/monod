@@ -11,6 +11,8 @@
 @include foundation-table;
 @include foundation-callout;
 @include foundation-close-button;
+@include foundation-button;
+@include foundation-button-group;
 
 /* -- FontAwesome -- */
 $fa-font-path: '~font-awesome/fonts';
@@ -24,6 +26,7 @@ $fa-font-path: '~font-awesome/fonts';
 
 // Components
 @import 'components/header';
+@import 'components/toolbar';
 @import 'components/template_form';
 @import 'components/editor';
 @import 'components/markdown';

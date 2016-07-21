@@ -8,7 +8,21 @@ const Footer = (props) =>
   <footer className="main">
     <div className="version">
       <span className="git-ref">
-        <i className="fa fa-code-fork"></i>&nbsp;{props.version}
+        <i className="fa fa-code-fork"></i>&nbsp;&nbsp;{props.version}
+      </span>
+    </div>
+
+    <div className="help">
+      <span className="help-link">
+        <i className="fa fa-book"></i>
+        &nbsp;&nbsp;
+        <a
+          href="https://github.com/TailorDev/monod/blob/slidedeck/doc/writing.md"
+          title="The Monod documentation"
+          target="_blank"
+        >
+          Documentation
+        </a>
       </span>
     </div>
 

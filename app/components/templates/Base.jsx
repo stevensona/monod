@@ -27,7 +27,7 @@ export default class Base extends Component {
     // Clean input data to avoid undefined or null object properties
     // This avoids preview crash when trying to access null.<property>
     for (const p in data) {
-      if (data.hasOwnProperty(p) && data[p] === null) {
+      if (data.hasOwnProperty(p) && null === data[p]) {
         delete cleaned[p];
       }
     }

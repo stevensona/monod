@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import Letter from './templates/Letter';
 import Invoice from './templates/Invoice';
 import Report from './templates/Report';
+import Slidedeck from './templates/Slidedeck';
 
 const { string, func } = PropTypes;
 
@@ -10,7 +11,8 @@ export const Templates = [
   { id: '', name: 'No template', component: {} },
   { id: 'letter', name: 'Letter', component: Letter },
   { id: 'invoice', name: 'Invoice', component: Invoice },
-  { id: 'report', name: 'Report', component: Report }
+  { id: 'report', name: 'Report', component: Report },
+  { id: 'slidedeck', name: 'Slide deck', component: Slidedeck },
 ];
 
 const TemplateForm = (props) =>
