@@ -20,6 +20,20 @@ tutorial](http://commonmark.org/help/tutorial/) a try. Monod supports CommonMark
 does not support HTML for security concerns, Monod provides various syntax
 extensions.
 
+* [Abbreviations](#abbreviations)
+* [Autolinks](#autolinks)
+* [Code](#code)
+* [Emoji](#emoji)
+* [highlighting](#highlighting)
+* [Icons / FontAwesome](#icons--fontawesome)
+* [Insertions](#insertions)
+* [Mathematical expressions](#mathematical-expressions)
+* [Small paragraphs](#small-paragraphs)
+* [Strikethrough](#strikethrough)
+* [Subscript](#subscript)
+* [Superscript](#superscript)
+* [Tables](#tables)
+
 
 ### Abbreviations
 
@@ -144,6 +158,21 @@ by surrounding your content with `^`:
 ```
 ^This is a superscript^ and this is not.
 ```
+
+### Tables
+
+Monod supports (data) tables:
+
+```
+| Tables   |      Are      |  Cool |
+|----------|:-------------:|------:|
+| col 1 is |  left-aligned | $1600 |
+| col 2 is |    centered   |   $12 |
+| col 3 is | right-aligned |    $1 |
+```
+
+Note that it is possible to choose column alignment by specifying `:` either on
+the left, right or both sides of the horizontal separators.
 
 
 ## YAML Front-Matter

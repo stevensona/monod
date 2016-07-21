@@ -17,7 +17,7 @@ const Footer = (props) =>
         <i className="fa fa-book"></i>
         &nbsp;&nbsp;
         <a
-          href="https://github.com/TailorDev/monod/blob/slidedeck/doc/writing.md"
+          href="https://github.com/TailorDev/monod/blob/master/doc/writing.md"
           title="The Monod documentation"
           target="_blank"
         >
