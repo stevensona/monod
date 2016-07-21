@@ -88,7 +88,7 @@ content, use a separator `---` (3 dashes) to split your content into different
 **sections** (horizontally, like regular slide decks).
 
 Thanks to Reveal.js, it is also possible to group slides into **sub-sections**
-that are displayed vertically. Use the `----` (4 dashes) to create sub-sections.
+that are displayed vertically. Use `----` (4 dashes) to create sub-sections.
 
 **Example:**
 
