@@ -84,7 +84,38 @@ version:
 
 The "Slide deck" template helps you write awesome
 [Reveal.js](https://github.com/hakimel/reveal.js)-based slides. In your Markdown
-content, use a separator `---` to split your content into different slides.
+content, use a separator `---` (3 dashes) to split your content into different
+**sections** (horizontally, like regular slide decks).
+
+Thanks to Reveal.js, it is also possible to group slides into **sub-sections**
+that are displayed vertically. Use the `----` (4 dashes) to create sub-sections.
+
+**Example:**
+
+```markdown
+Slide 1.0
+
+---
+
+Slide 2.0
+
+----
+
+Slide 2.1
+
+----
+
+Slide 2.2
+
+---
+
+Slide 3.0
+
+----
+
+Slide 3.1
+```
+
 
 ### YAML Front-Matter
 
