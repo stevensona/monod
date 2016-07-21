@@ -106,6 +106,18 @@
         .reveal {
             p {
                 text-align: inherit!important;
+
+                &.justify {
+                    text-align: justify!important;
+                }
+
+                &.left {
+                    text-align: left!important;
+                }
+
+                &.right {
+                    text-align: right!important;
+                }
             }
 
             img {

@@ -117,5 +117,44 @@ transition: default
 {fragment}
 ```
 
+### Style
+
+#### Images
+
+It is possible to hide the border of an image by using the `{no-border}` special
+notation below the image:
+
+```markdown
+![](https://example.org/foobar.png)
+{no-border}
+```
+
+#### Lists
+
+It is possible to hide the bullets of a list by using the `{no-bullets}` special
+notation:
+
+```markdown
+Isaac Asimov's "Three Laws of Robotics":
+
+* A robot may not injure a human being or, through inaction, allow a human being
+  to come to harm;
+* A robot must obey orders given it by human beings except where such orders
+  would conflict with the First Law;
+* A robot must protect its own existence as long as such protection does not
+  conflict with the First or Second Law.
+{no-bullets}
+```
+
+#### Paragraphs
+
+You can choose the paragraph alignment using the following special notations
+on paragraphs (default being centered):
+
+* `{left}`
+* `{right}`
+* `{justify}`
+
+
 ---
 Back to: [Writing Monod documents](writing.md)
