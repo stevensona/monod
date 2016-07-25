@@ -20,7 +20,7 @@ const PATHS  = {
     build: path.join(__dirname, 'build')
 };
 
-const VERSION = () => {
+const VERSION = (() => {
   var v;
 
   try {
@@ -31,7 +31,7 @@ const VERSION = () => {
   }
 
   return v;
-}();
+})();
 
 // Used to configure Babel (see: `.babelrc` file)
 process.env.BABEL_ENV = TARGET;
