@@ -619,4 +619,29 @@ describe('<Preview />', () => {
       done();
     }, 5);
   });
+
+  // cf. https://github.com/andrey-p/markdown-it-classy/issues/8
+  it('does not break tables because of classy plugin', (done) => {
+    const raw = `
+Annonce | Où | WM | Taille | Nb pièces | Etage | Balcon? | Cave/Gge/Parking | Ascenceur? | Cuisine | Libre
+--- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+[Lien](http://schnapp.de/miete/wohnungen/ruh-idyll-geleg-2-zi-wohnung-x1x) | [Landwasser](https://goo.gl/maps/7hmfddKPsw12) | 740 KM + NK | 64m2 |  | 3e | 2 | Garage | Equipée | Oui| 01.09.2016
+[Lien](http://schnapp.de/miete/wohnungen/fr-opfingen-2-zi-dg-studio) | Opfingen? | 420 + 140 | 68m2 |  |  | Non | Cave/Parking |  | Equipée | 1.11.16 evtl. 1.10.16`;
+
+    const wrapper = mount(
+      <Preview
+        raw={raw}
+        pos={0}
+        previewLoader={previewLoader}
+        template={''}
+      />
+    );
+
+    setTimeout(() => {
+      expect(wrapper.html()).to.contain(`Annonce`);
+      expect(wrapper.html()).to.contain(`schnapp.de`);
+
+      done();
+    }, 5);
+  });
 });
