@@ -23,7 +23,7 @@ export class PreviewChunk extends Component {
       }
     });
 
-    return !isEqual(this.props.chunk, nextProps.chunk) || this.props.key !== nextProps.key;
+    return !isEqual(this.props.chunk, nextProps.chunk) || this.props.id !== nextProps.id;
   }
 
   getHTML() {
@@ -51,7 +51,7 @@ export class PreviewChunk extends Component {
 }
 
 PreviewChunk.propTypes = {
-  key: string,
+  id: string,
   markdownIt: object.isRequired,
   emojione: object.isRequired,
   chunk: array.isRequired,
@@ -194,10 +194,11 @@ export default class Preview extends Component {
       // Get chunks to render from tokens
       const chunks = this.getChunks(this.matter.content, markdownItEnv);
 
-      content = chunks.map((chunk, key) => {
+      content = chunks.map((chunk, id) => {
         return (
           <PreviewChunk
-            key={`ck-${key.toString()}`}
+            id={`ck-${id.toString()}`}
+            key={`ck-${id.toString()}`}
             markdownIt={this.markdownIt}
             emojione={this.emojione}
             chunk={chunk}

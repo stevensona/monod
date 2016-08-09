@@ -14,22 +14,14 @@ export default class Sync extends Component {
       offline: false,
       displayCounter: true
     };
+
+    this.intervalId = false;
+    this.counter = this.counter.bind(this);
   }
 
+
   componentWillMount() {
-    this.interval = setInterval(() => {
-      let counter = this.state.counter;
-
-      if (0 < counter) {
-        counter--;
-        this.setState({ counter });
-
-        if (0 === counter) {
-          this.setState({ counter: DEFAULT_DURATION });
-          this.context.controller.dispatch('action:sync');
-        }
-      }
-    }, 1000);
+    this.intervalId = setInterval(this.counter, 1000);
   }
 
   componentDidMount() {
@@ -60,7 +52,22 @@ export default class Sync extends Component {
   }
 
   componentWillUnmount() {
-    clearInterval(this.interval);
+    clearInterval(this.intervalId);
+    this.intervalId = false;
+  }
+
+  counter() {
+    let counter = this.state.counter;
+
+    if (0 < counter) {
+      counter--;
+      this.setState({ counter });
+
+      if (0 === counter) {
+        this.setState({ counter: DEFAULT_DURATION });
+        this.context.controller.dispatch('action:sync');
+      }
+    }
   }
 
   render() {

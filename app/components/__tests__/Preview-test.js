@@ -305,7 +305,7 @@ describe('<Preview />', () => {
     setTimeout(() => {
       const html = wrapper.html();
 
-      expect(html).to.contain('<span>Foo</span>');
+      expect(html).to.contain('Foo');
       expect(html).to.contain('<div>John Doe</div>');
       expect(html).to.contain([
         '<div class="chunk">',
