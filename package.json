@@ -59,7 +59,7 @@
     "localforage": "^1.4.0",
     "lodash.debounce": "^4.0.3",
     "lodash.isequal": "^4.1.1",
-    "markdown-it": "^6.0.0",
+    "markdown-it": "^7.0.0",
     "markdown-it-abbr": "^1.0.3",
     "markdown-it-classy": "github:mrvautin/markdown-it-classy#e4849bf",
     "markdown-it-container": "^2.0.0",
