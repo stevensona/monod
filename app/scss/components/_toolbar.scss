@@ -24,6 +24,11 @@
 
     .action {
       @include button($background: darken($primary-color, 10%));
+      margin-right: 0.2rem;
+    }
+
+    .disabled {
+      @include button-disabled;
     }
   }
 }

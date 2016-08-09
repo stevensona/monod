@@ -2,15 +2,13 @@ import React, { PropTypes } from 'react';
 
 import Toolbar from './Toolbar';
 
-const { func, string } = PropTypes;
+const { bool, func, string } = PropTypes;
 
 const Header = (props) =>
   <header className="main">
     <h1>Monod <small>The Markdown Editor</small></h1>
     <Toolbar
-      onTogglePresentationMode={props.onTogglePresentationMode}
-      template={props.template}
-      onUpdateTemplate={props.onUpdateTemplate}
+      {...props}
     />
   </header>
 ;
@@ -18,7 +16,9 @@ const Header = (props) =>
 Header.propTypes = {
   onTogglePresentationMode: func.isRequired,
   template: string.isRequired,
-  onUpdateTemplate: func.isRequired
+  onUpdateTemplate: func.isRequired,
+  onToggleShareModal: func.isRequired,
+  enableShareModalButton: bool.isRequired,
 };
 
 export default Header;

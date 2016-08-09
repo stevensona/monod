@@ -1,6 +1,7 @@
 import Immutable from 'immutable';
 import React, { Component, PropTypes } from 'react';
 import debounce from 'lodash.debounce';
+
 import { Events } from '../Store';
 import Document from '../Document';
 
@@ -8,6 +9,7 @@ import Header from './Header';
 import Editor from './Editor';
 import Footer from './Footer';
 import MessageBoxes from './MessageBox';
+import ShareModal from './ShareModal';
 
 const { object, string } = PropTypes;
 
@@ -19,10 +21,12 @@ export default class App extends Component {
     this.state = {
       document: new Document(),
       messages: new Immutable.List(),
-      loaded: false
+      loaded: false,
+      displayShareModal: false,
     };
 
     this.updateContent = debounce(this.updateContent, 150);
+    this.toggleShareModal = this.toggleShareModal.bind(this);
   }
 
   getChildContext() {
@@ -173,13 +177,24 @@ export default class App extends Component {
     });
   }
 
+  toggleShareModal() {
+    this.setState({ displayShareModal: !this.state.displayShareModal });
+  }
+
   render() {
     return (
       <div className="layout">
         <Header
           onTogglePresentationMode={this.togglePresentationMode.bind(this)}
+          onToggleShareModal={this.toggleShareModal}
           template={this.state.document.get('template')}
           onUpdateTemplate={this.updateTemplate.bind(this)}
+          enableShareModalButton={'' !== window.location.pathname.slice(1)}
+        />
+        <ShareModal
+          isOpen={this.state.displayShareModal}
+          onRequestClose={this.toggleShareModal}
+          fullAccessURL={window.location}
         />
         <MessageBoxes
           messages={this.state.messages}

@@ -36,6 +36,10 @@ $fa-font-path: '~font-awesome/fonts';
 @import 'components/footer';
 @import 'components/sync';
 @import 'components/message_box';
+@import 'components/share_modal';
+
+// Utils
+@import 'utils/tooltips';
 
 // Misc
 @import 'print';
