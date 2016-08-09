@@ -33,6 +33,23 @@ const ShareModal = (props) =>
         name="monod-full-access"
         value={props.fullAccessURL}
       />
+
+      <h4>Read Only</h4>
+      <p>
+        Anyone with the link below is able to <strong>only</strong> read
+        your Monod document (
+        <a
+          href={props.readOnlyURL}
+          target="_blank"
+          rel="noopener noreferrer">
+          preview&nbsp;<i className="fa fa-external-link" />
+        </a>
+        ):
+      </p>
+      <CopiableUrlInput
+        name="monod-read-only-access"
+        value={props.readOnlyURL}
+      />
     </div>
   </Modal>
 ;
@@ -41,6 +58,7 @@ ShareModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onRequestClose: PropTypes.func.isRequired,
   fullAccessURL: PropTypes.string.isRequired,
+  readOnlyURL: PropTypes.string.isRequired,
 };
 
 export default ShareModal;

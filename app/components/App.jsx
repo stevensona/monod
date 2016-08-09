@@ -116,7 +116,7 @@ export default class App extends Component {
 
     this.props.route.controller.dispatch('action:init', {
       id: this.props.params.uuid,
-      secret: window.location.hash.slice(1)
+      secret: this.getSecret(),
     });
   }
 
@@ -140,6 +140,18 @@ export default class App extends Component {
         requestMethod.apply(element);
       }
     }
+  }
+
+  getSecret() {
+    return window.location.hash.slice(1);
+  }
+
+  getFullAccessURL(state) {
+    return `${window.location.origin}/${state.document.uuid}#${this.getSecret()}`;
+  }
+
+  getReadOnlyURL(state) {
+    return `${window.location.origin}/r/${state.document.uuid}#${this.getSecret()}`;
   }
 
   isReadOnly() {
@@ -205,16 +217,12 @@ export default class App extends Component {
         <ShareModal
           isOpen={this.state.displayShareModal}
           onRequestClose={this.toggleShareModal}
-          fullAccessURL={window.location.toString()}
+          fullAccessURL={this.getFullAccessURL(this.state)}
+          readOnlyURL={this.getReadOnlyURL(this.state)}
         />
         <MessageBoxes
           messages={this.state.messages}
           closeMessageBox={this.removeMessage.bind(this)}
-        />
-        <ShareModal
-          isOpen={this.state.displayShareModal}
-          onRequestClose={this.toggleShareModal}
-          fullAccessURL={window.location.toString()}
         />
         {this.props.children && React.cloneElement(this.props.children, {
           loaded: this.state.loaded,
