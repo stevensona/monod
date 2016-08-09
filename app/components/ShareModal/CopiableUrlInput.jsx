@@ -1,5 +1,5 @@
 import React, { PropTypes } from 'react';
-import Clipboard from 'clipboard';
+
 
 class CopiableUrlInput extends React.Component {
 
@@ -11,6 +11,8 @@ class CopiableUrlInput extends React.Component {
   }
 
   componentDidMount() {
+    const Clipboard = require('clipboard'); // eslint-disable-line global-require
+
     this.clipboard = new Clipboard(this.$button);
     this.clipboard.on('success', (e) => {
       e.trigger.setAttribute('aria-label', 'Copied!');
