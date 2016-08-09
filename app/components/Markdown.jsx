@@ -1,19 +1,27 @@
 /* eslint new-cap: 0 */
 import React, { Component, PropTypes } from 'react';
-import MarkdownLoader from './loaders/Markdown';
 import CodeMirror from 'codemirror';
-import { Events } from '../Store';
 
 import 'codemirror/lib/codemirror.css';
+
+import MarkdownLoader from './loaders/Markdown';
+import { Events } from '../Store';
+
 
 const { func, string } = PropTypes;
 
 export default class Markdown extends Component {
 
+  constructor(props, context) {
+    super(props, context);
+
+    this.setTextareaEl = this.setTextareaEl.bind(this);
+  }
+
   componentWillMount() {
     MarkdownLoader().then(() => {
       const defaultValue = this.props.raw || '';
-      const textareaNode = this.refs.markdownTextarea;
+      const textareaNode = this.$textarea;
       const options = {
         autofocus: true,
         lineNumbers: true,
@@ -55,6 +63,10 @@ export default class Markdown extends Component {
     return this.codeMirror;
   }
 
+  setTextareaEl(node) {
+    this.$textarea = node;
+  }
+
   handleOnChange() {
     const newValue = this.getCodeMirror().getDoc().getValue();
 
@@ -74,7 +86,7 @@ export default class Markdown extends Component {
     return (
       <div className="markdown">
         <textarea
-          ref="markdownTextarea"
+          ref={this.setTextareaEl}
           placeholder="Type your *markdown* content here"
           onChange={this.props.onChange}
           value={this.props.raw}

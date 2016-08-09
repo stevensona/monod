@@ -9,14 +9,14 @@ const VerticalHandler = (props) => (
       title="Reduce markdown editor"
       onClick={props.onClickLeft}
     >
-      <i className="fa fa-chevron-left"></i>
+      <i className="fa fa-chevron-left" />
     </div>
     <div
       className="right"
       title="Reduce preview"
       onClick={props.onClickRight}
     >
-      <i className="fa fa-chevron-right"></i>
+      <i className="fa fa-chevron-right" />
     </div>
   </div>
 );

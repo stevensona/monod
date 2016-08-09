@@ -2,9 +2,10 @@
 import uuid from 'uuid';
 import sjcl from 'sjcl';
 import request from 'superagent';
-import Document from './Document';
-import { Config } from './Config';
 import Immutable from 'immutable';
+import Document from './Document';
+import Config from './Config';
+
 
 const { Promise } = global;
 

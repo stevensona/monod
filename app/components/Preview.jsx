@@ -1,15 +1,15 @@
 /* eslint no-param-reassign: 0, array-callback-return: 0, react/no-multi-comp: 0 */
 import React, { PropTypes, Component } from 'react';
-import ReactDOM from 'react-dom';
-import PreviewLoader from './loaders/Preview';
-import { Templates } from './TemplateForm';
 import grayMatter from 'gray-matter';
 import isEqual from 'lodash.isequal';
 
+import 'emojione/assets/sprites/emojione.sprites.css';
+
+import PreviewLoader from './loaders/Preview';
+import { Templates } from './TemplateForm';
+
 
 const { array, func, number, object, string } = PropTypes;
-
-import 'emojione/assets/sprites/emojione.sprites.css';
 
 export class PreviewChunk extends Component {
 
@@ -65,6 +65,8 @@ export default class Preview extends Component {
 
     this.matter = {};
     this.requestAnimationId = false;
+
+    this.setRenderedEl = this.setRenderedEl.bind(this);
   }
 
   componentWillMount() {
@@ -114,10 +116,6 @@ export default class Preview extends Component {
     });
   }
 
-  componentDidMount() {
-    this.$rendered = ReactDOM.findDOMNode(this.refs.rendered);
-  }
-
   componentWillReceiveProps(nextProps) {
     if (!this.$rendered) {
       return;
@@ -155,17 +153,20 @@ export default class Preview extends Component {
     let stop = 0;
 
     for (let i = 0; i < tokens.length; i++) {
+      // TODO: invert condition to get rid of the 'continue' statement
       if (
-          // We are starting tokens walk or in a chunk
-          i < start ||
-          !(
-            // We are (NOT) closing a nested block
-            (0 === tokens[i].level && -1 === tokens[i].nesting) ||
-            // We are (NOT) in a root block
-            (0 === tokens[i].level && 0 === tokens[i].nesting)
-          )) {
-        continue;
+        // We are starting tokens walk or in a chunk
+        i < start ||
+        !(
+          // We are (NOT) closing a nested block
+          (0 === tokens[i].level && -1 === tokens[i].nesting) ||
+          // We are (NOT) in a root block
+          (0 === tokens[i].level && 0 === tokens[i].nesting)
+        )
+      ) {
+        continue; // eslint-disable-line no-continue
       }
+
       stop = i + 1;
       chunks.push(tokens.slice(start, stop));
       start = stop;
@@ -174,11 +175,15 @@ export default class Preview extends Component {
     return chunks;
   }
 
+  setRenderedEl(node) {
+    this.$rendered = node;
+  }
+
   render() {
     let content = [(
       <div className="preview-loader" key="preview-loader">
         <p>Loading all the rendering stuff...</p>
-        <i className="fa fa-spinner fa-spin"></i>
+        <i className="fa fa-spinner fa-spin" />
       </div>
     )];
     let data = {};
@@ -223,7 +228,7 @@ export default class Preview extends Component {
 
     return (
       <div className="preview">
-        <div ref="rendered" className="rendered">
+        <div ref={this.setRenderedEl} className="rendered">
           {content}
         </div>
       </div>

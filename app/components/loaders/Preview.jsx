@@ -1,3 +1,4 @@
+/* eslint global-require: 0 */
 const { Promise } = global;
 
 export default () => {

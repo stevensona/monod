@@ -90,7 +90,7 @@ export default class Sync extends Component {
           <i
             title={title}
             className={this.state.offline ? 'fa fa-toggle-off' : 'fa fa-toggle-on'}
-          ></i>
+          />
           {offlineStatus}
         </span>
       </div>
