@@ -13,6 +13,15 @@ const ShareModal = (props) =>
     style={{ overlay: { zIndex: 5 } }}
   >
     <div className="share-modal-content">
+      <button
+        className="close-button"
+        aria-label="Close this modal"
+        type="button"
+        onClick={props.onRequestClose}
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+
       <h2>Share your work!</h2>
 
       <h4>Full Access</h4>

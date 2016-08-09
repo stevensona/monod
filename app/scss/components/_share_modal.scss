@@ -42,13 +42,13 @@
     font-size: 1.1rem;
   }
 
-  button {
+  .button {
     color: #000;
     background-color: $secondary-color;
   }
 
-  button:hover,
-  button:focus {
+  .button:hover,
+  .button:focus {
     background-color: darken($secondary-color, 10);
   }
 }
