@@ -194,7 +194,7 @@ export default class App extends Component {
         <ShareModal
           isOpen={this.state.displayShareModal}
           onRequestClose={this.toggleShareModal}
-          fullAccessURL={window.location}
+          fullAccessURL={window.location.toString()}
         />
         <MessageBoxes
           messages={this.state.messages}
