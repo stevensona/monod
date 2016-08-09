@@ -1,7 +1,7 @@
 /* eslint new-cap: 0 */
 import { Record } from 'immutable';
-import { Config } from './Config';
 import uuid from 'uuid';
+import Config from './Config';
 
 export default class Document extends Record({
   uuid: uuid.v4(),

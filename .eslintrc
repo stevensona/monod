@@ -15,6 +15,10 @@
     "arrow-body-style": 0,
     "new-cap": 1,
     "react/no-multi-comp": 1,
-    "object-shorthand": 1
+    "object-shorthand": 1,
+    "import/no-extraneous-dependencies": [2, {
+      'optionalDependencies': false,
+    }],
+    "no-underscore-dangle": 0,
   }
 }

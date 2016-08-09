@@ -12,7 +12,7 @@ const Toolbar = (props) =>
         title="Presentation mode"
         onClick={props.onTogglePresentationMode}
       >
-        <i className="fa fa-play-circle" aria-hidden="true"></i>
+        <i className="fa fa-play-circle" aria-hidden="true" />
       </button>
     </div>
     <TemplateForm

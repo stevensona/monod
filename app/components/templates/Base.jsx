@@ -26,8 +26,8 @@ export default class Base extends Component {
     const cleaned = Object.assign({}, data);
     // Clean input data to avoid undefined or null object properties
     // This avoids preview crash when trying to access null.<property>
-    for (const p in data) {
-      if (data.hasOwnProperty(p) && null === data[p]) {
+    for (const p in data) { // eslint-disable-line no-restricted-syntax
+      if (data.hasOwnProperty(p) && null === data[p]) { // eslint-disable-line no-prototype-builtins
         delete cleaned[p];
       }
     }

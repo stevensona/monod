@@ -49,6 +49,8 @@ describe('<App />', () => {
 
     expect(spy.calledOnce).to.be.true;
     expect(spy.calledWith('action:init')).to.be.true;
+
+    wrapper.unmount(); // force unmount here to prevent an execption in Sync.counter()
   });
 
   it('removes messages', () => {

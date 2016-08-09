@@ -1,8 +1,8 @@
 import Immutable from 'immutable';
 import React, { Component, PropTypes } from 'react';
+import debounce from 'lodash.debounce';
 import { Events } from '../Store';
 import Document from '../Document';
-import debounce from 'lodash.debounce';
 
 import Header from './Header';
 import Editor from './Editor';

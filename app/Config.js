@@ -1,5 +1,5 @@
 /* eslint max-len: 0 */
-export const Config = {
+export default {
   APP_NAME: 'monod',
   DEFAULT_CONTENT: [
     '---',

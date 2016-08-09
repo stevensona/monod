@@ -1,7 +1,7 @@
 /* eslint one-var: 0 */
 import React from 'react';
-import BaseTemplate from './Base';
 import Reveal from 'reveal.js';
+import BaseTemplate from './Base';
 
 import '../../scss/reveal.css';
 import '../../scss/reveal-theme.css';
