@@ -82,6 +82,7 @@
     "react-dom": "^15.3.0",
     "react-loader": "^2.1.0",
     "react-modal": "^1.4.0",
+    "react-router": "^2.6.1",
     "reveal.js": "^3.3.0",
     "sass-loader": "^4.0.0",
     "sinon": "^1.17.3",

@@ -19,6 +19,7 @@ Header.propTypes = {
   onUpdateTemplate: func.isRequired,
   onToggleShareModal: func.isRequired,
   enableShareModalButton: bool.isRequired,
+  readOnly: bool.isRequired,
 };
 
 export default Header;

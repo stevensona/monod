@@ -27,24 +27,26 @@ export default class App extends Component {
 
     this.updateContent = debounce(this.updateContent, 150);
     this.toggleShareModal = this.toggleShareModal.bind(this);
+    this.loadAndRedirect = this.loadAndRedirect.bind(this);
+    this.isReadOnly = this.isReadOnly.bind(this);
   }
 
   getChildContext() {
     // Pass the controller to child components.
     return {
-      controller: this.props.controller
+      controller: this.props.route.controller
     };
   }
 
   componentDidMount() {
-    this.props.controller.on(Events.NO_DOCUMENT_ID, (state) => {
+    this.props.route.controller.on(Events.NO_DOCUMENT_ID, (state) => {
       this.setState({
         loaded: true,
         document: state.document
       });
     });
 
-    this.props.controller.on(Events.DECRYPTION_FAILED, (state) => {
+    this.props.route.controller.on(Events.DECRYPTION_FAILED, (state) => {
       const message = {
         content: [
           'We were unable to decrypt the document. Either the secret has not',
@@ -57,7 +59,7 @@ export default class App extends Component {
       this.loadAndRedirect(state.document, '/', message);
     });
 
-    this.props.controller.on(Events.DOCUMENT_NOT_FOUND, (state) => {
+    this.props.route.controller.on(Events.DOCUMENT_NOT_FOUND, (state) => {
       const message = {
         content: [
           'We could not find the document you were trying to load, so we have',
@@ -69,7 +71,7 @@ export default class App extends Component {
       this.loadAndRedirect(state.document, '/', message);
     });
 
-    this.props.controller.on(Events.CONFLICT, (state) => {
+    this.props.route.controller.on(Events.CONFLICT, (state) => {
       const message = {
         content: (
           <span>
@@ -90,7 +92,7 @@ export default class App extends Component {
       );
     });
 
-    this.props.controller.on(Events.UPDATE_WITHOUT_CONFLICT, (state) => {
+    this.props.route.controller.on(Events.UPDATE_WITHOUT_CONFLICT, (state) => {
       const message = {
         content: [
           'We have updated the document you are viewing to its latest revision.',
@@ -105,15 +107,15 @@ export default class App extends Component {
       });
     });
 
-    this.props.controller.on(`${Events.SYNCHRONIZE}, ${Events.CHANGE}`, (state) => {
+    this.props.route.controller.on(`${Events.SYNCHRONIZE}, ${Events.CHANGE}`, (state) => {
       this.loadAndRedirect(
         state.document,
         `/${state.document.uuid}#${state.secret}`
       );
     });
 
-    this.props.controller.dispatch('action:init', {
-      id: window.location.pathname.slice(1),
+    this.props.route.controller.dispatch('action:init', {
+      id: this.props.params.uuid,
       secret: window.location.hash.slice(1)
     });
   }
@@ -140,6 +142,10 @@ export default class App extends Component {
     }
   }
 
+  isReadOnly() {
+    return '/r' === this.props.location.pathname.substr(0, 2);
+  }
+
   loadAndRedirect(doc, uri, message) {
     if (message) {
       this.state.messages.push(message);
@@ -151,6 +157,10 @@ export default class App extends Component {
       messages: this.state.messages
     });
 
+    if (this.isReadOnly()) {
+      uri = `/r${uri}`;
+    }
+
     if (!window.history.state || !window.history.state.uuid ||
         (window.history.state && window.history.state.uuid &&
         doc.get('uuid') !== window.history.state.uuid)
@@ -161,14 +171,14 @@ export default class App extends Component {
 
   updateContent(newContent) {
     if (this.state.document.content !== newContent) {
-      this.props.controller.dispatch('action:update-content', newContent);
+      this.props.route.controller.dispatch('action:update-content', newContent);
     }
   }
 
   updateTemplate(event) {
     const newTemplate = event.target.value;
 
-    this.props.controller.dispatch('action:update-template', newTemplate);
+    this.props.route.controller.dispatch('action:update-template', newTemplate);
   }
 
   removeMessage(index) {
@@ -190,6 +200,7 @@ export default class App extends Component {
           template={this.state.document.get('template')}
           onUpdateTemplate={this.updateTemplate.bind(this)}
           enableShareModalButton={'' !== window.location.pathname.slice(1)}
+          readOnly={this.isReadOnly()}
         />
         <ShareModal
           isOpen={this.state.displayShareModal}
@@ -200,21 +211,32 @@ export default class App extends Component {
           messages={this.state.messages}
           closeMessageBox={this.removeMessage.bind(this)}
         />
-        <Editor
-          loaded={this.state.loaded}
-          content={this.state.document.get('content')}
-          template={this.state.document.get('template')}
-          onUpdateContent={this.updateContent.bind(this)}
+        <ShareModal
+          isOpen={this.state.displayShareModal}
+          onRequestClose={this.toggleShareModal}
+          fullAccessURL={window.location.toString()}
         />
-        <Footer version={this.props.version} />
+        {this.props.children && React.cloneElement(this.props.children, {
+          loaded: this.state.loaded,
+          content: this.state.document.get('content'),
+          template: this.state.document.get('template'),
+          onUpdateContent: this.updateContent.bind(this)
+        })}
+        <Footer version={this.props.route.version} />
       </div>
     );
   }
 }
 
 App.propTypes = {
-  version: string.isRequired,
-  controller: object.isRequired
+  route: PropTypes.shape({
+    version: string.isRequired,
+    controller: object.isRequired,
+  }),
+  params: PropTypes.shape({
+    uuid: string.isRequired,
+  }),
+  children: PropTypes.object,
 };
 
 App.childContextTypes = {

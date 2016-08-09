@@ -16,7 +16,11 @@ describe('<Toolbar />', () => {
         onTogglePresentationMode={() => {}}
         template={''}
         onUpdateTemplate={() => {}}
-      />);
+        onToggleShareModal={() => {}}
+        enableShareModalButton
+        readOnly={false}
+      />
+    );
 
     expect(wrapper.find('#toolbar')).to.have.length(1);
   });

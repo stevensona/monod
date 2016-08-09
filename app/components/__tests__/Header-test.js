@@ -16,6 +16,9 @@ describe('<Header />', () => {
         onTogglePresentationMode={() => {}}
         template={''}
         onUpdateTemplate={() => {}}
+        onToggleShareModal={() => {}}
+        enableShareModalButton
+        readOnly={false}
       />
     );
     expect(wrapper.find('header')).to.have.length(1);

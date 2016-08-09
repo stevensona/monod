@@ -55,7 +55,8 @@ const common = {
     output: {
         path: PATHS.build,
         // `[name]` is replaced by the name of the chunk
-        filename: '[name].js'
+        filename: '[name].js',
+        publicPath: '/'
     },
     module: {
         // see: https://github.com/isagalaev/highlight.js/issues/895 and

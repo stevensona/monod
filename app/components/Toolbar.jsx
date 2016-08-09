@@ -7,14 +7,16 @@ const { bool, func, string } = PropTypes;
 const Toolbar = (props) =>
   <div id="toolbar">
     <div className="actions">
-      <button
-        className={`action share${props.enableShareModalButton ? '' : ' disabled'}`}
-        title="Share this document"
-        onClick={props.onToggleShareModal}
-        disabled={!props.enableShareModalButton}
-      >
-        <i className="fa fa-share-alt" aria-hidden="true" />
-      </button>
+      {false === props.readOnly ?
+        <button
+          className={`action share${props.enableShareModalButton ? '' : ' disabled'}`}
+          title="Share this document"
+          onClick={props.onToggleShareModal}
+          disabled={!props.enableShareModalButton}
+        >
+          <i className="fa fa-share-alt" aria-hidden="true" />
+        </button> : null
+      }
       <button
         className="action fullscreen"
         title="Presentation mode"
@@ -23,10 +25,12 @@ const Toolbar = (props) =>
         <i className="fa fa-play-circle" aria-hidden="true" />
       </button>
     </div>
-    <TemplateForm
-      template={props.template}
-      doUpdateTemplate={props.onUpdateTemplate}
-    />
+    {false === props.readOnly ?
+      <TemplateForm
+        template={props.template}
+        doUpdateTemplate={props.onUpdateTemplate}
+      /> : null
+    }
   </div>
 ;
 
@@ -36,6 +40,7 @@ Toolbar.propTypes = {
   onUpdateTemplate: func.isRequired,
   onToggleShareModal: func.isRequired,
   enableShareModalButton: bool.isRequired,
+  readOnly: bool.isRequired,
 };
 
 export default Toolbar;

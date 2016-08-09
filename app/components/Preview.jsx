@@ -117,7 +117,7 @@ export default class Preview extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (!this.$rendered) {
+    if (!this.$rendered || -1 === nextProps.pos) {
       return;
     }
 
