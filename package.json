@@ -80,7 +80,7 @@
     "react-dom": "^15.3.0",
     "react-loader": "^2.1.0",
     "reveal.js": "^3.3.0",
-    "sass-loader": "^3.1.2",
+    "sass-loader": "^4.0.0",
     "sinon": "^1.17.3",
     "sjcl": "^1.0.3",
     "style-loader": "^0.13.0",
