@@ -70,7 +70,7 @@ class Preview extends Component {
       return;
     }
 
-    if (this.props.pos !== nextProps.pos || 1 === nextProps.pos) {
+    if (this.props.position !== nextProps.position || 1 === nextProps.position) {
       if (this.requestAnimationId) {
         window.cancelAnimationFrame(this.requestAnimationId);
         this.requestAnimationId = false;
@@ -78,7 +78,7 @@ class Preview extends Component {
 
       this.requestAnimationId = window.requestAnimationFrame(() => {
         const previewHeight = this.$rendered.scrollHeight - this.$rendered.offsetHeight;
-        const previewScroll = parseInt(previewHeight * this.props.pos, 10);
+        const previewScroll = parseInt(previewHeight * this.props.position, 10);
 
         this.$rendered.scrollTop = previewScroll;
       });
@@ -86,16 +86,16 @@ class Preview extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return this.props.raw !== nextProps.raw || this.props.template !== nextProps.template;
+    return this.props.content !== nextProps.content || this.props.template !== nextProps.template;
   }
 
   /**
    * A chunk is a logical group of tokens
    * We build chunks from token's level and nesting properties
    */
-  getChunks(raw, env) {
+  getChunks(content, env) {
     // Parse the whole markdown document and get tokens
-    const tokens = this.markdownIt.parse(raw, env);
+    const tokens = this.markdownIt.parse(content, env);
     const chunks = [];
 
     let start = 0;
@@ -142,7 +142,7 @@ class Preview extends Component {
       const markdownItEnv = {};
 
       // Get front-matter vars
-      this.matter = grayMatter(this.props.raw);
+      this.matter = grayMatter(this.props.content);
       data = this.matter.data;
 
       // Get chunks to render from tokens
@@ -182,9 +182,9 @@ class Preview extends Component {
 }
 
 Preview.propTypes = {
-  raw: PropTypes.string.isRequired,
+  content: PropTypes.string.isRequired,
   template: PropTypes.string.isRequired,
-  pos: PropTypes.number.isRequired,
+  position: PropTypes.number.isRequired,
   previewLoader: PropTypes.func.isRequired,
 };
 

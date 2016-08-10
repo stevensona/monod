@@ -1,13 +1,10 @@
-/* eslint new-cap: 0 */
 import React, { Component, PropTypes } from 'react';
 import CodeMirror from 'codemirror';
 
 import 'codemirror/lib/codemirror.css';
 
-import MarkdownLoader from './loaders/Markdown';
+import markdownLoader from './loaders/Markdown';
 
-
-const { func, string } = PropTypes;
 
 export default class Markdown extends Component {
 
@@ -18,8 +15,8 @@ export default class Markdown extends Component {
   }
 
   componentWillMount() {
-    MarkdownLoader().then(() => {
-      const defaultValue = this.props.raw || '';
+    markdownLoader().then(() => {
+      const defaultValue = this.props.content || '';
       const textareaNode = this.$textarea;
       const options = {
         autofocus: true,
@@ -27,15 +24,15 @@ export default class Markdown extends Component {
         lineWrapping: true,
         mode: 'gfm',
         scrollbarStyle: null,
-        theme: 'monod'
+        theme: 'monod',
       };
 
       // CodeMirror main instance
       this.codeMirror = CodeMirror.fromTextArea(textareaNode, options);
 
       // Bind CodeMirror events
-      this.codeMirror.on('change', this.handleOnChange.bind(this));
-      this.codeMirror.on('scroll', this.handleScroll.bind(this));
+      this.codeMirror.on('change', this.onChange.bind(this));
+      this.codeMirror.on('scroll', this.onScroll.bind(this));
 
       // Set default value
       this.codeMirror.setValue(defaultValue);
@@ -68,19 +65,20 @@ export default class Markdown extends Component {
     this.$textarea = node;
   }
 
-  handleOnChange() {
+  onChange() {
     const newValue = this.getCodeMirror().getDoc().getValue();
 
     // Update the value -> rendering
     this.props.onChange(newValue);
 
     // Update scrolling position (ensure rendering is visible)
-    this.handleScroll();
+    this.onScroll();
   }
 
-  handleScroll() {
+  onScroll() {
     const { top, height, clientHeight } = this.getCodeMirror().getScrollInfo();
-    this.props.doUpdatePosition(top / (height - clientHeight));
+
+    this.props.onUpdatePosition(top / (height - clientHeight));
   }
 
   render() {
@@ -90,7 +88,7 @@ export default class Markdown extends Component {
           ref={this.setTextareaEl}
           placeholder="Type your *markdown* content here"
           onChange={this.props.onChange}
-          value={this.props.raw}
+          value={this.props.content}
           autoComplete="off"
         />
       </div>
@@ -99,7 +97,7 @@ export default class Markdown extends Component {
 }
 
 Markdown.propTypes = {
-  raw: string.isRequired,
-  onChange: func.isRequired,
-  doUpdatePosition: func.isRequired
+  content: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+  onUpdatePosition: PropTypes.func.isRequired,
 };

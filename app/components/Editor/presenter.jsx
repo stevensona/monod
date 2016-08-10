@@ -5,12 +5,11 @@ import Markdown from '../Markdown';
 import Preview from '../Preview';
 import VerticalHandler from './VerticalHandler';
 
-const { bool, func, string } = PropTypes;
 
 export const EditorModes = {
   FOCUS: 'focus',
   PREVIEW: 'edit-preview',
-  READING: 'reading'
+  READING: 'reading',
 };
 
 export default class Editor extends Component {
@@ -18,9 +17,12 @@ export default class Editor extends Component {
     super(props, context);
 
     this.state = {
-      pos: 0,
-      mode: EditorModes.PREVIEW
+      position: 0,
+      mode: EditorModes.PREVIEW,
     };
+
+    this.updatePosition = this.updatePosition.bind(this);
+    this.handleOnClick = this.handleOnClick.bind(this);
   }
 
   componentDidUpdate() {
@@ -29,8 +31,8 @@ export default class Editor extends Component {
     }
   }
 
-  updatePosition(newPos) {
-    this.setState({ pos: newPos });
+  updatePosition(position) {
+    this.setState({ position });
   }
 
   updateMode(newMode) {
@@ -60,17 +62,17 @@ export default class Editor extends Component {
         loadedClassName={`editor ${this.state.mode}`}
       >
         <Markdown
-          raw={this.props.content}
+          content={this.props.content}
           onChange={this.props.onUpdateContent}
-          doUpdatePosition={this.updatePosition.bind(this)}
+          onUpdatePosition={this.updatePosition}
         />
         <VerticalHandler
-          onClickLeft={this.handleOnClick.bind(this)}
-          onClickRight={this.handleOnClick.bind(this)}
+          onClickLeft={this.handleOnClick}
+          onClickRight={this.handleOnClick}
         />
         <Preview
-          raw={this.props.content}
-          pos={this.state.pos}
+          content={this.props.content}
+          position={this.state.position}
           template={this.props.template}
         />
       </Loader>
@@ -79,8 +81,8 @@ export default class Editor extends Component {
 }
 
 Editor.propTypes = {
-  loaded: bool.isRequired,
-  content: string.isRequired,
-  template: string.isRequired,
-  onUpdateContent: func.isRequired
+  loaded: PropTypes.bool.isRequired,
+  content: PropTypes.string.isRequired,
+  template: PropTypes.string.isRequired,
+  onUpdateContent: PropTypes.func.isRequired,
 };

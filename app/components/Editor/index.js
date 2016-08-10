@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import Editor from './presenter';
+import { updateContent } from '../../modules/documents';
 
 
 const mapStateToProps = (state) => {
@@ -13,7 +14,9 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  onUpdateContent: () => {},
+  onUpdateContent: (content) => {
+    dispatch(updateContent(content));
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Editor);

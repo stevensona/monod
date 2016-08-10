@@ -3,12 +3,12 @@ import Document from '../Document';
 
 
 // Actions
-const LOAD = 'monod/documents/LOAD';
 const UPDATE_TEMPLATE = 'monod/documents/UPDATE_TEMPLATE';
+const UPDATE_CONTENT = 'monod/documents/UPDATE_CONTENT';
 
 // Action Creators
-export function load() {
-  return { type: LOAD };
+export function updateContent(content) {
+  return { type: UPDATE_CONTENT, content };
 }
 
 export function updateTemplate(template) {
@@ -29,6 +29,11 @@ export default function reducer(state = initialState, action = {}) {
     case UPDATE_TEMPLATE:
       return Object.assign({}, state, {
         current: state.current.set('template', action.template),
+      });
+
+    case UPDATE_CONTENT:
+      return Object.assign({}, state, {
+        current: state.current.set('content', action.content),
       });
 
     default: return state;
