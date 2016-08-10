@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import Toolbar from './presenter';
+import { updateTemplate } from '../../modules/documents';
 
 
 const mapStateToProps = (state) => {
@@ -11,7 +12,11 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  onUpdateTemplate: () => {},
+  onUpdateTemplate: (event) => {
+    const template = event.target.value;
+
+    dispatch(updateTemplate(template));
+  },
   onTogglePresentationMode: () => {},
 });
 

@@ -4,10 +4,15 @@ import Document from '../Document';
 
 // Actions
 const LOAD = 'monod/documents/LOAD';
+const UPDATE_TEMPLATE = 'monod/documents/UPDATE_TEMPLATE';
 
 // Action Creators
 export function load() {
   return { type: LOAD };
+}
+
+export function updateTemplate(template) {
+  return { type: UPDATE_TEMPLATE, template };
 }
 
 // Reducer
@@ -21,7 +26,10 @@ const initialState = {
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
-    case LOAD:
+    case UPDATE_TEMPLATE:
+      return Object.assign({}, state, {
+        current: state.current.set('template', action.template),
+      });
 
     default: return state;
   }

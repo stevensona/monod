@@ -5,7 +5,6 @@ import CodeMirror from 'codemirror';
 import 'codemirror/lib/codemirror.css';
 
 import MarkdownLoader from './loaders/Markdown';
-import { Events } from '../Store';
 
 
 const { func, string } = PropTypes;
@@ -44,6 +43,7 @@ export default class Markdown extends Component {
   }
 
   componentDidMount() {
+    /*
     this.context.controller.on(Events.UPDATE_WITHOUT_CONFLICT, (state) => {
       // force content update
       this.getCodeMirror().setValue(state.document.content);
@@ -53,6 +53,7 @@ export default class Markdown extends Component {
       // force content update
       this.getCodeMirror().setValue(state.fork.document.content);
     });
+    */
   }
 
   shouldComponentUpdate() {
@@ -101,8 +102,4 @@ Markdown.propTypes = {
   raw: string.isRequired,
   onChange: func.isRequired,
   doUpdatePosition: func.isRequired
-};
-
-Markdown.contextTypes = {
-  controller: PropTypes.object.isRequired
 };

@@ -11,8 +11,6 @@ class Sync extends Component {
     this.state = {
       duration: DEFAULT_DURATION,
       counter: DEFAULT_DURATION,
-      offline: false,
-      displayCounter: true,
     };
 
     this.intervalId = false;
@@ -24,41 +22,25 @@ class Sync extends Component {
     this.intervalId = setInterval(this.counter, 1000);
   }
 
-  componentDidMount() {
-    /*
-    this.context.controller.on(Events.APP_IS_ONLINE, () => {
-      this.setState({
-        counter: DEFAULT_DURATION,
-        duration: DEFAULT_DURATION,
-        offline: false,
-        displayCounter: true
-      });
-    });
-
-    this.context.controller.on(Events.APP_IS_OFFLINE, () => {
-      const displayCounter = DEFAULT_DURATION === this.state.duration;
-      let duration = Math.round(this.state.duration * 2);
-
-      if (duration >= MAX_DURATION) {
-        duration = DEFAULT_DURATION + 1;
-      }
-
-      this.setState({
-        counter: duration,
-        duration,
-        offline: true,
-        displayCounter
-      });
-    });
-    */
-  }
-
   componentWillUnmount() {
     clearInterval(this.intervalId);
     this.intervalId = false;
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.offline !== nextProps.offline) {
+      this.setState({
+        duration: DEFAULT_DURATION,
+        counter: DEFAULT_DURATION,
+      });
+    }
+  }
+
   counter() {
+    if (!this.props.offline) {
+      return;
+    }
+
     let counter = this.state.counter;
 
     if (0 < counter) {
@@ -66,34 +48,39 @@ class Sync extends Component {
       this.setState({ counter });
 
       if (0 === counter) {
-        this.setState({ counter: DEFAULT_DURATION });
         this.props.onRequestSync();
+
+        let duration = Math.round(this.state.duration * 1.5);
+
+        if (duration >= MAX_DURATION) {
+          duration = DEFAULT_DURATION + 1;
+        }
+
+        this.setState({
+          counter: duration,
+          duration,
+        });
       }
     }
   }
 
   render() {
     let title = 'Connected to the Internets™';
-    let offlineStatus = '';
+    let message = '';
 
-    if (this.state.offline) {
+    if (this.props.offline) {
       title = 'No Internet connection or server is unreachable';
-
-      if (this.state.displayCounter) {
-        offlineStatus = (<span>&nbsp;Retrying in {this.state.counter} seconds</span>);
-      } else {
-        offlineStatus = (<span>&nbsp;Offline</span>);
-      }
+      message = (<span>&nbsp;Offline</span>);
     }
 
     return (
       <div className="sync">
-        <span className={this.state.offline ? 'status is-offline' : 'status is-online'}>
+        <span className={this.props.offline ? 'status is-offline' : 'status is-online'}>
           <i
             title={title}
-            className={this.state.offline ? 'fa fa-toggle-off' : 'fa fa-toggle-on'}
+            className={this.props.offline ? 'fa fa-toggle-off' : 'fa fa-toggle-on'}
           />
-          {offlineStatus}
+          {message}
         </span>
       </div>
     );
@@ -101,6 +88,7 @@ class Sync extends Component {
 }
 
 Sync.propTypes = {
+  offline: PropTypes.bool.isRequired,
   onRequestSync: PropTypes.func.isRequired,
 };
 

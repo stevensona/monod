@@ -13,7 +13,7 @@ const Toolbar = (props) =>
     </div>
     <TemplateForm
       template={props.template}
-      doUpdateTemplate={props.onUpdateTemplate}
+      onUpdateTemplate={props.onUpdateTemplate}
     />
   </div>
 ;

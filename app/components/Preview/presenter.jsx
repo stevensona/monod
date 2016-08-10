@@ -1,65 +1,14 @@
-/* eslint no-param-reassign: 0, array-callback-return: 0, react/no-multi-comp: 0 */
 import React, { PropTypes, Component } from 'react';
 import grayMatter from 'gray-matter';
-import isEqual from 'lodash.isequal';
 
 import 'emojione/assets/sprites/emojione.sprites.css';
 
-import PreviewLoader from './loaders/Preview';
-import Templates from './Templates';
+import PreviewChunk from './PreviewChunk';
+import PreviewLoader from '../loaders/Preview';
+import Templates from '../Templates';
 
 
-const { array, func, number, object, string } = PropTypes;
-
-export class PreviewChunk extends Component {
-
-  shouldComponentUpdate(nextProps) {
-    // It looks like `attrs` is modified by hljs on `render()`, which
-    // makes the chunk to be re-rendered all the time. The problem is
-    // that it impacts performance negatively since hljs is costly.
-    this.props.chunk.map((chunk) => {
-      if ('fence' === chunk.type) {
-        chunk.attrs = null;
-      }
-    });
-
-    return !isEqual(this.props.chunk, nextProps.chunk) || this.props.id !== nextProps.id;
-  }
-
-  getHTML() {
-    let html;
-
-    html = this.props.markdownIt.renderer.render(
-      this.props.chunk,
-      this.props.markdownIt.options,
-      this.props.markdownItEnv
-    );
-    html = this.props.emojione.toImage(html);
-
-    return {
-      __html: html
-    };
-  }
-
-  render() {
-    return (
-      <div className="chunk">
-        <span dangerouslySetInnerHTML={this.getHTML()} />
-      </div>
-    );
-  }
-}
-
-PreviewChunk.propTypes = {
-  id: string,
-  markdownIt: object.isRequired,
-  emojione: object.isRequired,
-  chunk: array.isRequired,
-  markdownItEnv: object.isRequired
-};
-
-
-export default class Preview extends Component {
+class Preview extends Component {
   constructor(props, context) {
     super(props, context);
 
@@ -89,12 +38,12 @@ export default class Preview extends Component {
         modifyToken: (token) => {
           switch (token.type) {
             case 'link_open':
-              token.attrObj.rel = 'noreferrer noopener';
+              token.attrObj.rel = 'noreferrer noopener'; // eslint-disable-line no-param-reassign
               break;
 
             default:
           }
-        }
+        },
       });
 
       deps.markdownItPlugins.forEach((plugin) => {
@@ -103,9 +52,9 @@ export default class Preview extends Component {
 
       // custom containers must be explicitly defined
       this.markdownIt.use(deps.markdownItContainer, 'small', {
-        render: (tokens, idx) => {
+        render: (tokens, idx) => { // eslint-disable-line arrow-body-style
           return 1 === tokens[idx].nesting ? '<small>\n' : '</small>\n';
-        }
+        },
       });
 
       this.emojione = deps.emojione;
@@ -199,27 +148,23 @@ export default class Preview extends Component {
       // Get chunks to render from tokens
       const chunks = this.getChunks(this.matter.content, markdownItEnv);
 
-      content = chunks.map((chunk, id) => {
-        return (
-          <PreviewChunk
-            id={`ck-${id.toString()}`}
-            key={`ck-${id.toString()}`}
-            markdownIt={this.markdownIt}
-            emojione={this.emojione}
-            chunk={chunk}
-            markdownItEnv={markdownItEnv}
-          />
-        );
-      }, this);
+      content = chunks.map((chunk, id) =>
+        <PreviewChunk
+          id={`ck-${id.toString()}`}
+          key={`ck-${id.toString()}`}
+          markdownIt={this.markdownIt}
+          emojione={this.emojione}
+          chunk={chunk}
+          markdownItEnv={markdownItEnv}
+        />, this);
     }
 
     // Compile selected template with given data
     if (this.props.template && this.props.template.length) {
       // Get the template component
       const Template = Templates.find(
-        (template) => {
-          return template.id === this.props.template;
-        }).component;
+        template => template.id === this.props.template
+      ).component;
 
       content = (
         <Template content={content} data={data} />
@@ -237,12 +182,14 @@ export default class Preview extends Component {
 }
 
 Preview.propTypes = {
-  raw: string.isRequired,
-  template: string.isRequired,
-  pos: number.isRequired,
-  previewLoader: func.isRequired
+  raw: PropTypes.string.isRequired,
+  template: PropTypes.string.isRequired,
+  pos: PropTypes.number.isRequired,
+  previewLoader: PropTypes.func.isRequired,
 };
 
 Preview.defaultProps = {
-  previewLoader: PreviewLoader
+  previewLoader: PreviewLoader,
 };
+
+export default Preview;
