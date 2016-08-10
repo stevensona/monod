@@ -16,7 +16,7 @@ const initialState = {
   current: new Document(),
   // we automatically generate a secret, but it might not be used
   secret: sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0),
-  loaded: false,
+  loaded: true,
 };
 
 export default function reducer(state = initialState, action = {}) {
