@@ -5,7 +5,7 @@ const Footer = (props) =>
   <footer className="main">
     <div className="version">
       <span className="git-ref">
-        <i className="fa fa-code-fork"></i>&nbsp;{props.version}
+        <i className="fa fa-code-fork" />&nbsp;{props.version}
       </span>
     </div>
 

@@ -14,7 +14,7 @@ const apiEndpoint = appElement.getAttribute('data-api-endpoint');
 
 const store = configureStore();
 
-//require('offline-plugin/runtime').install();
+// require('offline-plugin/runtime').install();
 
 ReactDOM.render(
   <AppContainer>

@@ -2,9 +2,7 @@
 import React from 'react';
 import BaseTemplate from './Base';
 
-/**
- * Invoice template
- */
+
 export default class Invoice extends BaseTemplate {
 
   getDefaultData() {
@@ -18,7 +16,7 @@ export default class Invoice extends BaseTemplate {
         zipCode: '[companyAddress/zipcode]',
         city: '[companyAddress/city]',
         country: '[companyAddress/country]',
-        businessID: '[companyAddress/businessID]'
+        businessID: '[companyAddress/businessID]',
       },
       customerAddress: {
         name: '[customerAddress/name]',
@@ -26,8 +24,8 @@ export default class Invoice extends BaseTemplate {
         zipCode: '[customerAddress/zipcode]',
         city: '[customerAddress/city]',
         country: '[customerAddress/country]',
-        businessID: '[customerAddress/businessID]'
-      }
+        businessID: '[customerAddress/businessID]',
+      },
     };
   }
 
@@ -36,52 +34,52 @@ export default class Invoice extends BaseTemplate {
     const
       invoiceStyle = {
         fontSize: '12pt',
-        fontFamily: 'Palatino, "Times New Roman", Times, serif'
+        fontFamily: 'Palatino, "Times New Roman", Times, serif',
       },
       invoiceReferenceStyle = {
         marginBottom: '0.5cm',
         fontSize: '8pt',
-        textTransform: 'uppercase'
+        textTransform: 'uppercase',
       },
       logoStyle = {
         float: 'left',
-        width: '33%'
+        width: '33%',
       },
       companyAddressStyle = {
         float: 'left',
         width: '33%',
-        paddingLeft: '1rem'
+        paddingLeft: '1rem',
       },
       customerAddressStyle = {
         float: 'left',
         width: '33%',
-        paddingLeft: '1rem'
+        paddingLeft: '1rem',
       },
       mainTitleStyle = {
         clear: 'left',
         width: '100%',
         paddingTop: '1cm',
         textAlign: 'center',
-        fontSize: '17pt'
+        fontSize: '17pt',
       },
       sectionTitleStyle = {
         width: '100%',
         borderBottom: '1px solid #ccc',
-        fontSize: '16pt'
+        fontSize: '16pt',
       },
       contentStyle = {
         marginTop: '1cm',
-        color: '#333'
+        color: '#333',
       },
       paymentStyle = {
         marginTop: '1cm',
-        color: '#333'
+        color: '#333',
       },
       ibanStyle = {
         backgroundColor: '#f8f8f8',
         padding: '1rem',
         borderRadius: '3px',
-        border: '1px solid #ccc'
+        border: '1px solid #ccc',
       };
 
     return (

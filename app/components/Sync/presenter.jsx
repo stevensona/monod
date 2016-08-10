@@ -22,11 +22,6 @@ class Sync extends Component {
     this.intervalId = setInterval(this.counter, 1000);
   }
 
-  componentWillUnmount() {
-    clearInterval(this.intervalId);
-    this.intervalId = false;
-  }
-
   componentWillReceiveProps(nextProps) {
     if (this.props.offline !== nextProps.offline) {
       this.setState({
@@ -34,6 +29,11 @@ class Sync extends Component {
         counter: DEFAULT_DURATION,
       });
     }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.intervalId);
+    this.intervalId = false;
   }
 
   counter() {

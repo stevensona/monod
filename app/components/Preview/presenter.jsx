@@ -4,7 +4,7 @@ import grayMatter from 'gray-matter';
 import 'emojione/assets/sprites/emojione.sprites.css';
 
 import PreviewChunk from './PreviewChunk';
-import PreviewLoader from '../loaders/Preview';
+import previewLoader from '../loaders/Preview';
 import Templates from '../Templates';
 
 
@@ -189,7 +189,7 @@ Preview.propTypes = {
 };
 
 Preview.defaultProps = {
-  previewLoader: PreviewLoader,
+  previewLoader,
 };
 
 export default Preview;

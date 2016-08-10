@@ -2,11 +2,7 @@
 import { PropTypes, Component } from 'react';
 import merge from 'deepmerge';
 
-const { array, object } = PropTypes;
 
-/**
- * Base template
- */
 export default class Base extends Component {
 
   getDefaultData() {
@@ -37,6 +33,6 @@ export default class Base extends Component {
 }
 
 Base.propTypes = {
-  content: array.isRequired,
-  data: object.isRequired
+  content: PropTypes.array.isRequired,
+  data: PropTypes.object.isRequired,
 };

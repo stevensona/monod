@@ -1,31 +1,29 @@
 /* eslint global-require: 0 */
 const { Promise } = global;
 
-export default () => {
-  return new Promise(resolve => {
-    require.ensure([], () => {
-      require('highlight.js/styles/zenburn.css');
-      require('katex/dist/katex.min.css');
+export default () => new Promise(resolve => {
+  require.ensure([], () => {
+    require('highlight.js/styles/zenburn.css');
+    require('katex/dist/katex.min.css');
 
-      require('katex');
+    require('katex');
 
-      resolve({
-        hljs: require('highlight.js'),
-        markdownIt: require('markdown-it'),
-        markdownItPlugins: [
-          require('markdown-it-fontawesome'),
-          require('markdown-it-modify-token'),
-          require('markdown-it-sup'),
-          require('markdown-it-sub'),
-          require('markdown-it-mark'),
-          require('markdown-it-ins'),
-          require('markdown-it-abbr'),
-          require('markdown-it-katex'),
-          require('markdown-it-classy'),
-        ],
-        markdownItContainer: require('markdown-it-container'),
-        emojione: require('emojione')
-      });
+    resolve({
+      hljs: require('highlight.js'),
+      markdownIt: require('markdown-it'),
+      markdownItPlugins: [
+        require('markdown-it-fontawesome'),
+        require('markdown-it-modify-token'),
+        require('markdown-it-sup'),
+        require('markdown-it-sub'),
+        require('markdown-it-mark'),
+        require('markdown-it-ins'),
+        require('markdown-it-abbr'),
+        require('markdown-it-katex'),
+        require('markdown-it-classy'),
+      ],
+      markdownItContainer: require('markdown-it-container'),
+      emojione: require('emojione'),
     });
   });
-};
+});

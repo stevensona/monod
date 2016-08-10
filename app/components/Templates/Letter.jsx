@@ -15,15 +15,15 @@ export default class Letter extends BaseTemplate {
         name: '[addressFrom/name]',
         street: '[addressFrom/street]',
         zipCode: '[addressFrom/zipcode]',
-        city: '[addressFrom/city]'
+        city: '[addressFrom/city]',
       },
       addressTo: {
         name: '[addressTo/name]',
         street: '[addressTo/street]',
         zipCode: '[addressTo/zipcode]',
-        city: '[addressTo/city]'
+        city: '[addressTo/city]',
       },
-      signature: '[signature]'
+      signature: '[signature]',
     };
   }
 
@@ -32,27 +32,27 @@ export default class Letter extends BaseTemplate {
     const
       letterStyle = {
         fontSize: '12pt',
-        fontFamily: 'Palatino, "Times New Roman", Times, serif'
+        fontFamily: 'Palatino, "Times New Roman", Times, serif',
       },
       addressFromStyle = {
-        marginTop: '0'
+        marginTop: '0',
       },
       addressToStyle = {
         marginTop: '1cm',
-        paddingLeft: '60%'
+        paddingLeft: '60%',
       },
       locationDateStyle = {
         marginTop: '1cm',
-        paddingLeft: '60%'
+        paddingLeft: '60%',
       },
       contentStyle = {
         marginTop: '1cm',
-        color: '#333'
+        color: '#333',
       },
       signatureStyle = {
         marginTop: '1cm',
         fontStyle: 'italic',
-        textAlign: 'right'
+        textAlign: 'right',
       };
 
     return (

@@ -23,6 +23,6 @@ export default {
     'Read more about how and why we built Monod at: https://tailordev.fr/blog/.',
     '',
     '---',
-    '*[Let us know your thoughts](mailto:hello@tailordev.fr?subject=About%20Monod). We would :heart: to hear from you!*'
-  ].join('\n')
+    '*[Let us know your thoughts](mailto:hello@tailordev.fr?subject=About%20Monod). We would :heart: to hear from you!*',
+  ].join('\n'),
 };

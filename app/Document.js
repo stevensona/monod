@@ -8,7 +8,7 @@ export default class Document extends Record({
   content: Config.DEFAULT_CONTENT,
   last_modified: null, // defined by the server
   last_modified_locally: null,
-  template: ''
+  template: '',
 }) {
 
   hasDefaultContent() {

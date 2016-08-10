@@ -9,23 +9,21 @@ const TemplateForm = (props) =>
       onChange={props.onUpdateTemplate}
       value={props.template}
     >
-      {Templates.map((component, key) => {
-        return (
-          <option
-            value={component.id}
-            key={key}
-          >
-            {component.name}
-          </option>
-        );
-      })}
+      {Templates.map((component, key) =>
+        <option
+          value={component.id}
+          key={key}
+        >
+          {component.name}
+        </option>
+      )}
     </select>
   </form>
 ;
 
 TemplateForm.propTypes = {
   template: PropTypes.string.isRequired,
-  onUpdateTemplate: PropTypes.func.isRequired
+  onUpdateTemplate: PropTypes.func.isRequired,
 };
 
 export default TemplateForm;

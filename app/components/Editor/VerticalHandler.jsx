@@ -23,7 +23,7 @@ const VerticalHandler = (props) => (
 
 VerticalHandler.propTypes = {
   onClickLeft: func.isRequired,
-  onClickRight: func.isRequired
+  onClickRight: func.isRequired,
 };
 
 export default VerticalHandler;

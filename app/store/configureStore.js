@@ -7,8 +7,8 @@ const middlewares = [thunk];
 
 if ('production' !== process.env.NODE_ENV) {
   const createLogger = require('redux-logger');
-  const logger = createLogger();
-  middlewares.push(logger);
+
+  middlewares.push(createLogger());
 }
 
 const createStoreWithMiddleware = applyMiddleware(...middlewares)(createStore);

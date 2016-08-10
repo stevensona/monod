@@ -57,14 +57,6 @@ export default class Markdown extends Component {
     return false;
   }
 
-  getCodeMirror() {
-    return this.codeMirror;
-  }
-
-  setTextareaEl(node) {
-    this.$textarea = node;
-  }
-
   onChange() {
     const newValue = this.getCodeMirror().getDoc().getValue();
 
@@ -79,6 +71,14 @@ export default class Markdown extends Component {
     const { top, height, clientHeight } = this.getCodeMirror().getScrollInfo();
 
     this.props.onUpdatePosition(top / (height - clientHeight));
+  }
+
+  setTextareaEl(node) {
+    this.$textarea = node;
+  }
+
+  getCodeMirror() {
+    return this.codeMirror;
   }
 
   render() {

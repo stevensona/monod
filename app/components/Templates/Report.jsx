@@ -11,14 +11,14 @@ export default class Report extends BaseTemplate {
     return {
       company: {
         name: '[company/name]',
-        logo_url: '[company/logo_url]'
+        logo_url: '[company/logo_url]',
       },
       project: '[project]',
       reporter: '[reporter]',
       date: '[date]',
       location: '[location]',
       reference: '[reference]',
-      version: '[version]'
+      version: '[version]',
     };
   }
 
@@ -28,22 +28,22 @@ export default class Report extends BaseTemplate {
       reportStyle = {},
       companyStyle = {
         margin: '2cm 0 3cm',
-        textAlign: 'center'
+        textAlign: 'center',
       },
       metaStyle = {
         margin: '1cm 0 3cm',
         fontFamily: 'consolas, monospace',
-        textAlign: 'left'
+        textAlign: 'left',
       },
       contentStyle = {
-        fontFamily: '"Helvetica Neue", Helvetica, Roboto, Arial, sans-serif !important'
+        fontFamily: '"Helvetica Neue", Helvetica, Roboto, Arial, sans-serif !important',
       },
       signatureStyle = {
         marginTop: '2cm',
         paddingTop: '0.3cm',
         borderTop: '1px solid #ccc',
         fontSize: '10pt',
-        textAlign: 'right'
+        textAlign: 'right',
       };
 
     return (

@@ -86,7 +86,7 @@ export default class Store {
               uuid: res.body.uuid,
               content: res.body.content,
               last_modified: res.body.last_modified,
-              template: res.body.template || ''
+              template: res.body.template || '',
             }));
           });
       })
@@ -100,9 +100,9 @@ export default class Store {
                 content: decryptedContent,
                 last_modified: document.get('last_modified'),
                 last_modified_locally: document.get('last_modified_locally'),
-                template: document.get('template')
+                template: document.get('template'),
               }),
-              secret
+              secret,
             });
           });
       })
@@ -126,9 +126,9 @@ export default class Store {
         content: document.get('content'),
         last_modified: document.get('last_modified'),
         last_modified_locally: Date.now(),
-        template: document.get('template')
+        template: document.get('template'),
       }),
-      secret: this.state.secret
+      secret: this.state.secret,
     });
 
     return this._localPersist();
@@ -157,7 +157,7 @@ export default class Store {
         content: previousDocument.get('content'),
         last_modified: previousDocument.get('last_modified'),
         last_modified_locally: previousDocument.get('last_modified_locally'),
-        template
+        template,
       })
     );
   }
@@ -186,7 +186,7 @@ export default class Store {
           uuid: res.body.uuid,
           content: res.body.content,
           last_modified: res.body.last_modified,
-          template: res.body.template || ''
+          template: res.body.template || '',
         });
 
         if (serverDoc.get('last_modified') === localDoc.get('last_modified')) {
@@ -212,17 +212,17 @@ export default class Store {
                   uuid: serverDoc.get('uuid'),
                   content: decryptedContent,
                   last_modified: serverDoc.get('last_modified'),
-                  template: serverDoc.get('template')
+                  template: serverDoc.get('template'),
                 });
 
                 this._setState(
                   {
                     document: updatedDocument,
-                    secret
+                    secret,
                   },
                   Events.UPDATE_WITHOUT_CONFLICT,
                   {
-                    document: updatedDocument
+                    document: updatedDocument,
                   }
                 );
               })
@@ -244,7 +244,7 @@ export default class Store {
               const fork = new Document({
                 uuid: uuid.v4(),
                 content: localDoc.content,
-                template: localDoc.template
+                template: localDoc.template,
               });
 
               // persist fork'ed document
@@ -253,7 +253,7 @@ export default class Store {
                 new Document({
                   uuid: fork.get('uuid'),
                   content: encryptedContent,
-                  template: fork.get('template')
+                  template: fork.get('template'),
                 }).toJS()
               )
               .then(() => {
@@ -266,7 +266,7 @@ export default class Store {
                 uuid: serverDoc.get('uuid'),
                 content: serverDoc.get('content'),
                 last_modified: serverDoc.get('last_modified'),
-                template: serverDoc.get('template')
+                template: serverDoc.get('template'),
               });
 
               return this
@@ -279,10 +279,10 @@ export default class Store {
                   const conflictState = {
                     fork: {
                       document: fork,
-                      secret: forkSecret
+                      secret: forkSecret,
                     },
                     document: former,
-                    secret: this.state.secret
+                    secret: this.state.secret,
                   };
 
                   // state is now sync'ed with fork
@@ -327,7 +327,7 @@ export default class Store {
             content: encryptedContent,
             last_modified: doc.get('last_modified'),
             last_modified_locally: doc.get('last_modified_locally'),
-            template: doc.get('template')
+            template: doc.get('template'),
           }).toJS()
         );
       })
@@ -349,7 +349,7 @@ export default class Store {
           .set('Content-Type', 'application/json')
           .send({
             content: encryptedContent,
-            template: doc.get('template')
+            template: doc.get('template'),
           })
           .then(this._handleRequestSuccess.bind(this))
           .catch(this._handleRequestError.bind(this))
@@ -361,9 +361,9 @@ export default class Store {
                   content: doc.get('content'),
                   last_modified: res.body.last_modified,
                   last_modified_locally: null,
-                  template: res.body.template || ''
+                  template: res.body.template || '',
                 }),
-                secret
+                secret,
               },
               Events.SYNCHRONIZE
             );
