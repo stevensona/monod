@@ -1,38 +1,23 @@
-import Immutable from 'immutable';
 import React, { Component, PropTypes } from 'react';
 import debounce from 'lodash.debounce';
-import { Events } from '../Store';
-import Document from '../Document';
 
 import Header from './Header';
 import Editor from './Editor';
 import Footer from './Footer';
 import MessageBoxes from './MessageBox';
 
-const { object, string } = PropTypes;
-
 
 export default class App extends Component {
   constructor(props, context) {
     super(props, context);
 
-    this.state = {
-      document: new Document(),
-      messages: new Immutable.List(),
-      loaded: false
-    };
+    this.state = { messages: [] };
 
     this.updateContent = debounce(this.updateContent, 150);
   }
 
-  getChildContext() {
-    // Pass the controller to child components.
-    return {
-      controller: this.props.controller
-    };
-  }
-
   componentDidMount() {
+    /*
     this.props.controller.on(Events.NO_DOCUMENT_ID, (state) => {
       this.setState({
         loaded: true,
@@ -112,6 +97,7 @@ export default class App extends Component {
       id: window.location.pathname.slice(1),
       secret: window.location.hash.slice(1)
     });
+    */
   }
 
   togglePresentationMode() {
@@ -156,15 +142,19 @@ export default class App extends Component {
   }
 
   updateContent(newContent) {
+    /*
     if (this.state.document.content !== newContent) {
       this.props.controller.dispatch('action:update-content', newContent);
     }
+    */
   }
 
   updateTemplate(event) {
+    /*
     const newTemplate = event.target.value;
 
     this.props.controller.dispatch('action:update-template', newTemplate);
+    */
   }
 
   removeMessage(index) {
@@ -176,21 +166,15 @@ export default class App extends Component {
   render() {
     return (
       <div className="layout">
-        <Header
-          onTogglePresentationMode={this.togglePresentationMode.bind(this)}
-          template={this.state.document.get('template')}
-          onUpdateTemplate={this.updateTemplate.bind(this)}
-        />
+        <Header />
+
         <MessageBoxes
           messages={this.state.messages}
           closeMessageBox={this.removeMessage.bind(this)}
         />
-        <Editor
-          loaded={this.state.loaded}
-          content={this.state.document.get('content')}
-          template={this.state.document.get('template')}
-          onUpdateContent={this.updateContent.bind(this)}
-        />
+
+        <Editor />
+
         <Footer version={this.props.version} />
       </div>
     );
@@ -198,10 +182,5 @@ export default class App extends Component {
 }
 
 App.propTypes = {
-  version: string.isRequired,
-  controller: object.isRequired
-};
-
-App.childContextTypes = {
-  controller: object
+  version: PropTypes.string.isRequired,
 };

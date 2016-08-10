@@ -1,24 +1,12 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 
 import Toolbar from './Toolbar';
 
-const { func, string } = PropTypes;
 
-const Header = (props) =>
+export default () =>
   <header className="main">
     <h1>Monod <small>The Markdown Editor</small></h1>
-    <Toolbar
-      onTogglePresentationMode={props.onTogglePresentationMode}
-      template={props.template}
-      onUpdateTemplate={props.onUpdateTemplate}
-    />
+
+    <Toolbar />
   </header>
 ;
-
-Header.propTypes = {
-  onTogglePresentationMode: func.isRequired,
-  template: string.isRequired,
-  onUpdateTemplate: func.isRequired
-};
-
-export default Header;

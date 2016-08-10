@@ -1,8 +1,8 @@
 import React, { PropTypes, Component } from 'react';
 import Loader from 'react-loader';
 
-import Markdown from './Markdown';
-import Preview from './Preview';
+import Markdown from '../Markdown';
+import Preview from '../Preview';
 import VerticalHandler from './VerticalHandler';
 
 const { bool, func, string } = PropTypes;
@@ -83,8 +83,4 @@ Editor.propTypes = {
   content: string.isRequired,
   template: string.isRequired,
   onUpdateContent: func.isRequired
-};
-
-Editor.contextTypes = {
-  controller: PropTypes.object.isRequired
 };

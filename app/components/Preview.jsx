@@ -6,7 +6,7 @@ import isEqual from 'lodash.isequal';
 import 'emojione/assets/sprites/emojione.sprites.css';
 
 import PreviewLoader from './loaders/Preview';
-import { Templates } from './TemplateForm';
+import Templates from './Templates';
 
 
 const { array, func, number, object, string } = PropTypes;
