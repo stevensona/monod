@@ -5,24 +5,27 @@ import { expect } from 'chai';
 // see: https://github.com/mochajs/mocha/issues/1847
 const { describe, it } = global;
 
-import Slidedeck from '../../templates/Slidedeck';
-import { PreviewChunk } from '../../Preview';
+import Slidedeck from '../Slidedeck';
+import PreviewChunk from '../../Preview/PreviewChunk';
 
 
 describe('<Slidedeck />', () => {
 
-  let key = 0;
+  let id = 0;
   const mockPreviewChunk = (content) => {
+    id++;
     return (
       <PreviewChunk
-        key={key++}
+        id={`${id}`}
+        key={`${id}`}
         markdownIt={{
           renderer: {
             render: (content) => content
-          }
+          },
+          options: {},
         }}
         emojione={{
-          toImage: (content) => content
+          toImage: (content) => content,
         }}
         chunk={[ { markup: content } ]}
         markdownItEnv={{}}

@@ -22,7 +22,7 @@ import mditClassy from 'markdown-it-classy';
 // see: https://github.com/mochajs/mocha/issues/1847
 const { before, describe, it, Promise } = global;
 
-import Preview from '../Preview';
+import Preview from '../presenter';
 
 
 describe('<Preview />', () => {
@@ -54,14 +54,14 @@ describe('<Preview />', () => {
 
   it('renders a block with preview css class', () => {
     const wrapper = shallow(
-      <Preview raw={""} pos={0} template={''} />
+      <Preview content={""} position={0} template={''} />
     );
 
     expect(wrapper.find('.preview')).to.have.length(1);
   });
 
   it('renders a loading message', () => {
-    const wrapper = render(<Preview raw={""} pos={0} template={''} />);
+    const wrapper = render(<Preview content={""} position={0} template={''} />);
 
     expect(wrapper.text()).to.contain('Loading all the rendering stuff...');
   });
@@ -69,8 +69,8 @@ describe('<Preview />', () => {
   it('renders content', (done) => {
     const wrapper = mount(
       <Preview
-        raw={'foo'}
-        pos={0}
+        content={'foo'}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -80,14 +80,14 @@ describe('<Preview />', () => {
       expect(wrapper.html()).to.contain('foo');
 
       done();
-    }, 5);
+    });
   });
 
   it('converts markdown into HTML', (done) => {
     const wrapper = mount(
       <Preview
-        raw={'*italic*'}
-        pos={0}
+        content={'*italic*'}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -97,14 +97,14 @@ describe('<Preview />', () => {
       expect(wrapper.html()).to.contain('<em>italic</em>');
 
       done();
-    }, 5);
+    });
   });
 
   it('converts markdown blocks into HTML chunks', (done) => {
     const wrapper = mount(
       <Preview
-        raw={['*italic*', '**bold**'].join('\n\n')}
-        pos={0}
+        content={['*italic*', '**bold**'].join('\n\n')}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -120,14 +120,14 @@ describe('<Preview />', () => {
       );
 
       done();
-    }, 5);
+    });
   });
 
   it('converts Emoji', (done) => {
     const wrapper = mount(
       <Preview
-        raw={":smile:"}
-        pos={0}
+        content={":smile:"}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -139,14 +139,14 @@ describe('<Preview />', () => {
       );
 
       done();
-    }, 5);
+    });
   });
 
   it('highlights code blocks', (done) => {
     const wrapper = mount(
       <Preview
-        raw={'```python\nprint()\n```'}
-        pos={0}
+        content={'```python\nprint()\n```'}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -166,15 +166,15 @@ describe('<Preview />', () => {
       );
 
       done();
-    }, 5);
+    });
   });
 
   it('generates paragraph chunks', (done) => {
     let chunks;
     const wrapper = shallow(
       <Preview
-        raw={''}
-        pos={0}
+        content={''}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -200,15 +200,15 @@ describe('<Preview />', () => {
       expect(chunks[1][1]).to.have.property('content', 'bar');
       expect(chunks[1][2]).to.have.property('type', 'paragraph_close');
       done();
-    }, 5);
+    });
   });
 
   it('generates code block chunks', (done) => {
     let chunks;
     const wrapper = shallow(
       <Preview
-        raw={''}
-        pos={0}
+        content={''}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -226,15 +226,15 @@ describe('<Preview />', () => {
       expect(chunks).to.have.lengthOf(1);
 
       done();
-    }, 5);
+    });
   });
 
   it('generates nested block chunks', (done) => {
     let chunks;
     const wrapper = shallow(
       <Preview
-        raw={''}
-        pos={0}
+        content={''}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -252,14 +252,14 @@ describe('<Preview />', () => {
       expect(chunks[0]).to.have.lengthOf(12);
 
       done();
-    }, 5);
+    });
   });
 
   it('removes front-matter YAML header from preview', (done) => {
     const wrapper = mount(
       <Preview
-        raw={'---\ntoto: 1\n---\n*italic*'}
-        pos={0}
+        content={'---\ntoto: 1\n---\n*italic*'}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -269,14 +269,14 @@ describe('<Preview />', () => {
       expect(wrapper.html()).to.contain('<em>italic</em>');
 
       done();
-    }, 5);
+    });
   });
 
   it('stores front-matter (YAML) values', (done) => {
     const wrapper = mount(
       <Preview
-        raw={'---\ntoto: 1\n---\n*italic*'}
-        pos={0}
+        content={'---\ntoto: 1\n---\n*italic*'}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -289,15 +289,15 @@ describe('<Preview />', () => {
       expect(preview.matter.data).to.deep.equal({ toto:1 });
 
       done();
-    }, 5);
+    });
   });
 
   it('compiles a template given a context', (done) => {
     const wrapper = mount(
       <Preview
-        raw={'---\nlocation: Foo\nsignature: John Doe\n---\nThis is content'}
+        content={'---\nlocation: Foo\nsignature: John Doe\n---\nThis is content'}
         template={'letter'}
-        pos={0}
+        position={0}
         previewLoader={previewLoader}
       />
     );
@@ -318,15 +318,15 @@ describe('<Preview />', () => {
       ].join(''));
 
       done();
-    }, 5);
+    });
   });
 
   it('does not add context without template', (done) => {
     const wrapper = mount(
       <Preview
-        raw={'---\ntitle: Foo\nauthor: John Doe\n---\nThis is content'}
+        content={'---\ntitle: Foo\nauthor: John Doe\n---\nThis is content'}
         template={''}
-        pos={0}
+        position={0}
         previewLoader={previewLoader}
       />
     );
@@ -347,15 +347,15 @@ describe('<Preview />', () => {
       ].join(''));
 
       done();
-    }, 5);
+    });
   });
 
   it('should not display iframes (#122)', (done) => {
     const content = '<a href=""><iframe src="javascript:alert(1)"></iframe></a>';
     const wrapper = mount(
       <Preview
-        raw={content}
-        pos={0}
+        content={content}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -365,15 +365,15 @@ describe('<Preview />', () => {
       expect(wrapper.html()).not.to.contain(content);
 
       done();
-    }, 5);
+    });
   });
 
   it('should not render bad input tag (#122)', (done) => {
     const content = '<input onfocus=alert(1) autofocus>>';
     const wrapper = mount(
       <Preview
-        raw={content}
-        pos={0}
+        content={content}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -383,15 +383,15 @@ describe('<Preview />', () => {
       expect(wrapper.html()).not.to.contain('input onfocus="alert(1)" autofocus=""');
 
       done();
-    }, 5);
+    });
   });
 
   it('should not render bad HTML tag (#122)', (done) => {
     const content = '<<img onerror=alert(1) src=x/>>';
     const wrapper = mount(
       <Preview
-        raw={content}
-        pos={0}
+        content={content}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -401,14 +401,14 @@ describe('<Preview />', () => {
       expect(wrapper.html()).not.to.contain('img onerror="alert(1)" src="x/"');
 
       done();
-    }, 5);
+    });
   });
 
   it('supports FontAwesome', (done) => {
     const wrapper = mount(
       <Preview
-        raw={':fa-globe:'}
-        pos={0}
+        content={':fa-globe:'}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -418,14 +418,14 @@ describe('<Preview />', () => {
       expect(wrapper.html()).to.contain('<i class="fa fa-globe"></i>');
 
       done();
-    }, 5);
+    });
   });
 
   it('should display links with rel="noopener"', (done) => {
     const wrapper = mount(
       <Preview
-        raw={'[foo](/url)'}
-        pos={0}
+        content={'[foo](/url)'}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -435,14 +435,14 @@ describe('<Preview />', () => {
       expect(wrapper.html()).to.contain('<a href="/url" rel="noreferrer noopener">foo</a>');
 
       done();
-    }, 5);
+    });
   });
 
   it('supports <sup> tag with ^text^', (done) => {
     const wrapper = mount(
       <Preview
-        raw={'29^th^'}
-        pos={0}
+        content={'29^th^'}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -452,14 +452,14 @@ describe('<Preview />', () => {
       expect(wrapper.html()).to.contain('<p>29<sup>th</sup></p>');
 
       done();
-    }, 5);
+    });
   });
 
   it('supports <mark> tag with ==text==', (done) => {
     const wrapper = mount(
       <Preview
-        raw={'==marked=='}
-        pos={0}
+        content={'==marked=='}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -469,14 +469,14 @@ describe('<Preview />', () => {
       expect(wrapper.html()).to.contain('<p><mark>marked</mark></p>');
 
       done();
-    }, 5);
+    });
   });
 
   it('supports strikethrough with ~~text~~', (done) => {
     const wrapper = mount(
       <Preview
-        raw={'~~Strikethrough~~'}
-        pos={0}
+        content={'~~Strikethrough~~'}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -486,14 +486,14 @@ describe('<Preview />', () => {
       expect(wrapper.html()).to.contain('<p><s>Strikethrough</s></p>');
 
       done();
-    }, 5);
+    });
   });
 
   it('has linkify plugin enabled', (done) => {
     const wrapper = mount(
       <Preview
-        raw={'http://example.org'}
-        pos={0}
+        content={'http://example.org'}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -505,14 +505,14 @@ describe('<Preview />', () => {
       );
 
       done();
-    }, 5);
+    });
   });
 
   it('supports <sub> tag with ~text~', (done) => {
     const wrapper = mount(
       <Preview
-        raw={'H~2~O'}
-        pos={0}
+        content={'H~2~O'}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -522,14 +522,14 @@ describe('<Preview />', () => {
       expect(wrapper.html()).to.contain('<p>H<sub>2</sub>O</p>');
 
       done();
-    }, 5);
+    });
   });
 
   it('supports insert (<ins>) tag with ++text++', (done) => {
     const wrapper = mount(
       <Preview
-        raw={'++inserted++'}
-        pos={0}
+        content={'++inserted++'}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -539,7 +539,7 @@ describe('<Preview />', () => {
       expect(wrapper.html()).to.contain('<p><ins>inserted</ins></p>');
 
       done();
-    }, 5);
+    });
   });
 
   it('supports <abbr> tags', (done) => {
@@ -551,8 +551,8 @@ describe('<Preview />', () => {
 
     const wrapper = mount(
       <Preview
-        raw={content}
-        pos={0}
+        content={content}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -566,14 +566,14 @@ describe('<Preview />', () => {
       ].join(' '));
 
       done();
-    }, 5);
+    });
   });
 
   it('supports Math expressions', (done) => {
     const wrapper = mount(
       <Preview
-        raw={'$Sut \leq_{ct} S^N =_{def} CTraces(Sut) \subseteq Traces_{Pass}(R(S^N))$'}
-        pos={0}
+        content={'$Sut \leq_{ct} S^N =_{def} CTraces(Sut) \subseteq Traces_{Pass}(R(S^N))$'}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -583,14 +583,14 @@ describe('<Preview />', () => {
       expect(wrapper.html()).to.contain('class="katex"');
 
       done();
-    }, 5);
+    });
   });
 
   it('supports custom container: small', (done) => {
     const wrapper = mount(
       <Preview
-        raw={':::small\nfoo\n:::'}
-        pos={0}
+        content={':::small\nfoo\n:::'}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -600,14 +600,14 @@ describe('<Preview />', () => {
       expect(wrapper.html()).to.contain('<small>\n<p>foo</p>\n</small>');
 
       done();
-    }, 5);
+    });
   });
 
   it('supports CSS custom classes', (done) => {
     const wrapper = mount(
       <Preview
-        raw={'hello\n{css-class}'}
-        pos={0}
+        content={'hello\n{css-class}'}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -617,12 +617,12 @@ describe('<Preview />', () => {
       expect(wrapper.html()).to.contain('<p class="css-class">hello</p>');
 
       done();
-    }, 5);
+    });
   });
 
   // cf. https://github.com/andrey-p/markdown-it-classy/issues/8
   it('does not break tables because of classy plugin', (done) => {
-    const raw = `
+    const content = `
 Annonce | Où | WM | Taille | Nb pièces | Etage | Balcon? | Cave/Gge/Parking | Ascenceur? | Cuisine | Libre
 --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | ---
 [Lien](http://schnapp.de/miete/wohnungen/ruh-idyll-geleg-2-zi-wohnung-x1x) | [Landwasser](https://goo.gl/maps/7hmfddKPsw12) | 740 KM + NK | 64m2 |  | 3e | 2 | Garage | Equipée | Oui| 01.09.2016
@@ -630,8 +630,8 @@ Annonce | Où | WM | Taille | Nb pièces | Etage | Balcon? | Cave/Gge/Parking | 
 
     const wrapper = mount(
       <Preview
-        raw={raw}
-        pos={0}
+        content={content}
+        position={0}
         previewLoader={previewLoader}
         template={''}
       />
@@ -642,6 +642,6 @@ Annonce | Où | WM | Taille | Nb pièces | Etage | Balcon? | Cave/Gge/Parking | 
       expect(wrapper.html()).to.contain(`schnapp.de`);
 
       done();
-    }, 5);
+    });
   });
 });

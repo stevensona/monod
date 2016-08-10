@@ -42,8 +42,10 @@ class PreviewChunk extends Component {
 PreviewChunk.propTypes = {
   id: PropTypes.string,
   markdownIt: PropTypes.shape({
-    renderer: PropTypes.func.isRequired,
-    options: PropTypes.array.isRequired,
+    renderer: PropTypes.shape({
+      render: PropTypes.func.isRequired,
+    }).isRequired,
+    options: PropTypes.any.isRequired,
   }).isRequired,
   emojione: PropTypes.object.isRequired,
   chunk: PropTypes.array.isRequired,

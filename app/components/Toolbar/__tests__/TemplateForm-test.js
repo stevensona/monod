@@ -14,7 +14,7 @@ describe('<TemplateForm />', () => {
     const wrapper = shallow(
       <TemplateForm
         template={''}
-        doUpdateTemplate={() => {}}
+        onUpdateTemplate={() => {}}
       />);
 
     expect(wrapper.find('select')).to.have.length(1);

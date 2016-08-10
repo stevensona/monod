@@ -16,7 +16,7 @@ const Notifications = (props) => (
 );
 
 Notifications.propTypes = {
-  messages: PropTypes.object.isRequired,
+  messages: PropTypes.array.isRequired,
   onMessageBoxClose: PropTypes.func.isRequired,
 };
 

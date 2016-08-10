@@ -5,7 +5,7 @@ import { expect } from 'chai';
 // see: https://github.com/mochajs/mocha/issues/1847
 const { describe, it } = global;
 
-import Toolbar from '../Toolbar';
+import Toolbar from '../presenter';
 
 
 describe('<Toolbar />', () => {
@@ -13,8 +13,8 @@ describe('<Toolbar />', () => {
   it('renders the application\'s toolbar', () => {
     const wrapper = shallow(
       <Toolbar
-        onTogglePresentationMode={() => {}}
         template={''}
+        onTogglePresentationMode={() => {}}
         onUpdateTemplate={() => {}}
       />);
 

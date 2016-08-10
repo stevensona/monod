@@ -7,23 +7,12 @@ import sinon from 'sinon';
 // see: https://github.com/mochajs/mocha/issues/1847
 const { before, describe, it } = global;
 
-import Editor, { EditorModes } from '../Editor';
-import Markdown from '../Markdown';
-import Preview from '../Preview';
+import Editor, { EditorModes } from '../presenter';
+import Markdown from '../../Markdown';
+import Preview from '../../Preview';
 
 
 describe('<Editor />', () => {
-
-  let context;
-
-  before(() => {
-    context = {
-      controller: {
-        on: () => {},
-        dispatch: () => {}
-      }
-    };
-  });
 
   it('renders Markdown component', () => {
     const wrapper = shallow(
@@ -32,8 +21,7 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
-      />,
-      { context }
+      />
     );
     expect(wrapper.find(Markdown)).to.have.length(1);
   });
@@ -45,8 +33,7 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
-      />,
-      { context }
+      />
     );
     expect(wrapper.find(Preview)).to.have.length(1);
   });
@@ -60,8 +47,7 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={spy}
         template={''}
-      />,
-      { context }
+      />
     );
     const content = 'Hello, World';
 
@@ -77,8 +63,7 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
-      />,
-      { context }
+      />
     );
 
     expect(wrapper.find(Loader)).to.have.length(1);
@@ -91,8 +76,7 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
-      />,
-      { context }
+      />
     );
 
     expect(wrapper.find('.editor')).to.have.length(0);
@@ -105,8 +89,7 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
-      />,
-      { context }
+      />
     );
 
     expect(wrapper.find('.editor')).to.have.length(1);
@@ -120,8 +103,7 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={spy}
         template={''}
-      />,
-      { context }
+      />
     );
 
     wrapper.find('Markdown').simulate('change');
@@ -136,8 +118,7 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
-      />,
-      { context }
+      />
     );
     const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();
 
@@ -156,8 +137,7 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
-      />,
-      { context }
+      />
     );
     const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();
 
@@ -182,8 +162,7 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
-      />,
-      { context }
+      />
     );
     const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();
 
@@ -202,8 +181,7 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
-      />,
-      { context }
+      />
     );
     const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();
 

@@ -6,29 +6,25 @@ const MessageBox = (props) => {
     props.onClose(props.index);
   };
 
-  if (props.message && props.message.content) {
-    return (
-      <div className={`message-box ${props.message.level}`}>
-        <p>{props.message.content}</p>
-        <button
-          className="close-button"
-          onClick={onClick}
-        >
-          <span>&times;</span>
-        </button>
-      </div>
-    );
-  }
-
-  return null;
+  return (
+    <div className={`message-box ${props.message.level || ''}`}>
+      <p>{props.message.content}</p>
+      <button
+        className="close-button"
+        onClick={onClick}
+      >
+        <span>&times;</span>
+      </button>
+    </div>
+  );
 };
 
 MessageBox.propTypes = {
   index: PropTypes.number.isRequired,
   message: PropTypes.shape({
     content: PropTypes.string.isRequired,
-    level: PropTypes.string.isRequired,
-    count: PropTypes.number.isRequired,
+    level: PropTypes.string,
+    count: PropTypes.number,
   }).isRequired,
   onClose: PropTypes.func.isRequired,
 };

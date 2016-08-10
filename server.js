@@ -1,4 +1,4 @@
-if ('production' === process.env.NODE_ENV) {
+if ('production' === process.env.NODE_ENV || 'test' === process.env.NODE_ENV) {
   const express = require('express');
   const compression = require('compression');
   const bodyParser = require('body-parser');

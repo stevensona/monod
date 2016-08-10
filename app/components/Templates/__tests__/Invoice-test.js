@@ -5,7 +5,7 @@ import { expect } from 'chai';
 // see: https://github.com/mochajs/mocha/issues/1847
 const { describe, it } = global;
 
-import Invoice from '../../templates/Invoice';
+import Invoice from '../Invoice';
 
 
 describe('<Invoice />', () => {

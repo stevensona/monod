@@ -11,24 +11,13 @@ import Markdown from '../Markdown';
 
 describe('<Markdown />', () => {
 
-  let context;
-
-  before(() => {
-    context = {
-      controller: {
-        on: () => {}
-      }
-    };
-  });
-
   it('renders a block with markdown css class', () => {
     const wrapper = mount(
       <Markdown
-        raw={""}
+        content={""}
         onChange={() => {}}
-        doUpdatePosition={() => {}}
-      />,
-      { context }
+        onUpdatePosition={() => {}}
+      />
     );
     expect(wrapper.find('.markdown')).to.have.length(1);
   });
@@ -36,60 +25,56 @@ describe('<Markdown />', () => {
   it('renders a CodeMirror block', () => {
     const wrapper = mount(
       <Markdown
-        raw={""}
+        content={""}
         onChange={() => {}}
-        doUpdatePosition={() => {}}
-      />,
-      { context }
+        onUpdatePosition={() => {}}
+      />
     );
 
     setTimeout(() => {
       expect(wrapper.render().find('.CodeMirror')).to.have.length(1);
-    }, 5);
+    });
   });
 
   it('calls onChange when a default value is provided', () => {
     const spy = sinon.spy();
     mount(
       <Markdown
-        raw={"foo"}
+        content={"foo"}
         onChange={spy}
-        doUpdatePosition={() => {}}
-      />,
-      { context }
+        onUpdatePosition={() => {}}
+      />
     );
 
     setTimeout(() => {
       expect(spy.calledOnce).to.be.true;
-    }, 5);
+    });
   });
 
   it('calls onChange when a text is entered', () => {
     const spy = sinon.spy();
     const wrapper = mount(
       <Markdown
-        raw={""}
+        content={""}
         onChange={spy}
-        doUpdatePosition={() => {}}
-      />,
-      { context }
+        onUpdatePosition={() => {}}
+      />
     );
 
     setTimeout(() => {
       wrapper.instance().getCodeMirror().getDoc().setValue('hello');
       expect(spy.calledOnce).to.be.true;
-    }, 5);
+    });
   });
 
-  it('calls doUpdatePosition when scrolling', () => {
+  it('calls onUpdatePosition when scrolling', () => {
     const spy = sinon.spy();
     const wrapper = mount(
       <Markdown
-        raw={""}
+        content={""}
         onChange={() => {}}
-        doUpdatePosition={spy}
-      />,
-      { context }
+        onUpdatePosition={spy}
+      />
     );
 
     setTimeout(() => {
@@ -100,6 +85,6 @@ describe('<Markdown />', () => {
       codeMirror.scrollTo(0, 10);
 
       expect(spy.called).to.be.true;
-    }, 5);
+    });
   });
 });
