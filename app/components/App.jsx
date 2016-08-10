@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from 'react';
 import Header from './Header';
 import Editor from './Editor';
 import Footer from './Footer';
-import MessageBoxes from './MessageBox';
+import Notifications from './Notifications';
 
 
 export default class App extends Component {
@@ -127,7 +127,7 @@ export default class App extends Component {
     this.setState({
       loaded: true,
       document: doc,
-      messages: this.state.messages
+      messages: this.state.messages,
     });
 
     if (!window.history.state || !window.history.state.uuid ||
@@ -138,37 +138,12 @@ export default class App extends Component {
     }
   }
 
-  updateContent(newContent) {
-    /*
-    if (this.state.document.content !== newContent) {
-      this.props.controller.dispatch('action:update-content', newContent);
-    }
-    */
-  }
-
-  updateTemplate(event) {
-    /*
-    const newTemplate = event.target.value;
-
-    this.props.controller.dispatch('action:update-template', newTemplate);
-    */
-  }
-
-  removeMessage(index) {
-    this.setState({
-      messages: this.state.messages.delete(index)
-    });
-  }
-
   render() {
     return (
       <div className="layout">
         <Header />
 
-        <MessageBoxes
-          messages={this.state.messages}
-          closeMessageBox={this.removeMessage.bind(this)}
-        />
+        <Notifications />
 
         <Editor />
 
