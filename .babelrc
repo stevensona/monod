@@ -1,14 +1,8 @@
 {
-  "presets": [
-    "es2015",
-    "react",
-    "airbnb"
-  ],
+  "presets": ["airbnb"],
   "env": {
     "dev": {
-      "presets": [
-        "react-hmre"
-      ]
+      "plugins": ["react-hot-loader/babel"]
     }
   }
 }
