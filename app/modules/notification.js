@@ -19,6 +19,22 @@ const initialState = {
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case NOTIFY:
+      const idx = state.messages.findIndex(
+        m => action.message === m.content && action.level === m.level
+      );
+
+      if (-1 !== idx) {
+        return {
+          messages: state.messages.map((m, index) => {
+            if (idx === index) {
+              return Object.assign({}, m, { count: m.count + 1 });
+            }
+
+            return m;
+          }),
+        };
+      }
+
       return {
         messages: state.messages.concat({
           content: action.message,
