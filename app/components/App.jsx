@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import debounce from 'lodash.debounce';
 
 import Header from './Header';
 import Editor from './Editor';
@@ -12,8 +11,6 @@ export default class App extends Component {
     super(props, context);
 
     this.state = { messages: [] };
-
-    this.updateContent = debounce(this.updateContent, 150);
   }
 
   componentDidMount() {
