@@ -1,17 +1,10 @@
 import React, { PropTypes } from 'react';
-import Sync from './Sync';
 
-const { string } = PropTypes;
-
+import DefaultFooter from './presenter';
+import Sync from '../Sync';
 
 const Footer = (props) =>
-  <footer className="main">
-    <div className="version">
-      <span className="git-ref">
-        <i className="fa fa-code-fork" />&nbsp;&nbsp;{props.version}
-      </span>
-    </div>
-
+  <DefaultFooter version={props.version}>
     <div className="help">
       <span className="help-link">
         <i className="fa fa-book" />
@@ -29,14 +22,11 @@ const Footer = (props) =>
 
     <Sync />
 
-    <div className="credits">
-      By the good folks at <a href="https://tailordev.fr" title="Read more about us" target="_blank" rel="noopener noreferrer">TailorDev</a>, 2016.
-    </div>
-  </footer>
+  </DefaultFooter>
 ;
 
 Footer.propTypes = {
-  version: string.isRequired
+  version: PropTypes.string.isRequired,
 };
 
 export default Footer;
