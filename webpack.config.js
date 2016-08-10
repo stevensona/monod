@@ -157,7 +157,7 @@ if (TARGET === 'dev' || !TARGET) {
         devtool: 'eval-source-map',
         entry: [
           'react-hot-loader/patch',
-          'webpack-dev-server/client?http://localhost:3000',
+          'webpack-dev-server/client?http://localhost:4000',
           'webpack/hot/only-dev-server',
           PATHS.app
         ],
