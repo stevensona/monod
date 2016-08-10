@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react';
-import { Events } from '../Store';
+
 
 const DEFAULT_DURATION = 5;
 const MAX_DURATION = 600;
 
-export default class Sync extends Component {
+class Sync extends Component {
   constructor(props, context) {
     super(props, context);
 
@@ -12,7 +12,7 @@ export default class Sync extends Component {
       duration: DEFAULT_DURATION,
       counter: DEFAULT_DURATION,
       offline: false,
-      displayCounter: true
+      displayCounter: true,
     };
 
     this.intervalId = false;
@@ -25,6 +25,7 @@ export default class Sync extends Component {
   }
 
   componentDidMount() {
+    /*
     this.context.controller.on(Events.APP_IS_ONLINE, () => {
       this.setState({
         counter: DEFAULT_DURATION,
@@ -49,6 +50,7 @@ export default class Sync extends Component {
         displayCounter
       });
     });
+    */
   }
 
   componentWillUnmount() {
@@ -65,7 +67,7 @@ export default class Sync extends Component {
 
       if (0 === counter) {
         this.setState({ counter: DEFAULT_DURATION });
-        this.context.controller.dispatch('action:sync');
+        this.props.onRequestSync();
       }
     }
   }
@@ -98,6 +100,8 @@ export default class Sync extends Component {
   }
 }
 
-Sync.contextTypes = {
-  controller: PropTypes.object.isRequired
+Sync.propTypes = {
+  onRequestSync: PropTypes.func.isRequired,
 };
+
+export default Sync;
