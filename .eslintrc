@@ -11,5 +11,10 @@
       'optionalDependencies': false,
     }],
     "no-underscore-dangle": 0,
+  },
+  "parserOptions":{
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true
+    }
   }
 }
