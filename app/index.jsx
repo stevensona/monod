@@ -7,12 +7,17 @@ import './scss/main.scss';
 
 import App from './components/App';
 import configureStore from './store/configureStore';
+import { load } from './modules/monod';
 
 const appElement = document.getElementById('app');
 const appVersion = appElement.getAttribute('data-app-version');
-const apiEndpoint = appElement.getAttribute('data-api-endpoint');
 
 const store = configureStore();
+
+store.dispatch(load(
+  window.location.pathname.slice(1),
+  window.location.hash.slice(1)
+));
 
 // require('offline-plugin/runtime').install();
 
@@ -27,7 +32,8 @@ ReactDOM.render(
 
 if (module.hot) {
   module.hot.accept('./components/App', () => {
-    const NextApp = require('./components/App').default;
+    const NextApp = require('./components/App').default; // eslint-disable-line global-require
+
     ReactDOM.render(
       <AppContainer>
         <Provider store={store}>

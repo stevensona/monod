@@ -11,6 +11,8 @@ export default class Markdown extends Component {
   constructor(props, context) {
     super(props, context);
 
+    this.state = { cursor: null };
+
     this.setTextareaEl = this.setTextareaEl.bind(this);
   }
 
@@ -29,13 +31,16 @@ export default class Markdown extends Component {
 
       // CodeMirror main instance
       this.codeMirror = CodeMirror.fromTextArea(textareaNode, options);
+      this.setState({ cursor: this.codeMirror.getCursor() });
+
+      // Set default value
+      // It is important to set the default value *before* defining the event
+      // listeners so that it does not trigger a "change" event.
+      this.codeMirror.setValue(defaultValue);
 
       // Bind CodeMirror events
       this.codeMirror.on('change', this.onChange.bind(this));
       this.codeMirror.on('scroll', this.onScroll.bind(this));
-
-      // Set default value
-      this.codeMirror.setValue(defaultValue);
     });
   }
 
@@ -53,6 +58,14 @@ export default class Markdown extends Component {
     */
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.content !== this.props.content) {
+      // force content update and move cursor
+      this.getCodeMirror().setValue(nextProps.content);
+      this.getCodeMirror().setCursor(this.state.cursor);
+    }
+  }
+
   shouldComponentUpdate() {
     return false;
   }
@@ -60,11 +73,16 @@ export default class Markdown extends Component {
   onChange() {
     const newValue = this.getCodeMirror().getDoc().getValue();
 
-    // Update the value -> rendering
-    this.props.onChange(newValue);
+    if (newValue !== this.props.content) {
+      // Retain cursor position for upcoming update
+      this.setState({ cursor: this.getCodeMirror().getCursor() });
 
-    // Update scrolling position (ensure rendering is visible)
-    this.onScroll();
+      // Update the value -> rendering
+      this.props.onChange(newValue);
+
+      // Update scrolling position (ensure rendering is visible)
+      this.onScroll();
+    }
   }
 
   onScroll() {

@@ -11,7 +11,51 @@ export function close(index) {
   return { type: CLOSE, index };
 }
 
+export function info(message) {
+  return notify(message, 'info');
+}
+
+export function error(message) {
+  return notify(message, 'error');
+}
+
 // Reducer
+
+function doNotify(state, action) {
+  const idx = state.messages.findIndex(
+    m => action.message === m.content && action.level === m.level
+  );
+
+  if (-1 !== idx) {
+    return {
+      messages: state.messages.map((m, index) => {
+        if (idx === index) {
+          return {
+            ...m,
+            count: m.count + 1,
+          };
+        }
+
+        return m;
+      }),
+    };
+  }
+
+  return {
+    messages: state.messages.concat({
+      content: action.message,
+      level: action.level,
+      count: 1,
+    }),
+  };
+}
+
+function doClose(state, action) {
+  return {
+    messages: state.messages.filter((_, index) => index !== action.index),
+  };
+}
+
 const initialState = {
   messages: [],
 };
@@ -19,34 +63,10 @@ const initialState = {
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case NOTIFY:
-      const idx = state.messages.findIndex(
-        m => action.message === m.content && action.level === m.level
-      );
-
-      if (-1 !== idx) {
-        return {
-          messages: state.messages.map((m, index) => {
-            if (idx === index) {
-              return Object.assign({}, m, { count: m.count + 1 });
-            }
-
-            return m;
-          }),
-        };
-      }
-
-      return {
-        messages: state.messages.concat({
-          content: action.message,
-          level: action.level,
-          count: 1,
-        }),
-      };
+      return doNotify(state, action);
 
     case CLOSE:
-      return {
-        messages: state.messages.filter((_, index) => index !== action.index),
-      };
+      return doClose(state, action);
 
     default: return state;
   }

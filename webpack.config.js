@@ -131,7 +131,6 @@ const common = {
             // Favicon generated with http://realfavicongenerator.net
             favicon: 'app/favicon.ico',
             version: VERSION.substring(0, 7),
-            apiEndpoint: '',
             // Main "div" `id`
             appMountId: 'app',
         }),

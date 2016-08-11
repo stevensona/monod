@@ -15,38 +15,6 @@ export default class App extends Component {
 
   componentDidMount() {
     /*
-    this.props.controller.on(Events.NO_DOCUMENT_ID, (state) => {
-      this.setState({
-        loaded: true,
-        document: state.document
-      });
-    });
-
-    this.props.controller.on(Events.DECRYPTION_FAILED, (state) => {
-      const message = {
-        content: [
-          'We were unable to decrypt the document. Either the secret has not',
-          'been supplied or it is invalid.',
-          'We have redirected you to a new document.'
-        ].join(' '),
-        type: 'error'
-      };
-
-      this.loadAndRedirect(state.document, '/', message);
-    });
-
-    this.props.controller.on(Events.DOCUMENT_NOT_FOUND, (state) => {
-      const message = {
-        content: [
-          'We could not find the document you were trying to load, so we have',
-          'redirected you to a new document.'
-        ].join(' '),
-        type: 'error'
-      };
-
-      this.loadAndRedirect(state.document, '/', message);
-    });
-
     this.props.controller.on(Events.CONFLICT, (state) => {
       const message = {
         content: (
@@ -116,25 +84,6 @@ export default class App extends Component {
       if (requestMethod) {
         requestMethod.apply(element);
       }
-    }
-  }
-
-  loadAndRedirect(doc, uri, message) {
-    if (message) {
-      this.state.messages.push(message);
-    }
-
-    this.setState({
-      loaded: true,
-      document: doc,
-      messages: this.state.messages,
-    });
-
-    if (!window.history.state || !window.history.state.uuid ||
-        (window.history.state && window.history.state.uuid &&
-        doc.get('uuid') !== window.history.state.uuid)
-    ) {
-      window.history.pushState({ uuid: doc.get('uuid') }, `Monod - ${doc.get('uuid')}`, uri);
     }
   }
 
