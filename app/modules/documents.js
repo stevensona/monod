@@ -68,7 +68,6 @@ export function decryptionFailed() {
     ].join(' ')));
 
     dispatch(loadDefault());
-    window.history.pushState({}, 'Monod', '/');
   };
 }
 
