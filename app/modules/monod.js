@@ -1,8 +1,8 @@
 import sjcl from 'sjcl';
 import Immutable from 'immutable';
 import request from 'superagent';
-import localforage from 'localforage';
 
+import db from '../db';
 import Document from '../Document';
 import {
   loadDefault,
@@ -50,7 +50,7 @@ export function load(id, secret) {
       return;
     }
 
-    localforage
+    db
       .getItem(id)
       .then((document) => {
         if (null === document) {
@@ -84,7 +84,7 @@ export function load(id, secret) {
             uuid: res.body.uuid,
             content: res.body.content,
             last_modified: res.body.last_modified,
-            template: res.body.template || '',
+            template: res.body.template || '', // avoid BC break
           })
         ))
       )
@@ -94,6 +94,8 @@ export function load(id, secret) {
           decryptedContent = sjcl.decrypt(secret, document.get('content'));
         } catch (e) {
           dispatch(decryptionFailed());
+
+          return;
         }
 
         dispatch(loadSuccess(document.set('content', decryptedContent), secret));

@@ -1,6 +1,7 @@
 import sjcl from 'sjcl';
 import Document from '../Document';
 import { error } from './notification';
+import { persist } from './localpersist';
 
 
 // Actions
@@ -41,11 +42,17 @@ export function updateContent(content) {
     }
 
     dispatch({ type: UPDATE_CONTENT, content });
+
+    dispatch(persist());
   };
 }
 
 export function updateTemplate(template) {
-  return { type: UPDATE_TEMPLATE, template };
+  return (dispatch) => {
+    dispatch({ type: UPDATE_TEMPLATE, template });
+
+    dispatch(persist());
+  };
 }
 
 export function notFound() {
@@ -73,7 +80,6 @@ export function decryptionFailed() {
 
 // Reducer
 const initialState = {
-  // we automatically create a default document, but it might not be used
   current: new Document(),
   secret: null,
   loaded: false,

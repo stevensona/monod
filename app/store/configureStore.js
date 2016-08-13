@@ -1,6 +1,7 @@
 /* eslint global-require: 0 */
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
+import createDebounce from 'redux-debounced';
 import rootReducer from '../modules/reducer';
 
 const middlewares = [thunk];
@@ -10,6 +11,8 @@ if ('production' !== process.env.NODE_ENV) {
 
   middlewares.push(createLogger());
 }
+
+middlewares.push(createDebounce());
 
 const createStoreWithMiddleware = applyMiddleware(...middlewares)(createStore);
 

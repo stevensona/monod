@@ -8,8 +8,8 @@ const mapStateToProps = (state) => {
 
   return {
     loaded: documents.loaded,
-    content: documents.current.content,
-    template: documents.current.template,
+    content: documents.current.get('content'),
+    template: documents.current.get('template'),
   };
 };
 
