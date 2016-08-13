@@ -1,18 +1,18 @@
 /* eslint new-cap: 0 */
 import { Record } from 'immutable';
 import uuid from 'uuid';
-import Config from './Config';
+import config from './config';
 
 export default class Document extends Record({
   uuid: uuid.v4(),
-  content: Config.DEFAULT_CONTENT,
+  content: config.DEFAULT_CONTENT,
   last_modified: null, // defined by the server
   last_modified_locally: null,
   template: '',
 }) {
 
   hasDefaultContent() {
-    return Config.DEFAULT_CONTENT === this.content;
+    return config.DEFAULT_CONTENT === this.content;
   }
 
   hasNeverBeenSync() {
