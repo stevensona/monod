@@ -1,12 +1,16 @@
+/* eslint react/jsx-filename-extension: 0 */
+import React from 'react';
 import uuid from 'uuid';
 import request from 'superagent';
 
 import db from '../db';
 import { encrypt, decrypt, newSecret } from '../utils';
 import { serverPersist } from './persistence';
+import Document from '../Document';
 
 import { isOnline, isOffline } from './monod';
 import {
+  loadSucess,
   updateCurrentDocument,
   decryptionFailed,
   notFound,
@@ -19,7 +23,7 @@ const SYNCHRONIZE = 'monod/sync/SYNCHRONIZE';
 const SYNCHRONIZE_SUCCESS = 'monod/sync/SYNCHRONIZE_SUCCESS';
 
 // Action Creators
-export function synchronize() {
+export function synchronize() { // eslint-disable-line import/prefer-default-export
   const thunk = (dispatch, getState) => {
     dispatch({ type: SYNCHRONIZE });
 
@@ -135,17 +139,17 @@ export function synchronize() {
               former.toJS()
             )
             .then(() => {
-              dispatch(warning([
-                '<span><i>Snap!</i>&nbsp;',
-                'The document you were working on has been updated by a third,',
-                'and you are now working on a fork. You can still find the original',
-                '(and updated) document:&nbsp;',
-                '<a href="">here</a>.', // TODO: fix URL
-                '</span>',
-              ].join(' ')));
+              dispatch(warning(
+                (<span>
+                  <i>Snap!</i>&nbsp;
+                  The document you were working on has been updated by a
+                  third, and you are now working on a <strong>fork</strong>.
+                  You can still find the original (and updated) document:&nbsp;
+                  <a href={`/${former.uuid}#${secret}`}>here</a>.
+                </span>)
+              ));
 
-              // TODO: redirect to fork
-              console.log('should redirect to fork');
+              dispatch(loadSucess(fork, forkSecret));
             });
           });
         }

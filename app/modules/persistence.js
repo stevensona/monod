@@ -2,6 +2,7 @@ import request from 'superagent';
 
 import db from '../db';
 import { encrypt } from '../utils';
+import Document from '../Document';
 import { isOnline, isOffline } from './monod';
 import { updateCurrentDocument } from './documents';
 
@@ -34,19 +35,19 @@ export function serverPersist() {
       .then((res) => {
         dispatch(isOnline());
 
-        dispatch(updateCurrentDocument(
-          new Document({
-            uuid: document.get('uuid'),
-            content: document.get('content'),
-            last_modified: res.body.last_modified,
-            last_modified_locally: null,
-            template: res.body.template || '',
-          })
-        ));
+        const current = new Document({
+          uuid: document.get('uuid'),
+          content: document.get('content'),
+          last_modified: res.body.last_modified,
+          last_modified_locally: null,
+          template: res.body.template || '',
+        });
+
+        dispatch(updateCurrentDocument(current));
 
         dispatch({ type: SERVER_PERSIST_SUCCESS });
       })
-      .catch(() => {
+      .catch((err) => {
         dispatch(isOffline());
 
         dispatch({ type: SERVER_PERSIST_ERROR });

@@ -37,10 +37,6 @@ class Sync extends Component {
   }
 
   counter() {
-    if (!this.props.offline) {
-      return;
-    }
-
     let counter = this.state.counter;
 
     if (0 < counter) {
@@ -50,10 +46,14 @@ class Sync extends Component {
       if (0 === counter) {
         this.props.onRequestSync();
 
-        let duration = Math.round(this.state.duration * 1.5);
+        let duration = DEFAULT_DURATION;
 
-        if (duration >= MAX_DURATION) {
-          duration = DEFAULT_DURATION + 1;
+        if (this.props.offline) {
+          duration = Math.round(this.state.duration * 1.5);
+
+          if (duration >= MAX_DURATION) {
+            duration = DEFAULT_DURATION;
+          }
         }
 
         this.setState({
