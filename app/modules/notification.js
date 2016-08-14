@@ -19,6 +19,10 @@ export function error(message) {
   return notify(message, 'error');
 }
 
+export function warning(message) {
+  return notify(message, 'warning');
+}
+
 // Reducer
 
 function doNotify(state, action) {

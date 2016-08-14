@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import Sync from './presenter';
+import { synchronize } from '../../modules/sync';
 
 
 const mapStateToProps = (state) => {
@@ -11,7 +12,9 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  onRequestSync: () => {},
+  onRequestSync: () => {
+    dispatch(synchronize());
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Sync);

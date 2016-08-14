@@ -1,9 +1,9 @@
-import sjcl from 'sjcl';
 import Immutable from 'immutable';
 import request from 'superagent';
 
 import db from '../db';
 import Document from '../Document';
+import { decrypt } from '../utils';
 import {
   loadDefault,
   loadSuccess,
@@ -57,7 +57,7 @@ export function load(id, secret) {
           return Promise.reject(new Error('document not found'));
         }
 
-        return Promise.resolve(Immutable.fromJS(document));
+        return Promise.resolve(new Document(Immutable.fromJS(document)));
       })
       .catch(() => request
         .get(`/documents/${id}`)
@@ -66,7 +66,12 @@ export function load(id, secret) {
         .then((res) => {
           dispatch(isOnline());
 
-          return Promise.resolve(res);
+          return Promise.resolve(new Document({
+            uuid: res.body.uuid,
+            content: res.body.content,
+            last_modified: res.body.last_modified,
+            template: res.body.template || '', // avoid BC break
+          }));
         })
         .catch((err) => {
           if (err.response && 404 === err.response.statusCode) {
@@ -79,20 +84,11 @@ export function load(id, secret) {
 
           return Promise.reject(new Error('request failed (network)'));
         })
-        .then((res) => Promise.resolve(
-          new Document({
-            uuid: res.body.uuid,
-            content: res.body.content,
-            last_modified: res.body.last_modified,
-            template: res.body.template || '', // avoid BC break
-          })
-        ))
       )
       .then((document) => {
-        let decryptedContent;
-        try {
-          decryptedContent = sjcl.decrypt(secret, document.get('content'));
-        } catch (e) {
+        const decryptedContent = decrypt(document.get('content'), secret);
+
+        if (null === decryptedContent) {
           dispatch(decryptionFailed());
 
           return;

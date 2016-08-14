@@ -1,7 +1,7 @@
-import sjcl from 'sjcl';
 import Document from '../Document';
 import { error } from './notification';
-import { persist } from './localpersist';
+import { localPersist } from './persistence';
+import { newSecret } from '../utils';
 
 
 // Actions
@@ -9,6 +9,7 @@ const LOAD_DEFAULT = 'monod/documents/LOAD_DEFAULT';
 const LOAD_SUCCESS = 'monod/documents/LOAD_SUCCESS';
 const UPDATE_TEMPLATE = 'monod/documents/UPDATE_TEMPLATE';
 const UPDATE_CONTENT = 'monod/documents/UPDATE_CONTENT';
+const UPDATE_CURRENT_DOCUMENT = 'monod/documents/UPDATE_CURRENT_DOCUMENT';
 
 // Action Creators
 export function loadDefault() {
@@ -27,31 +28,43 @@ export function loadSuccess(document, secret) {
   };
 }
 
+export function updateCurrentDocument(document) {
+  return { type: UPDATE_CURRENT_DOCUMENT, document };
+}
+
 export function updateContent(content) {
-  return (dispatch, getState) => {
+  const thunk = (dispatch, getState) => {
     const current = getState().documents.current;
-    let secret = getState().documents.secret;
+    const secret = getState().documents.secret;
 
     if (null === secret) {
       const document = current.set('content', content);
-      secret = sjcl.codec.base64.fromBits(sjcl.random.randomWords(8, 10), 0);
 
-      dispatch(loadSuccess(document, secret));
+      dispatch(loadSuccess(document, newSecret()));
 
       return;
     }
 
     dispatch({ type: UPDATE_CONTENT, content });
 
-    dispatch(persist());
+    dispatch(localPersist());
   };
+
+  thunk.meta = {
+    debounce: {
+      time: 100,
+      key: UPDATE_CONTENT,
+    },
+  };
+
+  return thunk;
 }
 
 export function updateTemplate(template) {
   return (dispatch) => {
     dispatch({ type: UPDATE_TEMPLATE, template });
 
-    dispatch(persist());
+    dispatch(localPersist());
   };
 }
 
@@ -87,6 +100,12 @@ const initialState = {
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
+    case UPDATE_CURRENT_DOCUMENT:
+      return {
+        ...state,
+        current: action.document,
+      };
+
     case UPDATE_TEMPLATE:
       return {
         ...state,
