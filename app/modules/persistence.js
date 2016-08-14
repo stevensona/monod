@@ -47,7 +47,7 @@ export function serverPersist() {
 
         dispatch({ type: SERVER_PERSIST_SUCCESS });
       })
-      .catch((err) => {
+      .catch(() => {
         dispatch(isOffline());
 
         dispatch({ type: SERVER_PERSIST_ERROR });

@@ -8,7 +8,7 @@ const MessageBox = (props) => {
 
   return (
     <div className={`message-box ${props.message.level || ''}`}>
-      {props.message.count > 1 ?
+      {1 < props.message.count ?
         <span className="badge">{props.message.count}</span> : null
       }
       <p>{props.message.content}</p>
