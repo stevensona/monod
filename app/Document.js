@@ -23,7 +23,7 @@ export default class Document extends Record({
     return null === this.last_modified_locally;
   }
 
-  isNew() {
+  isDefault() {
     return this.hasDefaultContent() && this.hasNeverBeenSync()
       && this.hasNoLocalChanges() && '' === this.template;
   }

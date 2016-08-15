@@ -1,6 +1,12 @@
 import sjcl from 'sjcl';
 
 
+export const Errors = {
+  NOT_FOUND: 'not_found',
+  SERVER_UNREACHABLE: 'server_unreachable',
+  DECRYPTION_FAILED: 'decryption_failed',
+};
+
 export function encrypt(content, secret) {
   return sjcl.encrypt(secret, content, { ks: 256 });
 }

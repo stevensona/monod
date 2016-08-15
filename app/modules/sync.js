@@ -3,23 +3,24 @@ import React from 'react';
 import uuid from 'uuid';
 import request from 'superagent';
 
-import { encrypt, decrypt, newSecret } from '../utils';
+import { Errors, encrypt, decrypt, newSecret } from '../utils';
 import { serverPersist } from './persistence';
 import Document from '../Document';
 
 import { isOnline, isOffline } from './monod';
 import {
-  loadSucess,
+  loadSuccess,
   updateCurrentDocument,
   decryptionFailed,
-  notFound,
 } from './documents';
 import { warning } from './notification';
 
 
 // Actions
-const SYNCHRONIZE = 'monod/sync/SYNCHRONIZE';
-const SYNCHRONIZE_SUCCESS = 'monod/sync/SYNCHRONIZE_SUCCESS';
+export const SYNCHRONIZE = 'monod/sync/SYNCHRONIZE';
+export const SYNCHRONIZE_SUCCESS = 'monod/sync/SYNCHRONIZE_SUCCESS';
+export const SYNCHRONIZE_ERROR = 'monod/sync/SYNCHRONIZE_ERROR';
+export const FORKING = 'monod/sync/FORKING';
 
 // Action Creators
 export function synchronize() { // eslint-disable-line import/prefer-default-export
@@ -29,83 +30,82 @@ export function synchronize() { // eslint-disable-line import/prefer-default-exp
     const document = getState().documents.current;
     const secret = getState().documents.secret;
 
-    if (document.isNew()) {
+    if (document.isDefault()) {
       dispatch({ type: SYNCHRONIZE_SUCCESS });
 
-      return;
+      return Promise.resolve();
     }
 
     if (document.hasNeverBeenSync()) {
-      dispatch(serverPersist());
-      dispatch({ type: SYNCHRONIZE_SUCCESS });
-
-      return;
+      return dispatch(serverPersist())
+        .then(() => {
+          dispatch({ type: SYNCHRONIZE_SUCCESS });
+        });
     }
 
-    request
+    return request
       .get(`/documents/${document.get('uuid')}`)
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json')
       .then((res) => {
         dispatch(isOnline());
 
-        return Promise.resolve(res);
+        return Promise.resolve(new Document({
+          uuid: res.body.uuid,
+          content: res.body.content,
+          last_modified: res.body.last_modified,
+          template: res.body.template || '', // avoid BC break
+        }));
       })
       .catch((err) => {
         if (err.response && 404 === err.response.statusCode) {
-          dispatch(notFound());
-
-          return Promise.reject(new Error('document not found'));
+          return Promise.reject(Errors.NOT_FOUND);
         }
 
         dispatch(isOffline());
 
-        return Promise.reject(new Error('request failed (network)'));
+        return Promise.reject(Errors.SERVER_UNREACHABLE);
       })
-      .then((res) => {
-        const serverDoc = new Document({
-          uuid: res.body.uuid,
-          content: res.body.content,
-          last_modified: res.body.last_modified,
-          template: res.body.template || '',
-        });
-
+      .then((serverDoc) => {
         if (serverDoc.get('last_modified') === document.get('last_modified')) {
           // here, document on the server has not been updated, so we can
           // probably push safely
           if (serverDoc.get('last_modified') < document.get('last_modified_locally')) {
-            dispatch(serverPersist());
-
-            return;
+            return dispatch(serverPersist())
+              .catch(() => dispatch({ type: SYNCHRONIZE_ERROR }))
+              .then(() => dispatch({ type: SYNCHRONIZE_SUCCESS }));
           }
 
-          return;
+          dispatch({ type: SYNCHRONIZE_SUCCESS });
+
+          return Promise.resolve();
         }
 
-        // In theory, it should never happened, but... what happens if:
-        // localDoc.get('last_modified') > serverDoc.get('last_modified') ?
+        // TODO: In theory, it should never happened, but... what happens if:
+        // localDoc.get('last_modified') > serverDoc.get('last_modified')...?
+
         if (serverDoc.get('last_modified') > document.get('last_modified')) {
           if (document.hasNoLocalChanges()) {
             const decryptedContent = decrypt(serverDoc.get('content'), secret);
 
             if (null === decryptedContent) {
-              dispatch(decryptionFailed());
-
-              return;
+              return Promise.reject(Errors.DECRYPTION_FAILED);
             }
 
             dispatch(updateCurrentDocument(
               serverDoc.set('content', decryptedContent)
             ));
 
-            return;
+            dispatch({ type: SYNCHRONIZE_SUCCESS });
+
+            return Promise.resolve();
           }
 
-          // someone modified my document!
-          // ... but I also modified it so... let's fork \o/
+          // Oh noooo, someone modified my document!  ... but I also modified
+          // it so...  let's fork it \o/
+          dispatch({ type: FORKING });
 
           // generate a new secret for fork'ed document
-
           const forkSecret = newSecret();
 
           // what we want is to create a fork
@@ -116,42 +116,57 @@ export function synchronize() { // eslint-disable-line import/prefer-default-exp
           });
 
           // persist fork'ed document
-          db.setItem(
-            fork.get('uuid'),
-            new Document({
-              uuid: fork.get('uuid'),
-              content: encrypt(document.get('content'), forkSecret),
-              template: fork.get('template'),
-            }).toJS()
-          )
-          .then(() => {
-            // now, we can update the former doc with server content
-            const former = new Document({
-              uuid: serverDoc.get('uuid'),
-              content: serverDoc.get('content'),
-              last_modified: serverDoc.get('last_modified'),
-              template: serverDoc.get('template'),
-            });
-
-            db.setItem(
-              former.get('uuid'),
-              former.toJS()
+          return db
+            .setItem(
+              fork.get('uuid'),
+              new Document({
+                uuid: fork.get('uuid'),
+                content: encrypt(document.get('content'), forkSecret),
+                template: fork.get('template'),
+              }).toJS()
             )
             .then(() => {
-              dispatch(warning(
-                (<span>
-                  <i>Snap!</i>&nbsp;
-                  The document you were working on has been updated by a
-                  third, and you are now working on a <strong>fork</strong>.
-                  You can still find the original (and updated) document:&nbsp;
-                  <a href={`/${former.uuid}#${secret}`}>here</a>.
-                </span>)
-              ));
+              // now, we can update the former doc with server content
+              const former = new Document({
+                uuid: serverDoc.get('uuid'),
+                content: serverDoc.get('content'),
+                last_modified: serverDoc.get('last_modified'),
+                template: serverDoc.get('template'),
+              });
 
-              dispatch(loadSucess(fork, forkSecret));
-            });
-          });
+              return db
+                .setItem(
+                  former.get('uuid'),
+                  former.toJS()
+                )
+                .then(() => {
+                  dispatch(warning(
+                    (<span>
+                      <i>Snap!</i>&nbsp;
+                      The document you were working on has been updated by a
+                      third, and you are now working on a <strong>fork</strong>.
+                      You can still find the original (and updated) document:&nbsp;
+                      <a href={`/${former.uuid}#${secret}`}>here</a>.
+                    </span>)
+                  ));
+
+                  dispatch(loadSuccess(fork, forkSecret));
+                });
+            })
+            .then(() => dispatch({ type: SYNCHRONIZE_SUCCESS }));
         }
+      })
+      .catch((err) => {
+        // TODO: maybe deal with these errors (cf. preview catch)
+        switch (err) {
+          case Errors.DECRYPTION_FAILED:
+            dispatch(decryptionFailed());
+            break;
+
+          default:
+        }
+
+        dispatch({ type: SYNCHRONIZE_ERROR });
       });
   };
 

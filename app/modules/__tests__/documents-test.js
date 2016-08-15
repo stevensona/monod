@@ -16,6 +16,10 @@ describe('modules/documents', () => {
   const middlewares = [thunk.withExtraArgument({ db: dbMock })];
   const mockStore = configureMockStore(middlewares);
 
+  beforeEach(() => {
+    dbMock.reset();
+  });
+
   it('should return the initial state', () => {
     const state = reducer(undefined, {});
 

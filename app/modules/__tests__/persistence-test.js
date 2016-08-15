@@ -19,6 +19,10 @@ describe('modules/persistence', () => {
 
   const secret = 'secret';
 
+  beforeEach(() => {
+    dbMock.reset();
+  });
+
   describe('localPersist()', () => {
     it('should persist the current document locally', () => {
       const store = mockStore({
@@ -125,7 +129,7 @@ describe('modules/persistence', () => {
     });
   });
 
-  it('should deal with offline mode', () => {
+  it('serverPersist() should deal with offline mode', () => {
     const doc = new Document();
     const store = mockStore({
       documents: {

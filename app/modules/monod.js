@@ -2,7 +2,7 @@ import Immutable from 'immutable';
 import request from 'superagent';
 
 import Document from '../Document';
-import { decrypt } from '../utils';
+import { Errors, decrypt } from '../utils';
 import {
   loadDefault,
   loadSuccess,
@@ -11,11 +11,6 @@ import {
   serverUnreachable,
 } from './documents';
 
-
-const Errors = {
-  NOT_FOUND: 'not_found',
-  SERVER_UNREACHABLE: 'server_unreachable',
-};
 
 // Actions
 export const IS_ONLINE = 'monod/IS_ONLINE';
@@ -97,9 +92,7 @@ export function load(id, secret) {
         const decryptedContent = decrypt(document.get('content'), secret);
 
         if (null === decryptedContent) {
-          dispatch(decryptionFailed());
-
-          return;
+          return Promise.reject(Errors.DECRYPTION_FAILED);
         }
 
         dispatch(loadSuccess(document.set('content', decryptedContent), secret));
@@ -112,6 +105,10 @@ export function load(id, secret) {
 
           case Errors.SERVER_UNREACHABLE:
             dispatch(serverUnreachable());
+            break;
+
+          case Errors.DECRYPTION_FAILED:
+            dispatch(decryptionFailed());
             break;
 
           default: // well...
