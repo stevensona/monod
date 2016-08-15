@@ -31,38 +31,4 @@ describe('<App />', () => {
     const wrapper = shallow(<App version={version} />);
     expect(wrapper.find(Footer)).to.have.length(1);
   });
-
-  /*
-  TODO: replace me somewhere
-  it('removes messages', () => {
-    const messages = Immutable.List([
-      {
-        content: 'foo',
-        type: 'warning'
-      },
-      {
-        content: 'bar',
-        type: 'success'
-      },
-      {
-        content: 'lol',
-        type: 'info'
-      }
-    ]);
-    const wrapper = shallow(<App version={version} />);
-    const inst = wrapper.instance();
-
-    wrapper.setState({
-      messages: messages
-    });
-
-    expect(wrapper.state('messages').size).to.equal(3);
-    inst.removeMessage(2);
-    expect(wrapper.state('messages').size).to.equal(2);
-    inst.removeMessage(1);
-    expect(wrapper.state('messages').size).to.equal(1);
-    inst.removeMessage(0);
-    expect(wrapper.state('messages').size).to.equal(0);
-  });
-  */
 });
