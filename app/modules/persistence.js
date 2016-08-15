@@ -1,6 +1,5 @@
 import request from 'superagent';
 
-import db from '../db';
 import { encrypt } from '../utils';
 import Document from '../Document';
 import { isOnline, isOffline } from './monod';
@@ -9,10 +8,10 @@ import { updateCurrentDocument } from './documents';
 
 // Actions
 export const LOCAL_PERSIST = 'monod/persistence/LOCAL_PERSIST';
-const LOCAL_PERSIST_SUCCESS = 'monod/persistence/LOCAL_PERSIST_SUCCESS';
-const SERVER_PERSIST = 'monod/persistence/SERVER_PERSIST';
-const SERVER_PERSIST_SUCCESS = 'monod/persistence/SERVER_PERSIST_SUCCESS';
-const SERVER_PERSIST_ERROR = 'monod/persistence/SERVER_PERSIST_ERROR';
+export const LOCAL_PERSIST_SUCCESS = 'monod/persistence/LOCAL_PERSIST_SUCCESS';
+export const SERVER_PERSIST = 'monod/persistence/SERVER_PERSIST';
+export const SERVER_PERSIST_SUCCESS = 'monod/persistence/SERVER_PERSIST_SUCCESS';
+export const SERVER_PERSIST_ERROR = 'monod/persistence/SERVER_PERSIST_ERROR';
 
 // Action Creators
 export function serverPersist() {
@@ -22,22 +21,23 @@ export function serverPersist() {
     const document = getState().documents.current;
     const secret = getState().documents.secret;
 
-    const encryptedContent = encrypt(document.get('content'), secret);
+    const id = document.get('uuid');
+    const content = document.get('content');
 
-    request
-      .put(`/documents/${document.get('uuid')}`)
+    return request
+      .put(`/documents/${id}`)
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json')
       .send({
-        content: encryptedContent,
+        content: encrypt(content, secret),
         template: document.get('template'),
       })
       .then((res) => {
         dispatch(isOnline());
 
         const current = new Document({
-          uuid: document.get('uuid'),
-          content: document.get('content'),
+          uuid: id,
+          content: content,
           last_modified: res.body.last_modified,
           last_modified_locally: null,
           template: res.body.template || '',
@@ -47,9 +47,12 @@ export function serverPersist() {
 
         dispatch({ type: SERVER_PERSIST_SUCCESS });
       })
-      .catch(() => {
-        dispatch(isOffline());
+      .catch((err) => {
+        if (!err.response) {
+          dispatch(isOffline());
+        }
 
+        // TODO: maybe handle this case
         dispatch({ type: SERVER_PERSIST_ERROR });
       });
   };
@@ -58,7 +61,7 @@ export function serverPersist() {
 }
 
 export function localPersist() {
-  const thunk = (dispatch, getState) => {
+  const thunk = (dispatch, getState, { db }) => {
     dispatch({ type: LOCAL_PERSIST });
 
     const document = getState().documents.current;
@@ -68,7 +71,7 @@ export function localPersist() {
       'content', encrypt(document.get('content'), secret)
     );
 
-    db
+    return db
       .setItem(encrypted.get('uuid'), encrypted.toJS())
       .then(() => dispatch({ type: LOCAL_PERSIST_SUCCESS }));
   };

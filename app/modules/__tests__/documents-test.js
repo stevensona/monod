@@ -6,13 +6,14 @@ import reducer, * as actions from '../documents';
 import Document from '../../Document';
 import { LOCAL_PERSIST } from '../persistence';
 import { NOTIFY } from '../notification';
+import dbMock from './dbMock';
 
 // see: https://github.com/mochajs/mocha/issues/1847
 const { describe, it } = global;
 
 
 describe('modules/documents', () => {
-  const middlewares = [ thunk ];
+  const middlewares = [thunk.withExtraArgument({ db: dbMock })];
   const mockStore = configureMockStore(middlewares);
 
   it('should return the initial state', () => {

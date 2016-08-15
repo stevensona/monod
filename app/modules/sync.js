@@ -3,7 +3,6 @@ import React from 'react';
 import uuid from 'uuid';
 import request from 'superagent';
 
-import db from '../db';
 import { encrypt, decrypt, newSecret } from '../utils';
 import { serverPersist } from './persistence';
 import Document from '../Document';
@@ -24,7 +23,7 @@ const SYNCHRONIZE_SUCCESS = 'monod/sync/SYNCHRONIZE_SUCCESS';
 
 // Action Creators
 export function synchronize() { // eslint-disable-line import/prefer-default-export
-  const thunk = (dispatch, getState) => {
+  const thunk = (dispatch, getState, { db }) => {
     dispatch({ type: SYNCHRONIZE });
 
     const document = getState().documents.current;

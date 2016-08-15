@@ -49,11 +49,11 @@ export default function reducer(state = initialState, action = {}) {
 
 /**
  * An action creator that loads a document based on its id, and a secret key to
- * decrypt it. It looks into the local database first (`db`), and calls the API
- * if the local database does not return anything.
+ * decrypt it. It looks into the local database first, and calls the API if the
+ * local database does not return anything.
  */
-export function load(id, secret, db) {
-  return (dispatch) => {
+export function load(id, secret) {
+  return (dispatch, getState, { db }) => {
     if (!id) {
       dispatch(loadDefault());
 

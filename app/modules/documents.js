@@ -9,7 +9,7 @@ export const LOAD_DEFAULT = 'monod/documents/LOAD_DEFAULT';
 export const LOAD_SUCCESS = 'monod/documents/LOAD_SUCCESS';
 export const UPDATE_TEMPLATE = 'monod/documents/UPDATE_TEMPLATE';
 export const UPDATE_CONTENT = 'monod/documents/UPDATE_CONTENT';
-const UPDATE_CURRENT_DOCUMENT = 'monod/documents/UPDATE_CURRENT_DOCUMENT';
+export const UPDATE_CURRENT_DOCUMENT = 'monod/documents/UPDATE_CURRENT_DOCUMENT';
 
 // Action Creators
 export function loadDefault() {

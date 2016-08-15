@@ -14,7 +14,7 @@ const { beforeEach, afterEach, describe, it } = global;
 
 
 describe('modules/monod', () => {
-  const middlewares = [thunk];
+  const middlewares = [thunk.withExtraArgument({ db: dbMock })];
   const mockStore = configureMockStore(middlewares);
 
   const secret = 'secret';
