@@ -95,6 +95,18 @@ export function decryptionFailed() {
   };
 }
 
+export function serverUnreachable() {
+  return (dispatch) => {
+    dispatch(error([
+      'We could not load the document you are requesting because we did not',
+      'find it locally and the server is currently unreachable.',
+      'We have redirected you to a new document.',
+    ].join(' ')));
+
+    dispatch(loadDefault());
+  };
+}
+
 // Reducer
 const initialState = {
   current: new Document(),

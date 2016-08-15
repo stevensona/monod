@@ -1,7 +1,6 @@
 import Immutable from 'immutable';
 import request from 'superagent';
 
-import db from '../db';
 import Document from '../Document';
 import { decrypt } from '../utils';
 import {
@@ -9,12 +8,18 @@ import {
   loadSuccess,
   notFound,
   decryptionFailed,
+  serverUnreachable,
 } from './documents';
 
 
+const Errors = {
+  NOT_FOUND: 'not_found',
+  SERVER_UNREACHABLE: 'server_unreachable',
+};
+
 // Actions
-const IS_ONLINE = 'monod/IS_ONLINE';
-const IS_OFFLINE = 'monod/IS_OFFLINE';
+export const IS_ONLINE = 'monod/IS_ONLINE';
+export const IS_OFFLINE = 'monod/IS_OFFLINE';
 
 // Action Creators
 export function isOnline() {
@@ -42,19 +47,24 @@ export default function reducer(state = initialState, action = {}) {
   }
 }
 
-export function load(id, secret) {
+/**
+ * An action creator that loads a document based on its id, and a secret key to
+ * decrypt it. It looks into the local database first (`db`), and calls the API
+ * if the local database does not return anything.
+ */
+export function load(id, secret, db) {
   return (dispatch) => {
     if (!id) {
       dispatch(loadDefault());
 
-      return;
+      return Promise.resolve();
     }
 
-    db
+    return db
       .getItem(id)
       .then((document) => {
         if (null === document) {
-          return Promise.reject(new Error('document not found'));
+          return Promise.reject(Errors.NOT_FOUND);
         }
 
         return Promise.resolve(new Document(Immutable.fromJS(document)));
@@ -75,14 +85,12 @@ export function load(id, secret) {
         })
         .catch((err) => {
           if (err.response && 404 === err.response.statusCode) {
-            dispatch(notFound());
-
-            return Promise.reject(new Error('document not found'));
+            return Promise.reject(Errors.NOT_FOUND);
           }
 
           dispatch(isOffline());
 
-          return Promise.reject(new Error('request failed (network)'));
+          return Promise.reject(Errors.SERVER_UNREACHABLE);
         })
       )
       .then((document) => {
@@ -95,6 +103,19 @@ export function load(id, secret) {
         }
 
         dispatch(loadSuccess(document.set('content', decryptedContent), secret));
+      })
+      .catch((err) => {
+        switch (err) {
+          case Errors.NOT_FOUND:
+            dispatch(notFound());
+            break;
+
+          case Errors.SERVER_UNREACHABLE:
+            dispatch(serverUnreachable());
+            break;
+
+          default: // well...
+        }
       });
   };
 }

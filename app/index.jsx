@@ -7,6 +7,7 @@ import './scss/main.scss';
 
 import App from './components/App';
 import configureStore from './store/configureStore';
+import db from '../db';
 import { load } from './modules/monod';
 
 const appElement = document.getElementById('app');
@@ -16,7 +17,8 @@ const store = configureStore();
 
 store.dispatch(load(
   window.location.pathname.slice(1),
-  window.location.hash.slice(1)
+  window.location.hash.slice(1),
+  db
 ));
 
 // require('offline-plugin/runtime').install();
