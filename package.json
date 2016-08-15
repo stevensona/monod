@@ -107,7 +107,9 @@
   },
   "nyc": {
     "exclude": [
-      "app/**/*-test.js",
+      "node_modules",
+      "**/*-test.js",
+      "**/__tests__/*.js",
       "lib"
     ]
   }
