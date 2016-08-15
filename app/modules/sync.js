@@ -159,7 +159,7 @@ export function synchronize() { // eslint-disable-line import/prefer-default-exp
         return Promise.resolve();
       })
       .catch((err) => {
-        // TODO: maybe deal with these errors (cf. preview catch)
+        // TODO: maybe deal with these errors
         switch (err) {
           case Errors.DECRYPTION_FAILED:
             dispatch(decryptionFailed());

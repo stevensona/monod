@@ -33,4 +33,30 @@ describe('modules/notification', () => {
     expect(state.messages[0].content).to.equal('hello');
     expect(state.messages[1].count).to.equal(1);
   });
+
+  it('should close a notification', () => {
+    let state = reducer(undefined, actions.notify('hello', 'info'));
+
+    state = reducer(state, actions.close(0));
+
+    expect(state.messages).to.have.length(0);
+  });
+
+  it('should notify "info" messages to the user', () => {
+    const state = reducer(undefined, actions.info('hello'));
+
+    expect(state.messages[0].level).to.equal('info');
+  });
+
+  it('should notify "error" messages to the user', () => {
+    const state = reducer(undefined, actions.error('hello'));
+
+    expect(state.messages[0].level).to.equal('error');
+  });
+
+  it('should notify "warning" messages to the user', () => {
+    const state = reducer(undefined, actions.warning('hello'));
+
+    expect(state.messages[0].level).to.equal('warning');
+  });
 });

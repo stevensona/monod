@@ -37,6 +37,12 @@ describe('modules/monod', () => {
     expect(state.offline).to.be.false;
   });
 
+  it('can flag the app as offline', () => {
+    const state = reducer(undefined, actions.isOffline());
+
+    expect(state.offline).to.be.true;
+  });
+
   describe('load()', () => {
     it('should dispatch documents.LOAD_DEFAULT when no document id supplied', () => {
       const store = mockStore();

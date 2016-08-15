@@ -30,6 +30,38 @@ describe('modules/documents', () => {
     ]);
   });
 
+  it('should be able to load default state', () => {
+    let state = reducer(undefined, { type: actions.LOAD_DEFAULT });
+
+    expect(state.loaded).to.be.true;
+  });
+
+  it('should return a new document when updating the template', () => {
+    const template = 'letter';
+
+    let state = reducer(undefined, '');
+
+    const docBeforeUpdate = state.current;
+
+    state = reducer(state, { type: actions.UPDATE_TEMPLATE, template });
+
+    expect(state.current.get('template')).to.equal(template);
+    expect(state.current !== docBeforeUpdate).to.be.true;
+  });
+
+  it('should return a new document when updating the content', () => {
+    const content = 'foo';
+
+    let state = reducer(undefined, '');
+
+    const docBeforeUpdate = state.current;
+
+    state = reducer(state, { type: actions.UPDATE_CONTENT, content });
+
+    expect(state.current.get('content')).to.equal(content);
+    expect(state.current !== docBeforeUpdate).to.be.true;
+  });
+
   it('should be able to load a default document', () => {
     const store = mockStore();
 
