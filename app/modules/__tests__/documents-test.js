@@ -4,7 +4,7 @@ import { expect } from 'chai';
 
 import reducer, * as actions from '../documents';
 import Document from '../../Document';
-import { LOCAL_PERSIST } from '../persistence';
+import { LOCAL_PERSIST } from '../persistence';
 import { NOTIFY } from '../notification';
 import dbMock from './dbMock';
 
@@ -42,7 +42,7 @@ describe('modules/documents', () => {
     const store = mockStore();
 
     const doc = new Document();
-    const secret = "secret";
+    const secret = 'secret';
 
     const expectedActions = [
       { type: actions.LOAD_SUCCESS, document: doc, secret },
@@ -60,7 +60,7 @@ describe('modules/documents', () => {
       const doc2 = new Document({ uuid: '5678' });
 
       let state = reducer(undefined, {
-        type: actions.LOAD_SUCCESS, document: doc1, secret: "secret"
+        type: actions.LOAD_SUCCESS, document: doc1, secret: 'secret',
       });
 
       expect(state.current.get('uuid')).to.equal(doc1.get('uuid'));
@@ -92,7 +92,7 @@ describe('modules/documents', () => {
       const store = mockStore({
         documents: {
           current: new Document(),
-          secret: "secret",
+          secret: 'secret',
         },
       });
 
@@ -114,7 +114,7 @@ describe('modules/documents', () => {
       const store = mockStore({
         documents: {
           current: new Document(),
-          secret: "secret",
+          secret: 'secret',
         },
       });
 
@@ -135,7 +135,7 @@ describe('modules/documents', () => {
       const store = mockStore({
         documents: {
           current: new Document(),
-          secret: "secret",
+          secret: 'secret',
         },
       });
 

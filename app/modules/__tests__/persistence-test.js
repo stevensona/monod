@@ -24,7 +24,7 @@ describe('modules/persistence', () => {
       const store = mockStore({
         documents: {
           current: new Document(),
-          secret: secret,
+          secret,
         },
       });
 
@@ -57,7 +57,7 @@ describe('modules/persistence', () => {
       const store = mockStore({
         documents: {
           current: doc,
-          secret: secret,
+          secret,
         },
       });
 
@@ -97,7 +97,7 @@ describe('modules/persistence', () => {
       const store = mockStore({
         documents: {
           current: doc,
-          secret: secret,
+          secret,
         },
       });
 
@@ -130,7 +130,7 @@ describe('modules/persistence', () => {
     const store = mockStore({
       documents: {
         current: doc,
-        secret: secret,
+        secret,
       },
     });
 
