@@ -5,10 +5,10 @@ import { newSecret } from '../utils';
 
 
 // Actions
-const LOAD_DEFAULT = 'monod/documents/LOAD_DEFAULT';
-const LOAD_SUCCESS = 'monod/documents/LOAD_SUCCESS';
-const UPDATE_TEMPLATE = 'monod/documents/UPDATE_TEMPLATE';
-const UPDATE_CONTENT = 'monod/documents/UPDATE_CONTENT';
+export const LOAD_DEFAULT = 'monod/documents/LOAD_DEFAULT';
+export const LOAD_SUCCESS = 'monod/documents/LOAD_SUCCESS';
+export const UPDATE_TEMPLATE = 'monod/documents/UPDATE_TEMPLATE';
+export const UPDATE_CONTENT = 'monod/documents/UPDATE_CONTENT';
 const UPDATE_CURRENT_DOCUMENT = 'monod/documents/UPDATE_CURRENT_DOCUMENT';
 
 // Action Creators
@@ -37,7 +37,7 @@ export function updateContent(content) {
     const current = getState().documents.current;
     const secret = getState().documents.secret;
 
-    if (null === secret) {
+    if (null === secret) { // looks like it is the very first edit
       const document = current.set('content', content);
 
       dispatch(loadSuccess(document, newSecret()));
@@ -61,10 +61,14 @@ export function updateContent(content) {
 }
 
 export function updateTemplate(template) {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const secret = getState().documents.secret;
+
     dispatch({ type: UPDATE_TEMPLATE, template });
 
-    dispatch(localPersist());
+    if (null !== secret) {
+      dispatch(localPersist());
+    }
   };
 }
 

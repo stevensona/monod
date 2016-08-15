@@ -1,5 +1,5 @@
 // Actions
-const NOTIFY = 'monod/notification/NOTIFY';
+export const NOTIFY = 'monod/notification/NOTIFY';
 const CLOSE = 'monod/notification/CLOSE';
 
 // Action Creators

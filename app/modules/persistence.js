@@ -8,7 +8,7 @@ import { updateCurrentDocument } from './documents';
 
 
 // Actions
-const LOCAL_PERSIST = 'monod/persistence/LOCAL_PERSIST';
+export const LOCAL_PERSIST = 'monod/persistence/LOCAL_PERSIST';
 const LOCAL_PERSIST_SUCCESS = 'monod/persistence/LOCAL_PERSIST_SUCCESS';
 const SERVER_PERSIST = 'monod/persistence/SERVER_PERSIST';
 const SERVER_PERSIST_SUCCESS = 'monod/persistence/SERVER_PERSIST_SUCCESS';

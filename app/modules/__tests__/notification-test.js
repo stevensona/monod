@@ -9,7 +9,9 @@ describe('modules/notification', () => {
   it('should return the initial state', () => {
     const state = reducer(undefined, {});
 
-    expect(state.messages).not.to.be.undefined;
+    expect(state).to.have.all.keys([
+      'messages',
+    ]);
     expect(state.messages).to.be.empty;
   });
 
