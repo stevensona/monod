@@ -19,58 +19,6 @@ export default class App extends Component {
     this.toggleShareModal = this.toggleShareModal.bind(this);
   }
 
-  componentDidMount() {
-    /*
-    this.props.controller.on(Events.CONFLICT, (state) => {
-      const message = {
-        content: (
-          <span>
-            <i>Snap!</i>&nbsp;
-            The document you were working on has been updated by a third,
-            and you are now working on a fork. You can still find the original
-            (and updated) document:&nbsp;
-            <a href={`/${state.document.uuid}#${state.secret}`}>here</a>.
-          </span>
-        ),
-        type: 'warning'
-      };
-
-      this.loadAndRedirect(
-        state.fork.document,
-        `/${state.fork.document.uuid}#${state.fork.secret}`,
-        message
-      );
-    });
-
-    this.props.controller.on(Events.UPDATE_WITHOUT_CONFLICT, (state) => {
-      const message = {
-        content: [
-          'We have updated the document you are viewing to its latest revision.',
-          'Happy reading/working!'
-        ].join(' '),
-        type: 'info'
-      };
-
-      this.setState({
-        document: state.document,
-        messages: this.state.messages.push(message)
-      });
-    });
-
-    this.props.controller.on(`${Events.SYNCHRONIZE}, ${Events.CHANGE}`, (state) => {
-      this.loadAndRedirect(
-        state.document,
-        `/${state.document.uuid}#${state.secret}`
-      );
-    });
-
-    this.props.controller.dispatch('action:init', {
-      id: window.location.pathname.slice(1),
-      secret: window.location.hash.slice(1)
-    });
-    */
-  }
-
   togglePresentationMode() {
     if (
       (!document.fullscreenElement) &&
