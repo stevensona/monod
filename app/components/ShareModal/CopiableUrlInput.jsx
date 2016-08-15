@@ -11,6 +11,7 @@ class CopiableUrlInput extends React.Component {
   }
 
   componentDidMount() {
+    // This is required to avoid an error with Node.js (for the test suite)
     const Clipboard = require('clipboard'); // eslint-disable-line global-require
 
     this.clipboard = new Clipboard(this.$button);
@@ -39,7 +40,7 @@ class CopiableUrlInput extends React.Component {
 
   render() {
     return (
-      <div className="input-group">
+      <div className="copiable-url-input input-group">
         <input
           id={this.props.name}
           type="url"
