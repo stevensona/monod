@@ -19,7 +19,7 @@ store.dispatch(load(
   window.location.hash.slice(1)
 ));
 
-// require('offline-plugin/runtime').install();
+require('offline-plugin/runtime').install();
 
 ReactDOM.render(
   <AppContainer>
