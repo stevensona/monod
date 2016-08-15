@@ -24,6 +24,9 @@ export function warning(message) {
 }
 
 // Reducer
+const initialState = {
+  messages: [],
+};
 
 function doNotify(state, action) {
   const idx = state.messages.findIndex(
@@ -59,10 +62,6 @@ function doClose(state, action) {
     messages: state.messages.filter((_, index) => index !== action.index),
   };
 }
-
-const initialState = {
-  messages: [],
-};
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
