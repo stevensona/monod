@@ -180,4 +180,19 @@ describe('modules/documents', () => {
       expect(triggeredActions[1].type).to.equal(actions.LOAD_DEFAULT);
     });
   });
+
+  describe('serverUnreachable()', () => {
+    it('should notify user and loads the default document', () => {
+      const store = mockStore();
+
+      store.dispatch(actions.serverUnreachable());
+
+      const triggeredActions = store.getActions();
+      expect(triggeredActions).to.have.length(2);
+
+      expect(triggeredActions[0].type).to.equal(NOTIFY);
+      expect(triggeredActions[0].level).to.equal('error');
+      expect(triggeredActions[1].type).to.equal(actions.LOAD_DEFAULT);
+    });
+  });
 });
