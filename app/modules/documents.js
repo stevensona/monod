@@ -37,6 +37,11 @@ export function updateContent(content) {
     const current = getState().documents.current;
     const secret = getState().documents.secret;
 
+    // prevent unwanted content update (e.g., after a // `UPDATE_CURRENT_DOCUMENT` action)
+    if (content === current.get('content')) {
+      return;
+    }
+
     if (null === secret) { // looks like it is the very first edit
       const document = current.set('content', content);
 
@@ -125,13 +130,17 @@ export default function reducer(state = initialState, action = {}) {
     case UPDATE_TEMPLATE:
       return {
         ...state,
-        current: state.current.set('template', action.template),
+        current: state.current
+          .set('template', action.template)
+          .set('last_modified_locally', Date.now()),
       };
 
     case UPDATE_CONTENT:
       return {
         ...state,
-        current: state.current.set('content', action.content),
+        current: state.current
+          .set('content', action.content)
+          .set('last_modified_locally', Date.now()),
       };
 
     case LOAD_SUCCESS:
