@@ -24,7 +24,6 @@ export default class Document extends Record({
   }
 
   isDefault() {
-    return this.hasDefaultContent() && this.hasNeverBeenSync()
-      && this.hasNoLocalChanges() && '' === this.template;
+    return this.hasDefaultContent() && this.hasNeverBeenSync() && this.hasNoLocalChanges();
   }
 }
