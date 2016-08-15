@@ -3,7 +3,7 @@ import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import createDebounce from 'redux-debounced';
 import rootReducer from '../modules/reducer';
-import db from './db';
+import db from '../db';
 
 const middlewares = [
   createDebounce(),

@@ -37,7 +37,7 @@ export function serverPersist() {
 
         const current = new Document({
           uuid: id,
-          content: content,
+          content,
           last_modified: res.body.last_modified,
           last_modified_locally: null,
           template: res.body.template || '',

@@ -96,6 +96,8 @@ export function load(id, secret) {
         }
 
         dispatch(loadSuccess(document.set('content', decryptedContent), secret));
+
+        return Promise.resolve();
       })
       .catch((err) => {
         switch (err) {

@@ -81,9 +81,6 @@ export function synchronize() { // eslint-disable-line import/prefer-default-exp
           return Promise.resolve();
         }
 
-        // TODO: In theory, it should never happened, but... what happens if:
-        // localDoc.get('last_modified') > serverDoc.get('last_modified')...?
-
         if (serverDoc.get('last_modified') > document.get('last_modified')) {
           if (document.hasNoLocalChanges()) {
             const decryptedContent = decrypt(serverDoc.get('content'), secret);
@@ -155,6 +152,11 @@ export function synchronize() { // eslint-disable-line import/prefer-default-exp
             })
             .then(() => dispatch({ type: SYNCHRONIZE_SUCCESS }));
         }
+
+        // TODO: In theory, it should never happened, but... what happens if:
+        // localDoc.get('last_modified') > serverDoc.get('last_modified')...?
+
+        return Promise.resolve();
       })
       .catch((err) => {
         // TODO: maybe deal with these errors (cf. preview catch)
