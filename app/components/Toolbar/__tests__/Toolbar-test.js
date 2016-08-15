@@ -16,6 +16,8 @@ describe('<Toolbar />', () => {
         template={''}
         onTogglePresentationMode={() => {}}
         onUpdateTemplate={() => {}}
+        onToggleShareModal={() => {}}
+        enableShareModalButton
       />);
 
     expect(wrapper.find('#toolbar')).to.have.length(1);

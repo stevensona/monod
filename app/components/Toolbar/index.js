@@ -8,6 +8,7 @@ const mapStateToProps = (state) => {
 
   return {
     template: documents.current.template,
+    enableShareModalButton: '' !== window.location.pathname.slice(1),
   };
 };
 
@@ -17,7 +18,6 @@ const mapDispatchToProps = (dispatch) => ({
 
     dispatch(updateTemplate(template));
   },
-  onTogglePresentationMode: () => {},
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Toolbar);

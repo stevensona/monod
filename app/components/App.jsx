@@ -4,13 +4,19 @@ import Header from './Header';
 import Editor from './Editor';
 import Footer from './Footer';
 import Notifications from './Notifications';
+import ShareModal from './ShareModal';
 
 
 export default class App extends Component {
   constructor(props, context) {
     super(props, context);
 
-    this.state = { messages: [] };
+    this.state = {
+      messages: [],
+      displayShareModal: false,
+    };
+
+    this.toggleShareModal = this.toggleShareModal.bind(this);
   }
 
   componentDidMount() {
@@ -87,10 +93,23 @@ export default class App extends Component {
     }
   }
 
+  toggleShareModal() {
+    this.setState({ displayShareModal: !this.state.displayShareModal });
+  }
+
   render() {
     return (
       <div className="layout">
-        <Header />
+        <Header
+          onToggleShareModal={this.toggleShareModal}
+          onTogglePresentationMode={this.togglePresentationMode}
+        />
+
+        <ShareModal
+          isOpen={this.state.displayShareModal}
+          onRequestClose={this.toggleShareModal}
+          fullAccessURL={window.location.toString()}
+        />
 
         <Notifications />
 

@@ -12,7 +12,10 @@ describe('<Header />', () => {
 
   it('renders a header element', () => {
     const wrapper = shallow(
-      <Header />
+      <Header
+        onTogglePresentationMode={() => {}}
+        onToggleShareModal={() => {}}
+      />
     );
     expect(wrapper.find('header')).to.have.length(1);
   });
