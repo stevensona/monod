@@ -25,7 +25,10 @@ const MessageBox = (props) => {
 MessageBox.propTypes = {
   index: PropTypes.number.isRequired,
   message: PropTypes.shape({
-    content: PropTypes.string.isRequired,
+    content: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object,
+    ]).isRequired,
     level: PropTypes.string,
     count: PropTypes.number,
   }).isRequired,
