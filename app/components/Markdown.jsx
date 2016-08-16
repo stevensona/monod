@@ -5,6 +5,7 @@ import 'codemirror/mode/gfm/gfm';
 import 'codemirror/lib/codemirror.css';
 
 import config from '../config';
+import extraKeys from './Markdown/extra-keys';
 
 
 export default class Markdown extends Component {
@@ -24,6 +25,7 @@ export default class Markdown extends Component {
       scrollbarStyle: null,
       mode: config.CODE_MIRROR_MODE,
       theme: config.CODE_MIRROR_THEME,
+      extraKeys,
     };
 
     // CodeMirror main instance
