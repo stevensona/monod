@@ -46,6 +46,11 @@ export function synchronize() { // eslint-disable-line import/prefer-default-exp
         dispatch({ type: SYNCHRONIZE_SUCCESS });
 
         return Promise.resolve();
+      })
+      .catch((error) => {
+        dispatch({ type: SYNCHRONIZE_ERROR, error });
+
+        return Promise.resolve();
       });
     }
 

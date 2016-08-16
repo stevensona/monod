@@ -2,7 +2,7 @@ import request from 'superagent';
 
 import config from '../config';
 import Document from '../Document';
-import { encrypt } from '../utils';
+import { Errors, encrypt } from '../utils';
 import { isOnline, isOffline } from './monod';
 import { updateCurrentDocument } from './documents';
 
@@ -98,7 +98,7 @@ export function serverPersist() {
         // TODO: maybe handle this case
         dispatch({ type: SERVER_PERSIST_ERROR, error });
 
-        return Promise.resolve();
+        return Promise.reject(Errors.SERVER_UNREACHABLE);
       });
   };
 

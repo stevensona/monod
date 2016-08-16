@@ -27,7 +27,7 @@ export function isOffline() {
 
 // Reducer
 const initialState = {
-  offline: true,
+  offline: false,
 };
 
 export default function reducer(state = initialState, action = {}) {

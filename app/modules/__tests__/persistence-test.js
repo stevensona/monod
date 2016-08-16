@@ -118,7 +118,7 @@ describe('modules/persistence', () => {
 
       return store
         .dispatch(actions.serverPersist())
-        .then(() => {
+        .catch(() => {
           const triggeredActions = store.getActions();
 
           expect(triggeredActions).to.have.length(expectedActions.length);
@@ -146,7 +146,7 @@ describe('modules/persistence', () => {
 
     return store
       .dispatch(actions.serverPersist())
-      .then(() => {
+      .catch(() => {
         const triggeredActions = store.getActions();
 
         expect(triggeredActions).to.have.length(expectedActions.length);
