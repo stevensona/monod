@@ -3,10 +3,10 @@ import { mount } from 'enzyme';
 import { expect } from 'chai';
 import sinon from 'sinon';
 
-// see: https://github.com/mochajs/mocha/issues/1847
-const { before, describe, it } = global;
+import Markdown from '../index';
 
-import Markdown from '../Markdown';
+// see: https://github.com/mochajs/mocha/issues/1847
+const { describe, it } = global;
 
 
 describe('<Markdown />', () => {

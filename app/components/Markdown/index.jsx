@@ -4,8 +4,8 @@ import CodeMirror from 'codemirror';
 import 'codemirror/mode/gfm/gfm';
 import 'codemirror/lib/codemirror.css';
 
-import config from '../config';
-import extraKeys from './Markdown/extra-keys';
+import config from '../../config';
+import extraKeys from './extra-keys';
 
 
 export default class Markdown extends Component {
