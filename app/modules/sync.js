@@ -39,10 +39,14 @@ export function synchronize() { // eslint-disable-line import/prefer-default-exp
     }
 
     if (document.hasNeverBeenSync()) {
-      return dispatch(serverPersist())
-        .then(() => {
-          dispatch({ type: SYNCHRONIZE_SUCCESS });
-        });
+      return dispatch(
+        serverPersist()
+      )
+      .then(() => {
+        dispatch({ type: SYNCHRONIZE_SUCCESS });
+
+        return Promise.resolve();
+      });
     }
 
     return request
@@ -73,8 +77,7 @@ export function synchronize() { // eslint-disable-line import/prefer-default-exp
           // here, document on the server has not been updated, so we can
           // probably push safely
           if (serverDoc.get('last_modified') < document.get('last_modified_locally')) {
-            return dispatch(serverPersist())
-              .catch(() => dispatch({ type: SYNCHRONIZE_ERROR }));
+            return dispatch(serverPersist());
           }
 
           dispatch({ type: NO_NEED_TO_SYNC });
@@ -151,6 +154,8 @@ export function synchronize() { // eslint-disable-line import/prefer-default-exp
                   ));
 
                   dispatch(loadSuccess(fork, forkSecret));
+
+                  return Promise.resolve();
                 });
             });
         }
@@ -162,10 +167,12 @@ export function synchronize() { // eslint-disable-line import/prefer-default-exp
       })
       .then(() => {
         dispatch({ type: SYNCHRONIZE_SUCCESS });
+
+        return Promise.resolve();
       })
-      .catch((err) => {
+      .catch((error) => {
         // TODO: maybe deal with these errors
-        switch (err) {
+        switch (error) {
           case Errors.DECRYPTION_FAILED:
             dispatch(decryptionFailed());
             break;
@@ -173,7 +180,9 @@ export function synchronize() { // eslint-disable-line import/prefer-default-exp
           default:
         }
 
-        dispatch({ type: SYNCHRONIZE_ERROR });
+        dispatch({ type: SYNCHRONIZE_ERROR, error });
+
+        return Promise.resolve();
       });
   };
 

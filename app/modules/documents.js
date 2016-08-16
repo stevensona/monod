@@ -40,7 +40,7 @@ export function updateContent(content) {
 
     // prevent unwanted content update (e.g., after a // `UPDATE_CURRENT_DOCUMENT` action)
     if (content === current.get('content')) {
-      return;
+      return Promise.resolve();
     }
 
     if (null === secret) { // looks like it is the very first edit
@@ -48,12 +48,12 @@ export function updateContent(content) {
 
       dispatch(loadSuccess(document, newSecret()));
 
-      return;
+      return Promise.resolve();
     }
 
     dispatch({ type: UPDATE_CONTENT, content });
 
-    dispatch(localPersist());
+    return dispatch(localPersist());
   };
 
   thunk.meta = {
@@ -73,8 +73,10 @@ export function updateTemplate(template) {
     dispatch({ type: UPDATE_TEMPLATE, template });
 
     if (null !== secret) {
-      dispatch(localPersist());
+      return dispatch(localPersist());
     }
+
+    return Promise.resolve();
   };
 }
 

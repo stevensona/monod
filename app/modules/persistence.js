@@ -15,8 +15,38 @@ export const SERVER_PERSIST_SUCCESS = 'monod/persistence/SERVER_PERSIST_SUCCESS'
 export const SERVER_PERSIST_ERROR = 'monod/persistence/SERVER_PERSIST_ERROR';
 
 // Action Creators
+export function localPersist() {
+  const thunk = (dispatch, getState, { db }) => {
+    dispatch({ type: LOCAL_PERSIST });
+
+    const document = getState().documents.current;
+    const secret = getState().documents.secret;
+
+    const encrypted = document.set(
+      'content', encrypt(document.get('content'), secret)
+    );
+
+    return db
+      .setItem(encrypted.get('uuid'), encrypted.toJS())
+      .then(() => {
+        dispatch({ type: LOCAL_PERSIST_SUCCESS });
+
+        return Promise.resolve();
+      });
+  };
+
+  thunk.meta = {
+    debounce: {
+      time: config.LOCAL_PERSIST_DEBOUNCE_TIME,
+      key: LOCAL_PERSIST,
+    },
+  };
+
+  return thunk;
+}
+
 export function serverPersist() {
-  const thunk = (dispatch, getState) => {
+  const thunk = (dispatch, getState, { db }) => {
     dispatch({ type: SERVER_PERSIST });
 
     const document = getState().documents.current;
@@ -44,44 +74,32 @@ export function serverPersist() {
           template: res.body.template || '',
         });
 
+        return Promise.resolve(current);
+      })
+      .then((current) => {
         dispatch(updateCurrentDocument(current));
 
-        dispatch({ type: SERVER_PERSIST_SUCCESS });
+        const encrypted = current.set(
+          'content', encrypt(current.get('content'), secret)
+        );
+
+        return db.setItem(encrypted.get('uuid'), encrypted.toJS());
       })
-      .catch((err) => {
-        if (!err.response) {
+      .then(() => {
+        dispatch({ type: SERVER_PERSIST_SUCCESS });
+
+        return Promise.resolve();
+      })
+      .catch((error) => {
+        if (!error.response) {
           dispatch(isOffline());
         }
 
         // TODO: maybe handle this case
-        dispatch({ type: SERVER_PERSIST_ERROR });
+        dispatch({ type: SERVER_PERSIST_ERROR, error });
+
+        return Promise.resolve();
       });
-  };
-
-  return thunk;
-}
-
-export function localPersist() {
-  const thunk = (dispatch, getState, { db }) => {
-    dispatch({ type: LOCAL_PERSIST });
-
-    const document = getState().documents.current;
-    const secret = getState().documents.secret;
-
-    const encrypted = document.set(
-      'content', encrypt(document.get('content'), secret)
-    );
-
-    return db
-      .setItem(encrypted.get('uuid'), encrypted.toJS())
-      .then(() => dispatch({ type: LOCAL_PERSIST_SUCCESS }));
-  };
-
-  thunk.meta = {
-    debounce: {
-      time: config.LOCAL_PERSIST_DEBOUNCE_TIME,
-      key: LOCAL_PERSIST,
-    },
   };
 
   return thunk;
