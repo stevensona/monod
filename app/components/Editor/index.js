@@ -10,6 +10,7 @@ const mapStateToProps = (state) => {
     loaded: documents.loaded,
     content: documents.current.get('content'),
     template: documents.current.get('template'),
+    forceUpdate: documents.forceUpdate,
   };
 };
 

@@ -27,6 +27,7 @@ describe('modules/documents', () => {
       'current',
       'loaded',
       'secret',
+      'forceUpdate',
     ]);
   });
 
@@ -34,6 +35,7 @@ describe('modules/documents', () => {
     let state = reducer(undefined, { type: actions.LOAD_DEFAULT });
 
     expect(state.loaded).to.be.true;
+    expect(state.forceUpdate).to.be.false;
   });
 
   it('should return a new document (with local modifications) when updating the template', () => {
@@ -48,6 +50,7 @@ describe('modules/documents', () => {
     expect(state.current.get('template')).to.equal(template);
     expect(state.current !== docBeforeUpdate).to.be.true;
     expect(state.current.get('last_modified_locally')).to.not.be.null;
+    expect(state.forceUpdate).to.be.false;
   });
 
   it('should return a new document (with local modifications) when updating the content', () => {
@@ -62,6 +65,7 @@ describe('modules/documents', () => {
     expect(state.current.get('content')).to.equal(content);
     expect(state.current !== docBeforeUpdate).to.be.true;
     expect(state.current.get('last_modified_locally')).to.not.be.null;
+    expect(state.forceUpdate).to.be.false;
   });
 
   it('should be able to load a default document', () => {
@@ -92,6 +96,24 @@ describe('modules/documents', () => {
     expect(store.getActions()).to.eql(expectedActions);
   });
 
+  describe('forceUpdateCurrentDocument()', () => {
+    it('should force update the current document', () => {
+      const doc1 = new Document({ uuid: '1234' });
+      const doc2 = new Document({ uuid: '5678' });
+
+      let state = reducer(undefined, {
+        type: actions.LOAD_SUCCESS, document: doc1, secret: 'secret',
+      });
+
+      expect(state.current.get('uuid')).to.equal(doc1.get('uuid'));
+
+      state = reducer(state, actions.forceUpdateCurrentDocument(doc2));
+
+      expect(state.current.get('uuid')).to.equal(doc2.get('uuid'));
+      expect(state.forceUpdate).to.be.true;
+    });
+  });
+
   describe('updateCurrentDocument()', () => {
     it('should update the current document', () => {
       const doc1 = new Document({ uuid: '1234' });
@@ -106,6 +128,7 @@ describe('modules/documents', () => {
       state = reducer(state, actions.updateCurrentDocument(doc2));
 
       expect(state.current.get('uuid')).to.equal(doc2.get('uuid'));
+      expect(state.forceUpdate).to.be.false;
     });
   });
 

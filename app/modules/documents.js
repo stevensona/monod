@@ -29,8 +29,12 @@ export function loadSuccess(document, secret) {
   };
 }
 
-export function updateCurrentDocument(document) {
-  return { type: UPDATE_CURRENT_DOCUMENT, document };
+export function updateCurrentDocument(document, force) {
+  return { type: UPDATE_CURRENT_DOCUMENT, document, forceUpdate: force || false };
+}
+
+export function forceUpdateCurrentDocument(document) {
+  return updateCurrentDocument(document, true);
 }
 
 export function updateContent(content) {
@@ -109,6 +113,7 @@ const initialState = {
   current: new Document(),
   secret: null,
   loaded: false,
+  forceUpdate: false,
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -117,6 +122,7 @@ export default function reducer(state = initialState, action = {}) {
       return {
         ...state,
         current: action.document,
+        forceUpdate: action.forceUpdate,
       };
 
     case UPDATE_TEMPLATE:
@@ -125,6 +131,7 @@ export default function reducer(state = initialState, action = {}) {
         current: state.current
           .set('template', action.template)
           .set('last_modified_locally', Date.now()),
+        forceUpdate: false,
       };
 
     case UPDATE_CONTENT:
@@ -133,12 +140,14 @@ export default function reducer(state = initialState, action = {}) {
         current: state.current
           .set('content', action.content)
           .set('last_modified_locally', Date.now()),
+        forceUpdate: false,
       };
 
     case LOAD_SUCCESS:
       return {
         current: action.document,
         secret: action.secret,
+        forceUpdate: false,
         loaded: true,
       };
 

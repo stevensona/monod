@@ -37,9 +37,7 @@ export default class Markdown extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.content !== nextProps.content &&
-      this.getCodeMirror().getValue() !== nextProps.content
-    ) {
+    if (true === nextProps.forceUpdate && this.props.content !== nextProps.content) {
       this.getCodeMirror().setValue(nextProps.content);
     }
   }
@@ -55,11 +53,11 @@ export default class Markdown extends Component {
       if (newValue !== this.props.content) {
         // Update the value -> rendering
         this.props.onChange(newValue);
-
-        // Update scrolling position (ensure rendering is visible)
-        this.onScroll();
       }
     }
+
+    // Update scrolling position (ensure rendering is visible)
+    this.onScroll();
   }
 
   onScroll() {
@@ -95,4 +93,5 @@ Markdown.propTypes = {
   content: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   onUpdatePosition: PropTypes.func.isRequired,
+  forceUpdate: PropTypes.bool.isRequired,
 };

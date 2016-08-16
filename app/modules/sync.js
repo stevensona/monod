@@ -10,7 +10,7 @@ import { localPersist, serverPersist } from './persistence';
 import { isOnline, isOffline } from './monod';
 import {
   loadSuccess,
-  updateCurrentDocument,
+  forceUpdateCurrentDocument,
   decryptionFailed,
 } from './documents';
 import { info, warning } from './notification';
@@ -93,7 +93,7 @@ export function synchronize() { // eslint-disable-line import/prefer-default-exp
               return Promise.reject(Errors.DECRYPTION_FAILED);
             }
 
-            dispatch(updateCurrentDocument(
+            dispatch(forceUpdateCurrentDocument(
               serverDoc
                 .set('content', decryptedContent)
                 .set('last_modified_locally', null)

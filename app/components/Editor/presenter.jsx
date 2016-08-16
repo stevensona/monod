@@ -65,6 +65,7 @@ export default class Editor extends Component {
           content={this.props.content}
           onChange={this.props.onUpdateContent}
           onUpdatePosition={this.updatePosition}
+          forceUpdate={this.props.forceUpdate}
         />
         <VerticalHandler
           onClickLeft={this.handleOnClick}
@@ -85,4 +86,5 @@ Editor.propTypes = {
   content: PropTypes.string.isRequired,
   template: PropTypes.string.isRequired,
   onUpdateContent: PropTypes.func.isRequired,
+  forceUpdate: PropTypes.bool.isRequired,
 };
