@@ -1,16 +1,15 @@
 import React, { Component, PropTypes } from 'react';
 
+import config from '../../config';
 
-const DEFAULT_DURATION = 5;
-const MAX_DURATION = 600;
 
 class Sync extends Component {
   constructor(props, context) {
     super(props, context);
 
     this.state = {
-      duration: DEFAULT_DURATION,
-      counter: DEFAULT_DURATION,
+      duration: config.SYNC_COUNTER_DURATION,
+      counter: config.SYNC_COUNTER_DURATION,
     };
 
     this.intervalId = false;
@@ -25,8 +24,8 @@ class Sync extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.props.offline !== nextProps.offline) {
       this.setState({
-        duration: DEFAULT_DURATION,
-        counter: DEFAULT_DURATION,
+        duration: config.SYNC_COUNTER_DURATION,
+        counter: config.SYNC_COUNTER_DURATION,
       });
     }
   }
@@ -46,13 +45,13 @@ class Sync extends Component {
       if (0 === counter) {
         this.props.onRequestSync();
 
-        let duration = DEFAULT_DURATION;
+        let duration = config.SYNC_COUNTER_DURATION;
 
         if (this.props.offline) {
           duration = Math.round(this.state.duration * 1.5);
 
-          if (duration >= MAX_DURATION) {
-            duration = DEFAULT_DURATION;
+          if (duration >= config.SYNC_COUNTER_THRESHOLD) {
+            duration = config.SYNC_COUNTER_DURATION;
           }
         }
 

@@ -8,11 +8,15 @@ export default {
   CODE_MIRROR_MODE: 'gfm',
   CODE_MIRROR_THEME: 'monod',
 
+  // in app/components/Sync/
+  SYNC_COUNTER_DURATION: 5, // seconds
+  SYNC_COUNTER_THRESHOLD: 600, // seconds
+
   // in app/modules/documents.js
-  UPDATE_CONTENT_DEBOUNCE_TIME: 100,
+  UPDATE_CONTENT_DEBOUNCE_TIME: 100, // milliseconds
 
   // in app/modules/persistence.js
-  LOCAL_PERSIST_DEBOUNCE_TIME: 1000,
+  LOCAL_PERSIST_DEBOUNCE_TIME: 500, // milliseconds
 
   // in app/modules/sync.js
   DOCUMENT_UPDATED_MESSAGE: [
