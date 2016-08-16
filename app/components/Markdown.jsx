@@ -12,13 +12,12 @@ export default class Markdown extends Component {
   constructor(props, context) {
     super(props, context);
 
-    this.state = { cursor: null };
+    this.state = { cursor: null, scrollInfo: null };
 
     this.setTextareaEl = this.setTextareaEl.bind(this);
   }
 
   componentDidMount() {
-    const defaultValue = this.props.content || '';
     const textareaNode = this.$textarea;
     const options = {
       autofocus: true,
@@ -31,7 +30,6 @@ export default class Markdown extends Component {
 
     // CodeMirror main instance
     this.codeMirror = CodeMirror.fromTextArea(textareaNode, options);
-    this.setState({ cursor: this.codeMirror.getCursor() });
 
     // Bind CodeMirror events
     this.codeMirror.on('change', this.onChange.bind(this));
@@ -43,6 +41,15 @@ export default class Markdown extends Component {
       // force content update and move cursor
       this.getCodeMirror().setValue(nextProps.content);
       this.getCodeMirror().setCursor(this.state.cursor);
+
+      const { left, clientHeight, height } = this.state.scrollInfo;
+      let top = this.state.scrollInfo.top;
+
+      if ((top + clientHeight) === height) {
+        top += 30;
+      }
+
+      this.getCodeMirror().scrollTo(left, top);
     }
   }
 
@@ -55,7 +62,10 @@ export default class Markdown extends Component {
 
     if (newValue !== this.props.content) {
       // Retain cursor position for upcoming update
-      this.setState({ cursor: this.getCodeMirror().getCursor() });
+      this.setState({
+        cursor: this.getCodeMirror().getCursor(),
+        scrollInfo: this.getCodeMirror().getScrollInfo(),
+      });
 
       // Update the value -> rendering
       this.props.onChange(newValue);
