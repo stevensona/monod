@@ -12,6 +12,9 @@ export default {
   SYNC_COUNTER_DURATION: 5, // seconds
   SYNC_COUNTER_THRESHOLD: 600, // seconds
 
+  SYNC_ONLINE_MESSAGE: 'Connected and synchronized!',
+  SYNC_OFFLINE_MESSAGE: 'No Internet connection or server is unreachable',
+
   // in app/modules/documents.js
   UPDATE_CONTENT_DEBOUNCE_TIME: 100, // milliseconds
 

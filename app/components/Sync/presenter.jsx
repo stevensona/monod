@@ -64,11 +64,11 @@ class Sync extends Component {
   }
 
   render() {
-    let title = 'Connected to the Internets™';
+    let title = config.SYNC_ONLINE_MESSAGE;
     let message = '';
 
     if (this.props.offline) {
-      title = 'No Internet connection or server is unreachable';
+      title = config.SYNC_OFFLINE_MESSAGE;
       message = (<span>&nbsp;Offline</span>);
     }
 

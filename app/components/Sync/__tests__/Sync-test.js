@@ -2,10 +2,11 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 
-// see: https://github.com/mochajs/mocha/issues/1847
-const { before, describe, it } = global;
-
 import Sync from '../presenter';
+import config from '../../../config';
+
+// see: https://github.com/mochajs/mocha/issues/1847
+const { describe, it } = global;
 
 
 describe('<Sync />', () => {
@@ -26,7 +27,7 @@ describe('<Sync />', () => {
         onRequestSync={() => {}}
       />
     );
-    expect(wrapper.html()).to.contain('Connected to the Internets');
+    expect(wrapper.html()).to.contain(config.SYNC_ONLINE_MESSAGE);
   });
 
   it('has an offline status', () => {
@@ -39,6 +40,6 @@ describe('<Sync />', () => {
 
     wrapper.setState({ offline: true });
 
-    expect(wrapper.html()).to.contain('No Internet connection');
+    expect(wrapper.html()).to.contain(config.SYNC_OFFLINE_MESSAGE);
   });
 });
