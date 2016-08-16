@@ -19,8 +19,12 @@ store.dispatch(load(
   window.location.hash.slice(1)
 ));
 
-/* eslint no-unused-expressions: 0, global-require: 0 */
-'production' === process.env.NODE_ENV && require('offline-plugin/runtime').install();
+if ('production' === process.env.NODE_ENV) {
+  require('offline-plugin/runtime').install(); // eslint-disable-line global-require
+  require('raven-js') // eslint-disable-line global-require
+    .config('https://33eb806367954478b38b7dba7828bb54@app.getsentry.com/92503')
+    .install();
+}
 
 ReactDOM.render(
   <AppContainer>
