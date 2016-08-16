@@ -4,7 +4,7 @@ import uuid from 'uuid';
 import request from 'superagent';
 
 import { Errors, encrypt, decrypt, newSecret } from '../utils';
-import { serverPersist } from './persistence';
+import { localPersist, serverPersist } from './persistence';
 import Document from '../Document';
 
 import { isOnline, isOffline } from './monod';
@@ -13,7 +13,7 @@ import {
   updateCurrentDocument,
   decryptionFailed,
 } from './documents';
-import { warning } from './notification';
+import { info, warning } from './notification';
 
 
 // Actions
@@ -21,6 +21,7 @@ export const SYNCHRONIZE = 'monod/sync/SYNCHRONIZE';
 export const SYNCHRONIZE_SUCCESS = 'monod/sync/SYNCHRONIZE_SUCCESS';
 export const SYNCHRONIZE_ERROR = 'monod/sync/SYNCHRONIZE_ERROR';
 export const FORKING = 'monod/sync/FORKING';
+export const NO_NEED_TO_SYNC = 'monod/sync/NO_NEED_TO_SYNC';
 
 // Action Creators
 export function synchronize() { // eslint-disable-line import/prefer-default-export
@@ -31,6 +32,7 @@ export function synchronize() { // eslint-disable-line import/prefer-default-exp
     const secret = getState().documents.secret;
 
     if (document.isDefault()) {
+      dispatch({ type: NO_NEED_TO_SYNC });
       dispatch({ type: SYNCHRONIZE_SUCCESS });
 
       return Promise.resolve();
@@ -72,11 +74,10 @@ export function synchronize() { // eslint-disable-line import/prefer-default-exp
           // probably push safely
           if (serverDoc.get('last_modified') < document.get('last_modified_locally')) {
             return dispatch(serverPersist())
-              .catch(() => dispatch({ type: SYNCHRONIZE_ERROR }))
-              .then(() => dispatch({ type: SYNCHRONIZE_SUCCESS }));
+              .catch(() => dispatch({ type: SYNCHRONIZE_ERROR }));
           }
 
-          dispatch({ type: SYNCHRONIZE_SUCCESS });
+          dispatch({ type: NO_NEED_TO_SYNC });
 
           return Promise.resolve();
         }
@@ -90,12 +91,17 @@ export function synchronize() { // eslint-disable-line import/prefer-default-exp
             }
 
             dispatch(updateCurrentDocument(
-              serverDoc.set('content', decryptedContent)
+              serverDoc
+                .set('content', decryptedContent)
+                .set('last_modified_locally', null)
             ));
 
-            dispatch({ type: SYNCHRONIZE_SUCCESS });
+            dispatch(info([
+              'We have updated the document you are viewing to its latest revision.',
+              'Happy reading/working!',
+            ].join(' ')));
 
-            return Promise.resolve();
+            return dispatch(localPersist());
           }
 
           // Oh noooo, someone modified my document!  ... but I also modified
@@ -149,14 +155,16 @@ export function synchronize() { // eslint-disable-line import/prefer-default-exp
 
                   dispatch(loadSuccess(fork, forkSecret));
                 });
-            })
-            .then(() => dispatch({ type: SYNCHRONIZE_SUCCESS }));
+            });
         }
 
         // TODO: In theory, it should never happened, but... what happens if:
         // localDoc.get('last_modified') > serverDoc.get('last_modified')...?
 
         return Promise.resolve();
+      })
+      .then(() => {
+        dispatch({ type: SYNCHRONIZE_SUCCESS });
       })
       .catch((err) => {
         // TODO: maybe deal with these errors

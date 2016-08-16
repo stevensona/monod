@@ -36,6 +36,7 @@ describe('modules/sync', () => {
 
       const expectedActions = [
         { type: actions.SYNCHRONIZE },
+        { type: actions.NO_NEED_TO_SYNC },
         { type: actions.SYNCHRONIZE_SUCCESS },
       ];
 
@@ -160,6 +161,7 @@ describe('modules/sync', () => {
         const expectedActions = [
           { type: actions.SYNCHRONIZE },
           { type: app.IS_ONLINE },
+          { type: actions.NO_NEED_TO_SYNC },
           { type: actions.SYNCHRONIZE_SUCCESS },
         ];
 
@@ -263,6 +265,9 @@ describe('modules/sync', () => {
           { type: actions.SYNCHRONIZE },
           { type: app.IS_ONLINE },
           { type: documents.UPDATE_CURRENT_DOCUMENT },
+          { type: notification.NOTIFY },
+          { type: persistence.LOCAL_PERSIST },
+          { type: persistence.LOCAL_PERSIST_SUCCESS },
           { type: actions.SYNCHRONIZE_SUCCESS },
         ];
 
@@ -350,7 +355,7 @@ describe('modules/sync', () => {
             expect(formerId).to.equal('foo');
 
             expect(former.uuid).to.equal(formerId);
-            expect(former.last_modified).to.equal(10);
+            expect(former.last_modified).to.equal(10); // from server
             // ensure we reset the local date
             expect(former.last_modified_locally).to.be.null;
           });
