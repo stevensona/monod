@@ -38,10 +38,29 @@ describe('modules/documents', () => {
     expect(state.forceUpdate).to.be.false;
   });
 
-  it('should return a new document (with local modifications) when updating the template', () => {
+  it([
+    'should return a new document without local modifications',
+    'when updating the template of the default one'
+  ].join(''), () => {
     const template = 'letter';
 
     let state = reducer(undefined, '');
+
+    const docBeforeUpdate = state.current;
+
+    state = reducer(state, { type: actions.UPDATE_TEMPLATE, template });
+
+    expect(state.current.get('template')).to.equal(template);
+    expect(state.current !== docBeforeUpdate).to.be.true;
+    expect(state.forceUpdate).to.be.false;
+
+    expect(state.current.get('last_modified_locally')).to.be.null;
+  });
+
+  it('should return a new document (with local modifications) when updating the template', () => {
+    const template = 'letter';
+
+    let state = reducer({ current: new Document({ content: 'foo' }) }, '');
 
     const docBeforeUpdate = state.current;
 
