@@ -4,6 +4,10 @@ export default {
   APP_NAME: 'monod',
   DOCUMENTS_STORE: 'documents',
 
+  // CodeMirror
+  CODE_MIRROR_MODE: 'gfm',
+  CODE_MIRROR_THEME: 'monod',
+
   // in app/modules/documents.js
   UPDATE_CONTENT_DEBOUNCE_TIME: 100,
 

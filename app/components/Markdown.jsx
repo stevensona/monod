@@ -1,9 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import CodeMirror from 'codemirror';
 
+import 'codemirror/mode/gfm/gfm';
 import 'codemirror/lib/codemirror.css';
 
-import markdownLoader from './loaders/Markdown';
+import config from '../config';
 
 
 export default class Markdown extends Component {
@@ -16,46 +17,25 @@ export default class Markdown extends Component {
     this.setTextareaEl = this.setTextareaEl.bind(this);
   }
 
-  componentWillMount() {
-    markdownLoader().then(() => {
-      const defaultValue = this.props.content || '';
-      const textareaNode = this.$textarea;
-      const options = {
-        autofocus: true,
-        lineNumbers: true,
-        lineWrapping: true,
-        mode: 'gfm',
-        scrollbarStyle: null,
-        theme: 'monod',
-      };
-
-      // CodeMirror main instance
-      this.codeMirror = CodeMirror.fromTextArea(textareaNode, options);
-      this.setState({ cursor: this.codeMirror.getCursor() });
-
-      // Set default value
-      // It is important to set the default value *before* defining the event
-      // listeners so that it does not trigger a "change" event.
-      this.codeMirror.setValue(defaultValue);
-
-      // Bind CodeMirror events
-      this.codeMirror.on('change', this.onChange.bind(this));
-      this.codeMirror.on('scroll', this.onScroll.bind(this));
-    });
-  }
-
   componentDidMount() {
-    /*
-    this.context.controller.on(Events.UPDATE_WITHOUT_CONFLICT, (state) => {
-      // force content update
-      this.getCodeMirror().setValue(state.document.content);
-    });
+    const defaultValue = this.props.content || '';
+    const textareaNode = this.$textarea;
+    const options = {
+      autofocus: true,
+      lineNumbers: true,
+      lineWrapping: true,
+      scrollbarStyle: null,
+      mode: config.CODE_MIRROR_MODE,
+      theme: config.CODE_MIRROR_THEME,
+    };
 
-    this.context.controller.on(Events.CONFLICT, (state) => {
-      // force content update
-      this.getCodeMirror().setValue(state.fork.document.content);
-    });
-    */
+    // CodeMirror main instance
+    this.codeMirror = CodeMirror.fromTextArea(textareaNode, options);
+    this.setState({ cursor: this.codeMirror.getCursor() });
+
+    // Bind CodeMirror events
+    this.codeMirror.on('change', this.onChange.bind(this));
+    this.codeMirror.on('scroll', this.onScroll.bind(this));
   }
 
   componentWillReceiveProps(nextProps) {
