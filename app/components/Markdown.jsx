@@ -12,8 +12,6 @@ export default class Markdown extends Component {
   constructor(props, context) {
     super(props, context);
 
-    this.state = { cursor: null, scrollInfo: null };
-
     this.setTextareaEl = this.setTextareaEl.bind(this);
   }
 
@@ -36,23 +34,6 @@ export default class Markdown extends Component {
     this.codeMirror.on('scroll', this.onScroll.bind(this));
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.content !== this.props.content) {
-      // force content update and move cursor
-      this.getCodeMirror().setValue(nextProps.content);
-      this.getCodeMirror().setCursor(this.state.cursor);
-
-      const { left, clientHeight, height } = this.state.scrollInfo;
-      let top = this.state.scrollInfo.top;
-
-      if ((top + clientHeight) === height) {
-        top += 30;
-      }
-
-      this.getCodeMirror().scrollTo(left, top);
-    }
-  }
-
   shouldComponentUpdate() {
     return false;
   }
@@ -61,12 +42,6 @@ export default class Markdown extends Component {
     const newValue = this.getCodeMirror().getDoc().getValue();
 
     if (newValue !== this.props.content) {
-      // Retain cursor position for upcoming update
-      this.setState({
-        cursor: this.getCodeMirror().getCursor(),
-        scrollInfo: this.getCodeMirror().getScrollInfo(),
-      });
-
       // Update the value -> rendering
       this.props.onChange(newValue);
 
