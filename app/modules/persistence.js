@@ -1,7 +1,8 @@
 import request from 'superagent';
 
-import { encrypt } from '../utils';
+import config from '../config';
 import Document from '../Document';
+import { encrypt } from '../utils';
 import { isOnline, isOffline } from './monod';
 import { updateCurrentDocument } from './documents';
 
@@ -78,7 +79,7 @@ export function localPersist() {
 
   thunk.meta = {
     debounce: {
-      time: 1000,
+      time: config.LOCAL_PERSIST_DEBOUNCE_TIME,
       key: LOCAL_PERSIST,
     },
   };

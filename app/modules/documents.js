@@ -2,6 +2,7 @@ import Document from '../Document';
 import { error } from './notification';
 import { localPersist } from './persistence';
 import { newSecret } from '../utils';
+import config from '../config';
 
 
 // Actions
@@ -57,7 +58,7 @@ export function updateContent(content) {
 
   thunk.meta = {
     debounce: {
-      time: 100,
+      time: config.UPDATE_CONTENT_DEBOUNCE_TIME,
       key: UPDATE_CONTENT,
     },
   };
@@ -79,10 +80,7 @@ export function updateTemplate(template) {
 
 export function notFound() {
   return (dispatch) => {
-    dispatch(error([
-      'We could not find the document you were trying to load',
-      'so we have redirected you to a new document.',
-    ].join(' ')));
+    dispatch(error(config.NOT_FOUND_MESSAGE));
 
     dispatch(loadDefault());
   };
@@ -90,11 +88,7 @@ export function notFound() {
 
 export function decryptionFailed() {
   return (dispatch) => {
-    dispatch(error([
-      'We were unable to decrypt the document. Either the secret has not',
-      'been supplied or it is invalid.',
-      'We have redirected you to a new document.',
-    ].join(' ')));
+    dispatch(error(config.DECRYPTION_FAILED_MESSAGE));
 
     dispatch(loadDefault());
   };
@@ -102,11 +96,7 @@ export function decryptionFailed() {
 
 export function serverUnreachable() {
   return (dispatch) => {
-    dispatch(error([
-      'We could not load the document you are requesting because we did not',
-      'find it locally and the server is currently unreachable.',
-      'We have redirected you to a new document.',
-    ].join(' ')));
+    dispatch(error(config.SERVER_UNREACHABLE_MESSAGE));
 
     dispatch(loadDefault());
   };

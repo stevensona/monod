@@ -1,6 +1,42 @@
 /* eslint max-len: 0 */
 export default {
+  // localForage settings
   APP_NAME: 'monod',
+  DOCUMENTS_STORE: 'documents',
+
+  // in app/modules/documents.js
+  UPDATE_CONTENT_DEBOUNCE_TIME: 100,
+
+  // in app/modules/persistence.js
+  LOCAL_PERSIST_DEBOUNCE_TIME: 1000,
+
+  // in app/modules/sync.js
+  DOCUMENT_UPDATED_MESSAGE: [
+    'We have updated the document you are viewing to its latest revision.',
+    'Happy reading/working!',
+  ].join(' '),
+
+  // in app/modules/documents.js
+  NOT_FOUND_MESSAGE: [
+    'We could not find the document you were trying to load',
+    'so we have redirected you to a new document.',
+  ].join(' '),
+
+  // in app/modules/documents.js
+  DECRYPTION_FAILED_MESSAGE: [
+    'We were unable to decrypt the document. Either the secret has not',
+    'been supplied or it is invalid.',
+    'We have redirected you to a new document.',
+  ].join(' '),
+
+  // in app/modules/documents.js
+  SERVER_UNREACHABLE_MESSAGE: [
+    'We could not load the document you are requesting because we did not',
+    'find it locally and the server is currently unreachable.',
+    'We have redirected you to a new document.',
+  ].join(' '),
+
+  // in app/Document.js
   DEFAULT_CONTENT: [
     '---',
     'hello: world! # YAML Front Matter (for templates)',

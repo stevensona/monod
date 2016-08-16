@@ -3,10 +3,10 @@ import React from 'react';
 import uuid from 'uuid';
 import request from 'superagent';
 
+import config from '../config';
+import Document from '../Document';
 import { Errors, encrypt, decrypt, newSecret } from '../utils';
 import { localPersist, serverPersist } from './persistence';
-import Document from '../Document';
-
 import { isOnline, isOffline } from './monod';
 import {
   loadSuccess,
@@ -96,10 +96,7 @@ export function synchronize() { // eslint-disable-line import/prefer-default-exp
                 .set('last_modified_locally', null)
             ));
 
-            dispatch(info([
-              'We have updated the document you are viewing to its latest revision.',
-              'Happy reading/working!',
-            ].join(' ')));
+            dispatch(info(config.DOCUMENT_UPDATED_MESSAGE));
 
             return dispatch(localPersist());
           }
