@@ -36,19 +36,29 @@ export default class Markdown extends Component {
     this.codeMirror.on('scroll', this.onScroll.bind(this));
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.content !== nextProps.content &&
+      this.getCodeMirror().getValue() !== nextProps.content
+    ) {
+      this.getCodeMirror().setValue(nextProps.content);
+    }
+  }
+
   shouldComponentUpdate() {
     return false;
   }
 
-  onChange() {
-    const newValue = this.getCodeMirror().getDoc().getValue();
+  onChange(doc, change) {
+    if ('setValue' !== change.origin) {
+      const newValue = doc.getValue();
 
-    if (newValue !== this.props.content) {
-      // Update the value -> rendering
-      this.props.onChange(newValue);
+      if (newValue !== this.props.content) {
+        // Update the value -> rendering
+        this.props.onChange(newValue);
 
-      // Update scrolling position (ensure rendering is visible)
-      this.onScroll();
+        // Update scrolling position (ensure rendering is visible)
+        this.onScroll();
+      }
     }
   }
 
