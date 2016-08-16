@@ -19,7 +19,8 @@ store.dispatch(load(
   window.location.hash.slice(1)
 ));
 
-require('offline-plugin/runtime').install();
+/* eslint no-unused-expressions: 0, global-require: 0 */
+'production' === process.env.NODE_ENV && require('offline-plugin/runtime').install();
 
 ReactDOM.render(
   <AppContainer>
