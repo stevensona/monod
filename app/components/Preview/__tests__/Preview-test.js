@@ -5,6 +5,7 @@ import emojione from 'emojione';
 import hljs from 'highlight.js';
 import mdit from 'markdown-it';
 import katex from 'katex';
+import sinon from 'sinon';
 
 // plugins loaded in the PreviewLoader, which we cannot use in the test suite
 // since it is tied to webpack's require feature...
@@ -56,14 +57,25 @@ describe('<Preview />', () => {
 
   it('renders a block with preview css class', () => {
     const wrapper = shallow(
-      <Preview content={""} position={0} template={''} />
+      <Preview
+        content={""}
+        position={0}
+        template={''}
+        onClickCheckbox={() => {}}
+      />
     );
 
     expect(wrapper.find('.preview')).to.have.length(1);
   });
 
   it('renders a loading message', () => {
-    const wrapper = render(<Preview content={""} position={0} template={''} />);
+    const wrapper = render(
+      <Preview
+        content={""}
+        position={0}
+        template={''}
+        onClickCheckbox={() => {}}
+      />);
 
     expect(wrapper.text()).to.contain('Loading all the rendering stuff...');
   });
@@ -75,6 +87,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -92,6 +105,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -109,6 +123,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -132,6 +147,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -151,6 +167,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -179,6 +196,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -213,6 +231,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -239,6 +258,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -264,6 +284,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -281,6 +302,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -301,6 +323,7 @@ describe('<Preview />', () => {
         template={'letter'}
         position={0}
         previewLoader={previewLoader}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -330,6 +353,7 @@ describe('<Preview />', () => {
         template={''}
         position={0}
         previewLoader={previewLoader}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -360,6 +384,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -378,6 +403,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -396,6 +422,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -413,6 +440,8 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -430,6 +459,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -447,6 +477,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -464,6 +495,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -481,6 +513,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -498,6 +531,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -517,6 +551,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -534,6 +569,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -557,6 +593,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -578,6 +615,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -595,6 +633,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -612,6 +651,7 @@ describe('<Preview />', () => {
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -636,6 +676,7 @@ Annonce | Où | WM | Taille | Nb pièces | Etage | Balcon? | Cave/Gge/Parking | 
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -654,13 +695,30 @@ Annonce | Où | WM | Taille | Nb pièces | Etage | Balcon? | Cave/Gge/Parking | 
         position={0}
         previewLoader={previewLoader}
         template={''}
+        onClickCheckbox={() => {}}
       />
     );
 
     setTimeout(() => {
-      expect(wrapper.html()).to.contain(
-        '<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox"> item</li>'
-      );
+      expect(wrapper.html()).to.contain('<li class="task-list-item">');
+
+      done();
+    });
+  });
+
+  it('should add a data attribute to each task list item', (done) => {
+    const wrapper = mount(
+      <Preview
+        content={'Hello:\n\n- [ ] item'}
+        position={0}
+        previewLoader={previewLoader}
+        template={''}
+        onClickCheckbox={() => {}}
+      />
+    );
+
+    setTimeout(() => {
+      expect(wrapper.html()).to.contain('data-task-list-item-index="0"');
 
       done();
     });

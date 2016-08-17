@@ -155,7 +155,9 @@ function doClickOnTask(state, action) {
 
   return {
     ...state,
-    current: state.current.set('content', updatedContent),
+    current: state
+      .current.set('content', updatedContent)
+      .set('last_modified_locally', Date.now()),
     forceUpdate: true,
   };
 }
