@@ -13,6 +13,7 @@
 @include foundation-close-button;
 @include foundation-button;
 @include foundation-button-group;
+@include foundation-badge;
 
 /* -- FontAwesome -- */
 $fa-font-path: '~font-awesome/fonts';
@@ -36,6 +37,10 @@ $fa-font-path: '~font-awesome/fonts';
 @import 'components/footer';
 @import 'components/sync';
 @import 'components/message_box';
+@import 'components/share_modal';
+
+// Utils
+@import 'utils/tooltips';
 
 // Misc
 @import 'print';

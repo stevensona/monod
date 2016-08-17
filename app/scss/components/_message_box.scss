@@ -42,8 +42,15 @@ $message-box-height: 65px;
             border-bottom: 3px solid $primary-color;
         }
 
+        .badge {
+            margin-right: 0.3rem;
+        }
+
         p {
+            margin-right: 2rem;
             margin-bottom: 0;
+            vertical-align: middle;
+            display: inline-block;
 
             a {
                 color: inherit;

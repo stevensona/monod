@@ -131,12 +131,8 @@ const common = {
             // Favicon generated with http://realfavicongenerator.net
             favicon: 'app/favicon.ico',
             version: VERSION.substring(0, 7),
-            apiEndpoint: '',
             // Main "div" `id`
             appMountId: 'app',
-            // No need to inject assets in the given template as it is handled
-            // by the template itself
-            inject: false
         }),
         new OfflinePlugin({
           caches: 'all',
@@ -158,30 +154,12 @@ if (TARGET === 'dev' || !TARGET) {
     module.exports = merge(common, {
         // Enable sourcemaps
         devtool: 'eval-source-map',
-        // Development server + Hot Module Replacement
-        devServer: {
-            // Enable history API fallback so HTML5 History API based routing
-            // works. This is a good default that will come in handy in more
-            // complicated setups.
-            historyApiFallback: true,
-            // Enable hot code replacement
-            hot: true,
-            // Let Webpack generate the client portion used to connect the
-            // generated bundle running in-memory to the development server
-            inline: true,
-            // Display some kind of progress bar
-            progress: true,
-            // Display only errors to reduce the amount of output.
-            stats: 'errors-only',
-            // Development server settings
-            host: process.env.HOST || '127.0.0.1',
-            port: process.env.PORT || 8080,
-            proxy: {
-              '/documents/*': {
-                target: 'http://127.0.0.1:3000',
-              }
-            }
-        },
+        entry: [
+          'react-hot-loader/patch',
+          'webpack-dev-server/client?http://localhost:4000',
+          'webpack/hot/only-dev-server',
+          PATHS.app
+        ],
         module: {
             loaders: [
                 {
