@@ -370,5 +370,15 @@ describe('modules/documents', () => {
   - [ ] follow up subtask #4321`
       );
     });
+
+    it('should not change the current document if there is no task list item', () => {
+      const doc = new Document({ content: 'Hello' });
+
+      const index = 123;
+      const state = reducer({ current: doc }, actions.toggleTaskListItem(index));
+
+      expect(state.current.get('content')).to.equal('Hello');
+      expect(state.current.get('last_modified_locally')).to.be.null;
+    });
   });
 });

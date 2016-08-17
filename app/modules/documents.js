@@ -153,6 +153,10 @@ function doClickOnTask(state, action) {
     return '[x] ';
   });
 
+  if (content === updatedContent) {
+    return state;
+  }
+
   return {
     ...state,
     current: state.current
