@@ -22,7 +22,9 @@ store.dispatch(load(
 if ('production' === process.env.NODE_ENV) {
   require('offline-plugin/runtime').install(); // eslint-disable-line global-require
   require('raven-js') // eslint-disable-line global-require
-    .config('https://33eb806367954478b38b7dba7828bb54@app.getsentry.com/92503')
+    .config('https://33eb806367954478b38b7dba7828bb54@app.getsentry.com/92503', {
+      release: appVersion,
+    })
     .install();
 }
 
