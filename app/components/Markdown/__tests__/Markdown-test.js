@@ -120,6 +120,7 @@ describe('<Markdown />', () => {
         content={""}
         onChange={spy}
         onUpdatePosition={() => {}}
+        forceUpdate={false}
       />
     );
 

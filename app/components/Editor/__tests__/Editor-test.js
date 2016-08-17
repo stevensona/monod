@@ -21,6 +21,7 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
+        forceUpdate={false}
       />
     );
     expect(wrapper.find(Markdown)).to.have.length(1);
@@ -33,6 +34,7 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
+        forceUpdate={false}
       />
     );
     expect(wrapper.find(Preview)).to.have.length(1);
@@ -47,6 +49,7 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={spy}
         template={''}
+        forceUpdate={false}
       />
     );
     const content = 'Hello, World';
@@ -63,6 +66,7 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
+        forceUpdate={false}
       />
     );
 
@@ -76,6 +80,7 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
+        forceUpdate={false}
       />
     );
 
@@ -89,6 +94,7 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
+        forceUpdate={false}
       />
     );
 
@@ -103,6 +109,7 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={spy}
         template={''}
+        forceUpdate={false}
       />
     );
 
@@ -118,6 +125,7 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
+        forceUpdate={false}
       />
     );
     const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();
@@ -137,6 +145,7 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
+        forceUpdate={false}
       />
     );
     const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();
@@ -162,6 +171,7 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
+        forceUpdate={false}
       />
     );
     const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();
@@ -181,6 +191,7 @@ describe('<Editor />', () => {
         content={''}
         onUpdateContent={() => {}}
         template={''}
+        forceUpdate={false}
       />
     );
     const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();
