@@ -42,26 +42,6 @@ describe('<Editor />', () => {
     expect(wrapper.find(Preview)).to.have.length(1);
   });
 
-  it('calls onUpdateContent() when text is entered in Markdown component', () => {
-    const spy = sinon.spy();
-
-    const wrapper = shallow(
-      <Editor
-        loaded
-        content={''}
-        onUpdateContent={spy}
-        template={''}
-        forceUpdate={false}
-        onClickCheckbox={() => {}}
-      />
-    );
-    const content = 'Hello, World';
-
-    wrapper.find('Markdown').simulate('change', content);
-
-    expect(spy.calledOnce).to.be.true;
-  });
-
   it('renders a Loader component', () => {
     const wrapper = shallow(
       <Editor
