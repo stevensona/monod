@@ -57,6 +57,10 @@ class Preview extends Component {
         },
       });
 
+      this.markdownIt.use(deps.markdownItTaskLists, {
+        enabled: true,
+      });
+
       this.emojione = deps.emojione;
       this.emojione.ascii = true;
       this.emojione.sprites = true;

@@ -18,6 +18,7 @@ import mditAbbr from 'markdown-it-abbr';
 import mditKatex from 'markdown-it-katex';
 import mditContainer from 'markdown-it-container';
 import mditClassy from 'markdown-it-classy';
+import mditTaskLists from 'markdown-it-task-lists';
 
 // see: https://github.com/mochajs/mocha/issues/1847
 const { before, describe, it, Promise } = global;
@@ -46,6 +47,7 @@ describe('<Preview />', () => {
           mditClassy,
         ],
         markdownItContainer: mditContainer,
+        markdownItTaskLists: mditTaskLists,
         hljs: hljs,
         emojione: emojione
       });
@@ -640,6 +642,25 @@ Annonce | Où | WM | Taille | Nb pièces | Etage | Balcon? | Cave/Gge/Parking | 
     setTimeout(() => {
       expect(wrapper.html()).to.contain(`Annonce`);
       expect(wrapper.html()).to.contain(`schnapp.de`);
+
+      done();
+    });
+  });
+
+  it('supports task lists', (done) => {
+    const wrapper = mount(
+      <Preview
+        content={'Hello:\n\n- [ ] item'}
+        position={0}
+        previewLoader={previewLoader}
+        template={''}
+      />
+    );
+
+    setTimeout(() => {
+      expect(wrapper.html()).to.contain(
+        '<li class="task-list-item"><input class="task-list-item-checkbox" type="checkbox"> item</li>'
+      );
 
       done();
     });
