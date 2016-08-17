@@ -4,8 +4,6 @@ import { expect } from 'chai';
 import emojione from 'emojione';
 import hljs from 'highlight.js';
 import mdit from 'markdown-it';
-import katex from 'katex';
-import sinon from 'sinon';
 
 // plugins loaded in the PreviewLoader, which we cannot use in the test suite
 // since it is tied to webpack's require feature...
