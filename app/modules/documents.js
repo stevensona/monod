@@ -11,6 +11,7 @@ export const LOAD_SUCCESS = 'monod/documents/LOAD_SUCCESS';
 export const UPDATE_TEMPLATE = 'monod/documents/UPDATE_TEMPLATE';
 export const UPDATE_CONTENT = 'monod/documents/UPDATE_CONTENT';
 export const UPDATE_CURRENT_DOCUMENT = 'monod/documents/UPDATE_CURRENT_DOCUMENT';
+export const TOGGLE_TASK_LIST_ITEM = 'monod/documents/TOGGLE_TASK_LIST_ITEM';
 
 // Action Creators
 export function loadDefault() {
@@ -108,6 +109,10 @@ export function serverUnreachable() {
   };
 }
 
+export function toggleTaskListItem(index) {
+  return { type: TOGGLE_TASK_LIST_ITEM, index };
+}
+
 // Reducer
 const initialState = {
   current: new Document(),
@@ -132,8 +137,34 @@ function doUpdateTemplate(state, action) {
   };
 }
 
+function doClickOnTask(state, action) {
+  const content = state.current.get('content');
+
+  let index = 0;
+  const updatedContent = content.replace(/\[[x| ]\] /gi, (match) => {
+    if (action.index !== index++) {
+      return match;
+    }
+
+    if (/x/i.test(match)) {
+      return '[ ] ';
+    }
+
+    return '[x] ';
+  });
+
+  return {
+    ...state,
+    current: state.current.set('content', updatedContent),
+    forceUpdate: true,
+  };
+}
+
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
+    case TOGGLE_TASK_LIST_ITEM:
+      return doClickOnTask(state, action);
+
     case UPDATE_CURRENT_DOCUMENT:
       return {
         ...state,
