@@ -380,5 +380,15 @@ describe('modules/documents', () => {
       expect(state.current.get('content')).to.equal('Hello');
       expect(state.current.get('last_modified_locally')).to.be.null;
     });
+
+    it('should not do anything if it is not strictly a task list item', () => {
+      const doc = new Document({ content: '[ ] foo' });
+
+      const index = 0;
+      const state = reducer({ current: doc }, actions.toggleTaskListItem(index));
+
+      expect(state.current.get('content')).to.equal('[ ] foo');
+      expect(state.current.get('last_modified_locally')).to.be.null;
+    });
   });
 });

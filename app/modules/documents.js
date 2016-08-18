@@ -141,16 +141,16 @@ function doClickOnTask(state, action) {
   const content = state.current.get('content');
 
   let index = 0;
-  const updatedContent = content.replace(/\[[x| ]\] /gi, (match) => {
+  const updatedContent = content.replace(/\- \[[x| ]\] /gi, (match) => {
     if (action.index !== index++) {
       return match;
     }
 
     if (/x/i.test(match)) {
-      return '[ ] ';
+      return '- [ ] ';
     }
 
-    return '[x] ';
+    return '- [x] ';
   });
 
   if (content === updatedContent) {
