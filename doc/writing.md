@@ -33,6 +33,7 @@ extensions.
 * [Subscript](#subscript)
 * [Superscript](#superscript)
 * [Tables](#tables)
+* [Task lists](#task-lists)
 
 
 ### Abbreviations
@@ -173,6 +174,23 @@ Monod supports (data) tables:
 
 Note that it is possible to choose column alignment by specifying `:` either on
 the left, right or both sides of the horizontal separators.
+
+### Task Lists
+
+Task lists are lists with items marked as either `[ ]` or `[x]` (incomplete or
+complete). For example:
+
+```
+- [ ] a task list item
+  - [ ] a sub item
+- [x] a task list item that is completed
+```
+
+This renders as a list of checkboxes. From here, you can either modify the
+content of your Monod document, or directly check or uncheck the boxes in the
+preview panel, and the text will automatically update:
+
+![](images/task-lists.gif)
 
 
 ## YAML Front-Matter

@@ -136,5 +136,17 @@
                 bottom: 43px;
             }
         }
+
+        .task-list {
+            list-style-type: none;
+
+            input[type=checkbox] {
+                margin: 0;
+            }
+        }
+
+        span > .task-list {
+            margin-left: 0;
+        }
     }
 }

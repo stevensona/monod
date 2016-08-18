@@ -23,6 +23,7 @@ export default () => new Promise(resolve => {
         require('markdown-it-classy'),
       ],
       markdownItContainer: require('markdown-it-container'),
+      markdownItTaskLists: require('markdown-it-task-lists'),
       emojione: require('emojione'),
     });
   });

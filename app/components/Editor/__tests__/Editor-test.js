@@ -22,6 +22,7 @@ describe('<Editor />', () => {
         onUpdateContent={() => {}}
         template={''}
         forceUpdate={false}
+        onClickCheckbox={() => {}}
       />
     );
     expect(wrapper.find(Markdown)).to.have.length(1);
@@ -35,28 +36,10 @@ describe('<Editor />', () => {
         onUpdateContent={() => {}}
         template={''}
         forceUpdate={false}
+        onClickCheckbox={() => {}}
       />
     );
     expect(wrapper.find(Preview)).to.have.length(1);
-  });
-
-  it('calls onUpdateContent() when text is entered in Markdown component', () => {
-    const spy = sinon.spy();
-
-    const wrapper = shallow(
-      <Editor
-        loaded
-        content={''}
-        onUpdateContent={spy}
-        template={''}
-        forceUpdate={false}
-      />
-    );
-    const content = 'Hello, World';
-
-    wrapper.find('Markdown').simulate('change', content);
-
-    expect(spy.calledOnce).to.be.true;
   });
 
   it('renders a Loader component', () => {
@@ -67,6 +50,7 @@ describe('<Editor />', () => {
         onUpdateContent={() => {}}
         template={''}
         forceUpdate={false}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -81,6 +65,7 @@ describe('<Editor />', () => {
         onUpdateContent={() => {}}
         template={''}
         forceUpdate={false}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -95,6 +80,7 @@ describe('<Editor />', () => {
         onUpdateContent={() => {}}
         template={''}
         forceUpdate={false}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -110,6 +96,7 @@ describe('<Editor />', () => {
         onUpdateContent={spy}
         template={''}
         forceUpdate={false}
+        onClickCheckbox={() => {}}
       />
     );
 
@@ -126,6 +113,7 @@ describe('<Editor />', () => {
         onUpdateContent={() => {}}
         template={''}
         forceUpdate={false}
+        onClickCheckbox={() => {}}
       />
     );
     const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();
@@ -146,6 +134,7 @@ describe('<Editor />', () => {
         onUpdateContent={() => {}}
         template={''}
         forceUpdate={false}
+        onClickCheckbox={() => {}}
       />
     );
     const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();
@@ -172,6 +161,7 @@ describe('<Editor />', () => {
         onUpdateContent={() => {}}
         template={''}
         forceUpdate={false}
+        onClickCheckbox={() => {}}
       />
     );
     const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();
@@ -192,6 +182,7 @@ describe('<Editor />', () => {
         onUpdateContent={() => {}}
         template={''}
         forceUpdate={false}
+        onClickCheckbox={() => {}}
       />
     );
     const verticalHandlerWrapper = wrapper.find('VerticalHandler').shallow();

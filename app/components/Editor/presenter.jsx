@@ -75,6 +75,7 @@ export default class Editor extends Component {
           content={this.props.content}
           position={this.state.position}
           template={this.props.template}
+          onClickCheckbox={this.props.onClickCheckbox}
         />
       </Loader>
     );
@@ -86,5 +87,6 @@ Editor.propTypes = {
   content: PropTypes.string.isRequired,
   template: PropTypes.string.isRequired,
   onUpdateContent: PropTypes.func.isRequired,
+  onClickCheckbox: PropTypes.func.isRequired,
   forceUpdate: PropTypes.bool.isRequired,
 };

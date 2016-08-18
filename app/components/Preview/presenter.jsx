@@ -16,6 +16,7 @@ class Preview extends Component {
     this.requestAnimationId = false;
 
     this.setRenderedEl = this.setRenderedEl.bind(this);
+    this.onClickCheckbox = this.onClickCheckbox.bind(this);
   }
 
   componentWillMount() {
@@ -57,12 +58,20 @@ class Preview extends Component {
         },
       });
 
+      this.markdownIt.use(deps.markdownItTaskLists, {
+        enabled: true,
+      });
+
       this.emojione = deps.emojione;
       this.emojione.ascii = true;
       this.emojione.sprites = true;
 
       this.forceUpdate();
     });
+  }
+
+  componentDidMount() {
+    this.$rendered.addEventListener('click', this.onClickCheckbox);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -87,6 +96,27 @@ class Preview extends Component {
 
   shouldComponentUpdate(nextProps) {
     return this.props.content !== nextProps.content || this.props.template !== nextProps.template;
+  }
+
+  componentDidUpdate() {
+    const checkboxes = this.$rendered.querySelectorAll('.task-list-item-checkbox');
+
+    let index = 0;
+    [].forEach.call(checkboxes, (cb) => {
+      cb.setAttribute('data-task-list-item-index', index++);
+    });
+  }
+
+  componentWillUnmount() {
+    this.$rendered.removeEventListener('click', this.onClickCheckbox);
+  }
+
+  onClickCheckbox(e) {
+    const target = e.target;
+
+    if (target.hasAttribute('data-task-list-item-index')) {
+      this.props.onClickCheckbox(target.getAttribute('data-task-list-item-index'));
+    }
   }
 
   /**
@@ -186,6 +216,7 @@ Preview.propTypes = {
   template: PropTypes.string.isRequired,
   position: PropTypes.number.isRequired,
   previewLoader: PropTypes.func.isRequired,
+  onClickCheckbox: PropTypes.func.isRequired,
 };
 
 Preview.defaultProps = {

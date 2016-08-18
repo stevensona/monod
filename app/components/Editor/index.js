@@ -1,6 +1,9 @@
 import { connect } from 'react-redux';
 import Editor from './presenter';
-import { updateContent } from '../../modules/documents';
+import {
+  updateContent,
+  toggleTaskListItem,
+} from '../../modules/documents';
 
 
 const mapStateToProps = (state) => {
@@ -17,6 +20,13 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   onUpdateContent: (content) => {
     dispatch(updateContent(content));
+  },
+  onClickCheckbox: (index) => {
+    const idx = parseInt(index, 10);
+
+    if (!isNaN(idx)) {
+      dispatch(toggleTaskListItem(idx));
+    }
   },
 });
 

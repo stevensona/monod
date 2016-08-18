@@ -276,4 +276,119 @@ describe('modules/documents', () => {
       expect(triggeredActions[1].type).to.equal(actions.LOAD_DEFAULT);
     });
   });
+
+  describe('toggleTaskListItem()', () => {
+    it('should check a task item in the current\’s document content', () => {
+      const doc = new Document({
+        content: `Hello\n\n- [ ] item 1`,
+      });
+
+      const index = 0;
+      const state = reducer({ current: doc }, actions.toggleTaskListItem(index));
+
+      expect(state.current.get('content')).to.equal(
+        'Hello\n\n- [x] item 1'
+      );
+    });
+
+    it('should uncheck a checked task item in the current\’s document content', () => {
+      const doc = new Document({
+        content: `Hello\n\n- [x] item 1`,
+      });
+
+      const index = 0;
+      const state = reducer({ current: doc }, actions.toggleTaskListItem(index));
+
+      expect(state.current.get('content')).to.equal(
+        'Hello\n\n- [ ] item 1'
+      );
+    });
+
+    it('should work with capital X', () => {
+      const doc = new Document({
+        content: `Hello\n\n- [X] item 1`,
+      });
+
+      const index = 0;
+      const state = reducer({ current: doc }, actions.toggleTaskListItem(index));
+
+      expect(state.current.get('content')).to.equal(
+        'Hello\n\n- [ ] item 1'
+      );
+    });
+
+    it('should deal with many checkboxes', () => {
+      const doc = new Document({
+        content: `Hello:
+
+- [ ] a bigger project
+  - [ ] first subtask #1234
+  - [x] follow up subtask #4321
+  - [ ] final subtask cc @mention
+- [ ] a separate task`
+      });
+
+      const index = 2;
+      const state = reducer({ current: doc }, actions.toggleTaskListItem(index));
+
+      expect(state.current.get('content')).to.equal(`Hello:
+
+- [ ] a bigger project
+  - [ ] first subtask #1234
+  - [ ] follow up subtask #4321
+  - [ ] final subtask cc @mention
+- [ ] a separate task`
+      );
+    });
+
+    it('should deal with many checkboxes (2)', () => {
+      const doc = new Document({
+        content: `Hello:
+
+- [ ] a bigger project
+  - [ ] first subtask #1234
+  - [X] follow up subtask #4321
+  - [ ] final subtask cc @mention
+
+- [ ] a separate task
+  - [ ] first subtask #1234
+  - [X] follow up subtask #4321`
+      });
+
+      const index = 6;
+      const state = reducer({ current: doc }, actions.toggleTaskListItem(index));
+
+      expect(state.current.get('content')).to.equal(`Hello:
+
+- [ ] a bigger project
+  - [ ] first subtask #1234
+  - [X] follow up subtask #4321
+  - [ ] final subtask cc @mention
+
+- [ ] a separate task
+  - [ ] first subtask #1234
+  - [ ] follow up subtask #4321`
+      );
+    });
+
+    it('should not change the current document if there is no task list item', () => {
+      const doc = new Document({ content: 'Hello' });
+
+      const index = 123;
+      const state = reducer({ current: doc }, actions.toggleTaskListItem(index));
+
+      expect(state.current.get('content')).to.equal('Hello');
+      expect(state.current.get('last_modified_locally')).to.be.null;
+    });
+
+    it('should not do anything if it is not strictly a task list item', () => {
+      const doc = new Document({ content: '[ ] foo' });
+
+      const index = 0;
+      const state = reducer({ current: doc }, actions.toggleTaskListItem(index));
+
+      expect(state.current.get('content')).to.equal('[ ] foo');
+      expect(state.current.get('last_modified_locally')).to.be.null;
+    });
+  });
 });
