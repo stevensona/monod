@@ -148,5 +148,15 @@
         span > .task-list {
             margin-left: 0;
         }
+
+        .citation {
+          font-family: Georgia, "Times New Roman", serif;
+          font-size: 1rem;
+          text-align: justify;
+        }
+
+        .invalid-ref {
+          color: $warning-color;
+        }
     }
 }

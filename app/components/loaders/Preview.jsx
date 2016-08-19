@@ -21,6 +21,7 @@ export default () => new Promise(resolve => {
         require('markdown-it-abbr'),
         require('markdown-it-katex'),
         require('markdown-it-classy'),
+        require('../../markdown-it-plugins/cite'),
       ],
       markdownItContainer: require('markdown-it-container'),
       markdownItTaskLists: require('markdown-it-task-lists'),
