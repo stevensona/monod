@@ -59,32 +59,10 @@ describe('bibtex', () => {
     });
   });
 
-  describe('getFirstAuthor()', () => {
-    it('should return the first author', () => {
-      const result = bibtex.getFirstAuthor('William Durand and Sebastien Salva');
-
-      expect(result).to.eql({ fullname: 'Durand, W.', lastname: 'Durand' });
-    });
-
-    it('should return the first author', () => {
-      const authors = 'Victoria J. Hodge';
-      const result = bibtex.getFirstAuthor(authors);
-
-      expect(result).to.eql({ fullname: 'Hodge, V. J.', lastname: 'Hodge' });
-    });
-
-    it('should return the first author', () => {
-      const authors = 'Hunter, Sarah and Corbett, Matthew';
-      const result = bibtex.getFirstAuthor(authors);
-
-      expect(result).to.eql({ fullname: 'Hunter, S.', lastname: 'Hunter' });
-    });
-  });
-
   describe('parse()', () => {
     it('should parse inproceedings', () => {
       const [ content, expected ] = fixture('inproceedings');
-      const result = (new Bibtex()).parse(content);
+      const result = bibtex.parse(content);
 
       expect(result).to.have.length(1);
       expect(result[0].html).to.equal(expected);
@@ -92,7 +70,7 @@ describe('bibtex', () => {
 
     it('should parse articles', () => {
       const [ content, expected ] = fixture('article');
-      const result = (new Bibtex()).parse(content);
+      const result = bibtex.parse(content);
 
       expect(result).to.have.length(1);
       expect(result[0].html).to.equal(expected);
@@ -100,7 +78,7 @@ describe('bibtex', () => {
 
     it('should parse multiple bibtex entries', () => {
       const [ content, expected ] = fixture('multi-entries');
-      const result = (new Bibtex()).parse(content);
+      const result = bibtex.parse(content);
 
       expect(result).to.have.length(2);
       expect(result.map((e) => e.html).join('\n\n')).to.equal(expected);
@@ -108,7 +86,7 @@ describe('bibtex', () => {
 
     it('should parse books', () => {
       const [ content, expected ] = fixture('book');
-      const result = (new Bibtex()).parse(content);
+      const result = bibtex.parse(content);
 
       expect(result).to.have.length(1);
       expect(result[0].html).to.equal(expected);
@@ -116,7 +94,7 @@ describe('bibtex', () => {
 
     it('should parse misc (fallback)', () => {
       const [ content, expected ] = fixture('misc');
-      const result = (new Bibtex()).parse(content);
+      const result = bibtex.parse(content);
 
       expect(result).to.have.length(1);
       expect(result[0].html).to.equal(expected);
@@ -124,10 +102,42 @@ describe('bibtex', () => {
 
     it('should return the same entry exactly once', () => {
       const [ content, expected ] = fixture('multi-same');
-      const result = (new Bibtex()).parse(content);
+      const result = bibtex.parse(content);
 
       expect(result).to.have.length(2);
       expect(result.map((e) => e.html).join('\n\n')).to.equal(expected);
+    });
+  });
+
+  describe('formatHtmlKey()', () => {
+    const year = 2010;
+
+    it('should format the citation key for one author', () => {
+      const authors = 'Victoria J. Hodge';
+      const result = bibtex.formatHtmlKey(bibtex.normalizeAuthors(authors), year);
+
+      expect(result).to.equal('Hodge, 2010');
+    });
+
+    it('should format the citation key for one author (2)', () => {
+      const authors = 'William Durand';
+      const result = bibtex.formatHtmlKey(bibtex.normalizeAuthors(authors), year);
+
+      expect(result).to.equal('Durand, 2010');
+    });
+
+    it('should format the citation key for two authors', () => {
+      const authors = 'William Durand and Sebastien Salva';
+      const result = bibtex.formatHtmlKey(bibtex.normalizeAuthors(authors), year);
+
+      expect(result).to.equal('Durand & Salva, 2010');
+    });
+
+    it('should format the citation key for more than two authors', () => {
+      const authors = 'Hunter, Sarah and Corbett, Matthew and Denise, Hubert';
+      const result = bibtex.formatHtmlKey(bibtex.normalizeAuthors(authors), year);
+
+      expect(result).to.equal('Hunter <em>et al.</em>, 2010');
     });
   });
 });

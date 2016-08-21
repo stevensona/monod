@@ -3,19 +3,24 @@ import Bibtex from '../bibtex';
 
 
 module.exports = (md) => {
-  const defaultRender = md.renderer.rules.fence;
+  const MULTI_REFS_RE = /;@/;
+
   const bibtex = new Bibtex();
+  const defaultRender = md.renderer.rules.fence;
 
   // override fence renderer for `cite`
   md.renderer.rules.fence = (tokens, idx, options, env, self) => {
     const token = tokens[idx];
 
-    if ('cite' === token.info) {
-      const entries = bibtex.parse(md.utils.escapeHtml(token.content));
+    if (-1 !== token.info.indexOf('cite') && token.id) {
+      const entries = env.citations[token.id];
 
-      return entries.map(
-        (entry) => `<p class="citation">${entry.html}</p>`
-      ).join('\n');
+      if (undefined !== entries) {
+        return entries.map(
+          (entry) => `<p class="citation">${entry.html}</p>`
+        ).join('\n')
+        .concat('\n');
+      }
     }
 
     // pass token to default renderer.
@@ -25,13 +30,18 @@ module.exports = (md) => {
   // renderer for cite references `[@citation_ref]`
   md.renderer.rules.cite_ref = (tokens, idx) => { // also take: options, env, self
     const token = tokens[idx];
-    const key = token.meta.key;
+    const keys = token.meta.keys;
+    const citations = token.meta.citations;
 
-    if (!token.meta.htmlKey || null === token.meta.htmlKey) {
-      return `<span title="This reference is invalid" class="invalid-ref">[@${key}]</span>`;
+    if (keys.length !== citations.length) {
+      return [
+        '<span title="Invalid reference(s)" class="invalid-ref">',
+        `[@${token.meta.reference}]`,
+        '</span>',
+      ].join('');
     }
 
-    return token.meta.htmlKey;
+    return bibtex.formatHtmlKeys(citations);
   };
 
   // override fence block parser
@@ -121,14 +131,14 @@ module.exports = (md) => {
     token.markup = markup;
     token.map = [startLine, state.line];
 
-    if (!state.env.citations) {
-      state.env.citations = [];
-    }
+    if (-1 !== token.info.indexOf('cite')) {
+      if (!state.env.citations) {
+        state.env.citations = [];
+      }
 
-    if ('cite' === token.info) {
-      state.env.citations = state.env.citations.concat(
-        bibtex.parse(md.utils.escapeHtml(token.content))
-      );
+      token.id = state.env.citations.length + 1;
+
+      state.env.citations[token.id] = bibtex.parse(md.utils.escapeHtml(token.content));
     }
 
     return true;
@@ -141,10 +151,9 @@ module.exports = (md) => {
     const max = state.posMax;
     const start = state.pos;
 
-    // should be at least 4 chars - "[^x]"
+    // should be at least 4 chars - "[@x]"
     if (start + 3 > max) { return false; }
 
-    if (!state.env.citations) { return false; }
     if (state.src.charCodeAt(start) !== 0x5B/* [ */) { return false; }
     if (state.src.charCodeAt(start + 1) !== 0x40/* @ */) { return false; }
 
@@ -161,12 +170,22 @@ module.exports = (md) => {
 
     pos++;
 
-    const key = state.src.slice(start + 2, pos - 1);
-    const citation = state.env.citations.find((entry) => entry.key === key);
+    const reference = state.src.slice(start + 2, pos - 1);
+    const keys = reference.split(MULTI_REFS_RE); // deal with multiple refs
+
+    let citations = [];
+    if (state.env.citations && 0 < state.env.citations.length) {
+      citations = state.env
+        .citations
+        .reduce((e1, e2) => e1.concat(e2))
+        .filter(e => -1 !== keys.indexOf(e.key))
+        .sort(bibtex.sortCitations)
+      ;
+    }
 
     if (!silent) {
       token = state.push('cite_ref', '', 0);
-      token.meta = { key, htmlKey: undefined !== citation ? citation.htmlKey : null };
+      token.meta = { reference, keys, citations };
     }
 
     state.pos = pos;

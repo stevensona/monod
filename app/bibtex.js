@@ -11,27 +11,35 @@ export default class Bibtex {
     for (let i = 0; i < entries.length; i++) {
       const e = entries[i];
       const key = e.citationKey;
-      const firstAuthor = this.getFirstAuthor(e.entryTags.author);
+
+      const authors = this.normalizeAuthors(e.entryTags.author);
+      const year = parseInt(e.entryTags.year, 10);
 
       if (undefined === keys.find((k) => key === k)) {
         keys.push(key);
 
         results.push({
           key,
-          firstAuthor,
+          year,
+          authors,
           html: this.formatHtmlEntry(e.entryType, e.entryTags),
-          htmlKey: this.formatHtmlKey(firstAuthor, e.entryTags.year),
+          htmlKey: this.formatHtmlKey(authors, year),
         });
       }
     }
 
-    return results
-      .sort((e1, e2) =>
-        e1.firstAuthor.lastname.localeCompare(e2.firstAuthor.lastname)
-      )
-      .map((e) => (
-        { key: e.key, html: e.html, htmlKey: e.htmlKey }
-      ));
+    return results.sort(this.sortCitations);
+  }
+
+  // first author's latname, then year
+  sortCitations(e1, e2) {
+    let r = e1.authors[0].lastname.localeCompare(e2.authors[0].lastname);
+
+    if (0 === r) {
+      r = e1.year < e2.year ? -1 : 1;
+    }
+
+    return r;
   }
 
   formatHtmlEntry(type, data) {
@@ -76,12 +84,16 @@ export default class Bibtex {
     return this.replaceLaTeXChars(content);
   }
 
-  getFirstAuthor(authors) {
-    return this.normalizeAuthors(authors)[0];
+  formatHtmlKey(authors, year) {
+    if (3 > authors.length) {
+      return `${authors.map((a) => a.lastname).join(' & ')}, ${year}`;
+    }
+
+    return `${authors[0].lastname} <em>et al.</em>, ${year}`;
   }
 
-  formatHtmlKey(firstAuthor, year) {
-    return `(${firstAuthor.lastname} <em>et al.</em>, ${year})`;
+  formatHtmlKeys(citations) {
+    return `(${citations.map((c) => c.htmlKey).join('; ')})`;
   }
 
   normalizeAuthors(authors) {
