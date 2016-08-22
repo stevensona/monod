@@ -22,6 +22,7 @@ extensions.
 
 * [Abbreviations](#abbreviations)
 * [Autolinks](#autolinks)
+* [BibTeX support](#bibtex-support)
 * [Code](#code)
 * [Emoji](#emoji)
 * [highlighting](#highlighting)
@@ -55,6 +56,39 @@ Pay attention to the syntax: there is no space between `*` and `[`.
 In regular Markdown, links are usually written with the `[link
 description](url)` syntax. In Monod, you can directly paste an URL in your
 document, and it will be automatically transformed into a link.
+
+### BibTeX support
+
+Using [fenced code blocks](#code) (see the next section) à la GitHub, you can
+add scientific references and citations into your Monod documents. Monod will
+just render them nicely:
+
+![](images/bibtex.png)
+
+Use as many fenced `cite` code blocks as you wish to add citations, and use the
+Pandoc `[@citation_ref]` syntax to add references to these citations (using the
+citation "keys" or "references"):
+
+    According to [@citation_ref], this is not accurate.
+
+    ``` cite
+    @article{citation_ref,
+        ...
+    }
+    ```
+
+In the screenshot above, the `[@logicreasoning]` reference points to the
+citation in the fenced `cite` code block at the bottom of the document. Note
+that you can put multiple `cite` blocks, and there is no specific position
+(place them wherever you wish, but do not forget that they will be rendered
+where you put them in the preview). It is recommended to put all your citations
+in one single `cite` code block though (as you probably already do in your
+`.bib` file).
+
+The `[@li_fast_2009;@li_fast_2010]` reference contains two references, and it is
+marked as invalid because Monod does not find any citation that corresponds to
+any of the given references. With multiple references, only one not found
+reference will mark the whole reference as invalid.
 
 ### Code
 

@@ -1,0 +1,141 @@
+should parse block with `cite`
+.
+```cite
+@misc{logicreasoning,
+  title={Artificial Intelligence, Logic and Reasoning},
+  author={Martial Hebert and Mike Lewicki},
+  note={Lecture. Available from
+    https://www.cs.cmu.edu/afs/cs/academic/class/15381-s07/www/slides/022707reasoning.pdf},
+  year={2007}
+}
+```
+.
+<p class="citation">Hebert, M. & Lewicki, M. (2007). Artificial Intelligence, Logic and Reasoning. Lecture. Available from https://www.cs.cmu.edu/afs/cs/academic/class/15381-s07/www/slides/022707reasoning.pdf</p>
+.
+
+
+should render an "invalid" citation reference if not found
+.
+[@li_fast_2009]
+.
+<p><span title="Invalid reference(s)" class="invalid-ref">[@li_fast_2009]</span></p>
+.
+
+
+should render a well-formatted citation reference when found
+.
+According to [@logicreasoning] [...]
+
+## References
+
+```cite
+@misc{logicreasoning,
+  title={Artificial Intelligence, Logic and Reasoning},
+  author={Martial Hebert and Mike Lewicki},
+  note={Lecture. Available from
+    https://www.cs.cmu.edu/afs/cs/academic/class/15381-s07/www/slides/022707reasoning.pdf},
+  year={2007}
+}
+```
+.
+<p>According to (Hebert & Lewicki, 2007) [...]</p>
+<h2>References</h2>
+<p class="citation">Hebert, M. & Lewicki, M. (2007). Artificial Intelligence, Logic and Reasoning. Lecture. Available from https://www.cs.cmu.edu/afs/cs/academic/class/15381-s07/www/slides/022707reasoning.pdf</p>
+.
+
+should not have problem with where the cite block is placed
+.
+```cite
+@misc{logicreasoning,
+  title={Artificial Intelligence, Logic and Reasoning},
+  author={Martial Hebert and Mike Lewicki},
+  note={Lecture. Available from
+    https://www.cs.cmu.edu/afs/cs/academic/class/15381-s07/www/slides/022707reasoning.pdf},
+  year={2007}
+}
+```
+
+According to [@logicreasoning] [...]
+.
+<p class="citation">Hebert, M. & Lewicki, M. (2007). Artificial Intelligence, Logic and Reasoning. Lecture. Available from https://www.cs.cmu.edu/afs/cs/academic/class/15381-s07/www/slides/022707reasoning.pdf</p>
+<p>According to (Hebert & Lewicki, 2007) [...]</p>
+.
+
+should indicate when at least on citation reference is invalid
+.
+According to [@logicreasoning;@invalid_ref] [...]
+
+```cite
+@misc{logicreasoning,
+  title={Artificial Intelligence, Logic and Reasoning},
+  author={Martial Hebert and Mike Lewicki},
+  note={Lecture. Available from
+    https://www.cs.cmu.edu/afs/cs/academic/class/15381-s07/www/slides/022707reasoning.pdf},
+  year={2007}
+}
+```
+.
+<p>According to <span title="Invalid reference(s)" class="invalid-ref">[@logicreasoning;@invalid_ref]</span> [...]</p>
+<p class="citation">Hebert, M. & Lewicki, M. (2007). Artificial Intelligence, Logic and Reasoning. Lecture. Available from https://www.cs.cmu.edu/afs/cs/academic/class/15381-s07/www/slides/022707reasoning.pdf</p>
+.
+
+should not parse empty references
+.
+[@]
+.
+<p>[@]</p>
+.
+
+should parse block with `cite` even if there are extra spaces
+.
+``` cite
+@misc{logicreasoning,
+  title={Artificial Intelligence, Logic and Reasoning},
+  author={Martial Hebert and Mike Lewicki},
+  note={Lecture. Available from
+    https://www.cs.cmu.edu/afs/cs/academic/class/15381-s07/www/slides/022707reasoning.pdf},
+  year={2007}
+}
+```
+.
+<p class="citation">Hebert, M. & Lewicki, M. (2007). Artificial Intelligence, Logic and Reasoning. Lecture. Available from https://www.cs.cmu.edu/afs/cs/academic/class/15381-s07/www/slides/022707reasoning.pdf</p>
+.
+
+should parse and render other fence blocks
+.
+``` php
+<?php
+
+echo 'Hello';
+```
+.
+<pre><code class="language-php">&lt;?php
+
+echo 'Hello';
+</code></pre>
+.
+
+should deal with multiple `cite` blocks
+.
+As in [@logicreasoning;@another] ...
+
+```cite
+@misc{logicreasoning,
+  title={Artificial Intelligence, Logic and Reasoning},
+  author={Martial Hebert and Mike Lewicki},
+  year={2007}
+}
+```
+
+``` cite
+@misc{another,
+  title={Another Brick In The Wall},
+  author={Pink Floyd},
+  year={1979}
+}
+```
+.
+<p>As in (Hebert & Lewicki, 2007; Floyd, 1979) ...</p>
+<p class="citation">Hebert, M. & Lewicki, M. (2007). Artificial Intelligence, Logic and Reasoning. </p>
+<p class="citation"> & Floyd, P. (1979). Another Brick In The Wall. </p>
+.

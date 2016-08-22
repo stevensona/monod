@@ -148,5 +148,14 @@
         span > .task-list {
             margin-left: 0;
         }
+
+        .citation {
+          font-size: 1rem;
+          text-align: justify;
+        }
+
+        .invalid-ref {
+          color: $warning-color;
+        }
     }
 }
