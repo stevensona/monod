@@ -1,11 +1,9 @@
 /* eslint no-param-reassign: 0, yoda: 0, no-continue: 0 */
-import Bibtex from '../bibtex';
+import bibtex from '../bibtex';
 
 
 module.exports = (md) => {
   const MULTI_REFS_RE = /;@/;
-
-  const bibtex = new Bibtex();
   const defaultRender = md.renderer.rules.fence;
 
   // override fence renderer for `cite`
@@ -41,7 +39,7 @@ module.exports = (md) => {
       ].join('');
     }
 
-    return bibtex.formatHtmlKeys(citations);
+    return bibtex.html.renderReferences(citations);
   };
 
   // override fence block parser

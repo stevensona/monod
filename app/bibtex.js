@@ -1,107 +1,70 @@
 import parser from 'bibtex-parse-js';
 
 
-export default class Bibtex {
+// constants
+const MAX_AUTHORS_IN_REFS = 2;
+const MAX_AUTHORS_IN_CITATIONS = 6;
 
-  parse(bibtex) {
-    const entries = parser.toJSON(bibtex);
+// utils
 
-    const keys = [];
-    const results = [];
-    for (let i = 0; i < entries.length; i++) {
-      const e = entries[i];
-      const key = e.citationKey;
+function optional(string, fallback) {
+  const str = undefined === string ? fallback : string;
 
-      const authors = this.normalizeAuthors(e.entryTags.author);
-      const year = parseInt(e.entryTags.year, 10);
+  return undefined !== str ? `(${str})` : '';
+}
 
-      if (undefined === keys.find((k) => key === k)) {
-        keys.push(key);
-
-        results.push({
-          key,
-          year,
-          authors,
-          html: this.formatHtmlEntry(e.entryType, e.entryTags),
-          htmlKey: this.formatHtmlKey(authors, year),
-        });
-      }
-    }
-
-    return results.sort(this.sortCitations);
+function linkify(string) {
+  if (/^https?:\/\//.test(string)) {
+    return `<a href="${string}" rel="noreferrer noopener">${string}</a>`;
   }
 
-  // first author's latname, then year
-  sortCitations(e1, e2) {
-    let r = e1.authors[0].lastname.localeCompare(e2.authors[0].lastname);
+  return string;
+}
 
-    if (0 === r) {
-      r = e1.year < e2.year ? -1 : 1;
-    }
-
-    return r;
+function linkifyDOI(string) {
+  let str = string;
+  if (!/^https?:\/\//.test(str)) {
+    str = `http://dx.doi.org/${str}`;
   }
 
-  formatHtmlEntry(type, data) {
-    let content;
-    switch (type.toLowerCase()) {
-      case 'inproceedings':
-        content = [
-          `${this.formatAuthors(data.author)} (${data.year}). ${data.title}.`,
-          `In <em>${data.booktitle}</em> (pp. ${data.pages}). ${this.urlize(data.url)}`,
-        ].join(' ');
-        break;
+  return linkify(str);
+}
 
-      case 'article':
-        content = [
-          `${this.formatAuthors(data.author)} (${data.year}).`,
-          `${data.title}.`,
-          `<em>${data.journal}</em>,`,
-          `${data.volume}${this.optional(data.issue, data.number)},`,
-          `${data.pages}.`,
-          `${this.urlizeDOI(data.doi)}`,
-        ].join(' ');
-        break;
+function replaceLaTeXChars(string) {
+  // TODO: need more replacements
+  return string
+    .replace(/\\'e/g, 'é')
+    .replace(/\\'\{e\}/g, 'é')
+    .replace(/\{/g, '')
+    .replace(/\}/g, '')
+    .replace(/--/g, '—')
+    .replace(/\s+/g, ' ')
+  ;
+}
 
-      case 'book':
-        content = [
-          `${this.formatAuthors(data.author)} (${data.year}).`,
-          `<em>${data.title}</em>.`,
-          `${data.publisher}`,
-        ].join(' ');
-        break;
+// sorting
 
-      case 'misc':
-      default:
-        content = [
-          `${this.formatAuthors(data.author)} (${data.year}).`,
-          `${data.title}.`,
-          `${data.note || ''}`,
-        ].join(' ');
+// first author's latname, then year
+function sortCitations(e1, e2) {
+  let r = e1.authors[0].lastname.localeCompare(e2.authors[0].lastname);
 
-    }
-
-    return this.replaceLaTeXChars(content);
+  if (0 === r) {
+    r = e1.year < e2.year ? -1 : 1;
   }
 
-  formatHtmlKey(authors, year) {
-    if (3 > authors.length) {
-      return `${authors.map((a) => a.lastname).join(' & ')}, ${year}`;
-    }
+  return r;
+}
 
-    return `${authors[0].lastname} <em>et al.</em>, ${year}`;
-  }
+// formatters
 
-  formatHtmlKeys(citations) {
-    return `(${citations.map((c) => c.htmlKey).join('; ')})`;
-  }
+function normalizeAuthors(authors) {
+  const parts = authors.split(/\sand\s/);
 
-  normalizeAuthors(authors) {
-    const parts = authors.split(/\sand\s/);
-
-    return parts.map((fullname) => {
-      let otherNames;
+  return parts
+    .filter(fullname => '' !== fullname)
+    .map((fullname) => {
       let lastname;
+      let otherNames;
       if (/,/.test(fullname)) {
         const subparts = fullname.split(/,/);
         lastname = subparts[0].trim();
@@ -122,71 +85,139 @@ export default class Bibtex {
         .join(' ');
 
       return {
-        fullname: `${lastname}, ${otherNames}`,
+        fullname: '' !== otherNames ? `${lastname}, ${otherNames}` : lastname,
         lastname,
       };
     });
-  }
-
-  formatAuthors(authors) {
-    const normalizedAuthors = this.normalizeAuthors(authors);
-    const truncate = 6 < normalizedAuthors.length;
-
-    let authorsToDisplay = normalizedAuthors;
-    if (truncate) {
-      authorsToDisplay = normalizedAuthors.splice(0, 6);
-    }
-
-    // because we have to put `author, author, author & last author name`
-    const lastAuthorToDisplay = authorsToDisplay.pop();
-
-    let authorsString = authorsToDisplay
-      .map((a) => a.fullname)
-      .join(', ')
-      .concat(` & ${lastAuthorToDisplay.fullname}`);
-
-    if (truncate) {
-      authorsString += ' et al.';
-    }
-
-    return this.replaceLaTeXChars(authorsString);
-  }
-
-  optional(string, fallback) {
-    let str = string;
-
-    if (undefined === str) {
-      str = fallback;
-    }
-
-    return undefined !== str ? `(${str})` : '';
-  }
-
-  urlizeDOI(string) {
-    let str = string;
-    if (!/^https?:\/\//.test(str)) {
-      str = `http://dx.doi.org/${str}`;
-    }
-
-    return this.urlize(str);
-  }
-
-  urlize(string) {
-    if (/^https?:\/\//.test(string)) {
-      return `<a href="${string}" rel="noreferrer noopener">${string}</a>`;
-    }
-
-    return string;
-  }
-
-  replaceLaTeXChars(string) {
-    return string
-      .replace(/\\'e/g, 'é')
-      .replace(/\\'\{e\}/g, 'é')
-      .replace(/\{/g, '')
-      .replace(/\}/g, '')
-      .replace(/--/g, '—')
-      .replace(/\s+/g, ' ')
-    ;
-  }
 }
+
+function formatAuthors(authors) {
+  const normalizedAuthors = normalizeAuthors(authors);
+
+  if (0 === normalizedAuthors.length) {
+    return '';
+  }
+
+  const truncate = MAX_AUTHORS_IN_CITATIONS < normalizedAuthors.length;
+
+  let authorsToDisplay = normalizedAuthors;
+  if (truncate) {
+    authorsToDisplay = normalizedAuthors.splice(0, MAX_AUTHORS_IN_CITATIONS);
+  }
+
+  // because we have to put `author, author, author & last author name`
+  const lastAuthorToDisplay = authorsToDisplay.pop();
+
+  let authorsString = authorsToDisplay
+    .map((a) => a.fullname)
+    .join(', ')
+    .concat(` & ${lastAuthorToDisplay.fullname}`);
+
+  if (truncate) {
+    authorsString += ' et al.';
+  }
+
+  return replaceLaTeXChars(authorsString);
+}
+
+function formatHtmlEntry(type, data) {
+  let content;
+  switch (type.toLowerCase()) {
+    case 'inproceedings':
+      content = [
+        `${formatAuthors(data.author)} (${data.year}). ${data.title}.`,
+        `In <em>${data.booktitle}</em> (pp. ${data.pages}). ${linkify(data.url)}`,
+      ].join(' ');
+      break;
+
+    case 'article':
+      content = [
+        `${formatAuthors(data.author)} (${data.year}).`,
+        `${data.title}.`,
+        `<em>${data.journal}</em>,`,
+        `${data.volume}${optional(data.issue, data.number)},`,
+        `${data.pages}.`,
+        `${linkifyDOI(data.doi)}`,
+      ].join(' ');
+      break;
+
+    case 'book':
+      content = [
+        `${formatAuthors(data.author)} (${data.year}).`,
+        `<em>${data.title}</em>.`,
+        `${data.publisher}`,
+      ].join(' ');
+      break;
+
+    case 'misc':
+    default:
+      content = [
+        `${formatAuthors(data.author)} (${data.year}).`,
+        `${data.title}.`,
+        `${data.note || ''}`,
+      ].join(' ');
+
+  }
+
+  return replaceLaTeXChars(content);
+}
+
+function formatHtmlKey(authors, year) {
+  if (0 === authors.length) {
+    return `Unknown authors, ${year}`;
+  }
+
+  if (MAX_AUTHORS_IN_REFS >= authors.length) {
+    return `${authors.map((a) => a.lastname).join(' & ')}, ${year}`;
+  }
+
+  return `${authors[0].lastname} <em>et al.</em>, ${year}`;
+}
+
+function formatHtmlReferences(citations) {
+  return `(${citations.map((c) => c.htmlKey).join('; ')})`;
+}
+
+// parsing
+
+function parse(bibtex) {
+  const entries = parser.toJSON(bibtex);
+
+  const keys = [];
+  const results = [];
+  for (let i = 0; i < entries.length; i++) {
+    const e = entries[i];
+    const key = e.citationKey;
+
+    const authors = normalizeAuthors(e.entryTags.author);
+    const year = parseInt(e.entryTags.year, 10);
+
+    if (undefined === keys.find((k) => key === k)) {
+      keys.push(key);
+
+      results.push({
+        key,
+        year,
+        authors,
+        html: formatHtmlEntry(e.entryType, e.entryTags),
+        htmlKey: formatHtmlKey(authors, year),
+      });
+    }
+  }
+
+  return results.sort(sortCitations);
+}
+
+const bibtex = {
+  // returns a set of citations
+  parse,
+  // returns a set of normalized authors
+  normalizeAuthors,
+  // HTML renderer
+  html: {
+    // returns well-formatted references given a set of citations
+    renderReferences: formatHtmlReferences,
+  },
+};
+
+export default bibtex;

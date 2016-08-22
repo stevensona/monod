@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import path from 'path';
 import fs from 'fs';
 
-import Bibtex from '../bibtex';
+import bibtex from '../bibtex';
 
 // see: https://github.com/mochajs/mocha/issues/1847
 const { describe, it } = global;
@@ -20,8 +20,6 @@ function fixture(name) {
 }
 
 describe('bibtex', () => {
-  const bibtex = new Bibtex();
-
   describe('normalizeAuthors()', () => {
     it('should normalize an author without comma and multiple names', () => {
       const authors = 'Victoria J. Hodge';
@@ -57,11 +55,35 @@ describe('bibtex', () => {
       expect(result[1]).to.eql({ fullname: 'Corbett, M.', lastname: 'Corbett' });
       expect(result[2]).to.eql({ fullname: 'Denise, H.', lastname: 'Denise' });
     });
+
+    it('should deal with empty authors', () => {
+      const authors = '';
+      const result = bibtex.normalizeAuthors(authors);
+
+      expect(result).to.have.length(0);
+    });
+
+    it('should normalize only a lastname', () => {
+      const authors = 'Durand';
+      const result = bibtex.normalizeAuthors(authors);
+
+      expect(result).to.have.length(1);
+      expect(result[0]).to.eql({ fullname: 'Durand', lastname: 'Durand' });
+    });
+
+    it('should normalize only lastnames', () => {
+      const authors = 'Durand and Salva';
+      const result = bibtex.normalizeAuthors(authors);
+
+      expect(result).to.have.length(2);
+      expect(result[0]).to.eql({ fullname: 'Durand', lastname: 'Durand' });
+      expect(result[1]).to.eql({ fullname: 'Salva', lastname: 'Salva' });
+    });
   });
 
   describe('parse()', () => {
     it('should parse inproceedings', () => {
-      const [ content, expected ] = fixture('inproceedings');
+      const [content, expected] = fixture('inproceedings');
       const result = bibtex.parse(content);
 
       expect(result).to.have.length(1);
@@ -69,7 +91,7 @@ describe('bibtex', () => {
     });
 
     it('should parse articles', () => {
-      const [ content, expected ] = fixture('article');
+      const [content, expected] = fixture('article');
       const result = bibtex.parse(content);
 
       expect(result).to.have.length(1);
@@ -77,7 +99,7 @@ describe('bibtex', () => {
     });
 
     it('should parse multiple bibtex entries', () => {
-      const [ content, expected ] = fixture('multi-entries');
+      const [content, expected] = fixture('multi-entries');
       const result = bibtex.parse(content);
 
       expect(result).to.have.length(2);
@@ -85,7 +107,7 @@ describe('bibtex', () => {
     });
 
     it('should parse books', () => {
-      const [ content, expected ] = fixture('book');
+      const [content, expected] = fixture('book');
       const result = bibtex.parse(content);
 
       expect(result).to.have.length(1);
@@ -93,7 +115,7 @@ describe('bibtex', () => {
     });
 
     it('should parse misc (fallback)', () => {
-      const [ content, expected ] = fixture('misc');
+      const [content, expected] = fixture('misc');
       const result = bibtex.parse(content);
 
       expect(result).to.have.length(1);
@@ -101,7 +123,7 @@ describe('bibtex', () => {
     });
 
     it('should return the same entry exactly once', () => {
-      const [ content, expected ] = fixture('multi-same');
+      const [content, expected] = fixture('multi-same');
       const result = bibtex.parse(content);
 
       expect(result).to.have.length(2);
@@ -109,35 +131,27 @@ describe('bibtex', () => {
     });
   });
 
-  describe('formatHtmlKey()', () => {
-    const year = 2010;
+  describe('html.renderReferences()', () => {
+    it('should format the keys of a set of citations', () => {
+      const [content, _] = fixture('multi-entries');
+      const result = bibtex.html.renderReferences(bibtex.parse(content));
 
-    it('should format the citation key for one author', () => {
-      const authors = 'Victoria J. Hodge';
-      const result = bibtex.formatHtmlKey(bibtex.normalizeAuthors(authors), year);
-
-      expect(result).to.equal('Hodge, 2010');
+      expect(result).to.equal('(Durand & Salva, 2015; Hodge & Austin, 2004)');
     });
 
-    it('should format the citation key for one author (2)', () => {
-      const authors = 'William Durand';
-      const result = bibtex.formatHtmlKey(bibtex.normalizeAuthors(authors), year);
+    it('should deal with empty authors', () => {
+      const [content, _] = fixture('no-authors');
+      const result = bibtex.html.renderReferences(bibtex.parse(content));
 
-      expect(result).to.equal('Durand, 2010');
+      expect(result).to.equal('(Unknown authors, 2007)');
     });
 
-    it('should format the citation key for two authors', () => {
-      const authors = 'William Durand and Sebastien Salva';
-      const result = bibtex.formatHtmlKey(bibtex.normalizeAuthors(authors), year);
+    // TODO: implement this feature
+    it.skip('should handle same authors with different dates', () => {
+      const [content, _] = fixture('multi-same-authors-diff-dates');
+      const result = bibtex.html.renderReferences(bibtex.parse(content));
 
-      expect(result).to.equal('Durand & Salva, 2010');
-    });
-
-    it('should format the citation key for more than two authors', () => {
-      const authors = 'Hunter, Sarah and Corbett, Matthew and Denise, Hubert';
-      const result = bibtex.formatHtmlKey(bibtex.normalizeAuthors(authors), year);
-
-      expect(result).to.equal('Hunter <em>et al.</em>, 2010');
+      expect(result).to.equal('(Li & Durbin, 2009, 2010)');
     });
   });
 });
