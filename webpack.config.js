@@ -219,6 +219,7 @@ if (TARGET === 'build') {
             new webpack.optimize.UglifyJsPlugin({
                 minimize: true,
                 sourceMap: false,
+                mangle: false,
                 compress: {
                     // Ignore warning messages are they are pretty useless
                     warnings: false
