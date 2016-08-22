@@ -178,6 +178,22 @@ function formatHtmlReferences(citations) {
   return `(${citations.map((c) => c.htmlKey).join('; ')})`;
 }
 
+function formatHtmlCitations(citations) {
+  return citations
+    .map(c => `<p class="citation">${c.html}</p>`)
+    .join('\n')
+    .concat('\n')
+  ;
+}
+
+function formatHtmlInvalidReferences(references) {
+  return [
+    '<span title="Invalid reference(s)" class="invalid-ref">',
+    references,
+    '</span>',
+  ].join('');
+}
+
 // parsing
 
 function parse(bibtex) {
@@ -217,6 +233,10 @@ const bibtex = {
   html: {
     // returns well-formatted references given a set of citations
     renderReferences: formatHtmlReferences,
+    // returns HTML for to highlight an invalid reference (given as a string)
+    renderInvalidReferences: formatHtmlInvalidReferences,
+    // returns well-formatted citations
+    renderCitations: formatHtmlCitations,
   },
 };
 

@@ -11,13 +11,10 @@ module.exports = (md) => {
     const token = tokens[idx];
 
     if (-1 !== token.info.indexOf('cite') && token.id) {
-      const entries = env.citations[token.id];
+      const citations = env.citations[token.id];
 
-      if (undefined !== entries) {
-        return entries.map(
-          (entry) => `<p class="citation">${entry.html}</p>`
-        ).join('\n')
-        .concat('\n');
+      if (undefined !== citations) {
+        return bibtex.html.renderCitations(citations);
       }
     }
 
@@ -32,11 +29,7 @@ module.exports = (md) => {
     const citations = token.meta.citations;
 
     if (keys.length !== citations.length) {
-      return [
-        '<span title="Invalid reference(s)" class="invalid-ref">',
-        `[@${token.meta.reference}]`,
-        '</span>',
-      ].join('');
+      return bibtex.html.renderInvalidReferences(`[@${token.meta.reference}]`);
     }
 
     return bibtex.html.renderReferences(citations);
