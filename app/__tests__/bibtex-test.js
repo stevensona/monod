@@ -129,6 +129,14 @@ describe('bibtex', () => {
       expect(result).to.have.length(2);
       expect(result.map((e) => e.html).join('\n\n')).to.equal(expected);
     });
+
+    it('should sort the entries', () => {
+      const [content, expected] = fixture('multi-unsorted');
+      const result = bibtex.parse(content);
+
+      expect(result).to.have.length(2);
+      expect(result.map((e) => e.html).join('\n\n')).to.equal(expected);
+    });
   });
 
   describe('html.renderReferences()', () => {
