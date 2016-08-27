@@ -137,6 +137,37 @@ describe('bibtex', () => {
       expect(result).to.have.length(2);
       expect(result.map((e) => e.html).join('\n\n')).to.equal(expected);
     });
+
+    it('should not emit errors when parsing has failed', () => {
+      const [content, expected] = fixture('partial');
+      const result = bibtex.parse(content);
+
+      expect(result).to.have.length(0);
+    });
+
+    // TODO: for now, we have to keep such a limitation...
+    it('cannot return any result when parsing has failed', () => {
+      const [content, expected] = fixture('multi-partial');
+      const result = bibtex.parse(content);
+
+      expect(result).to.have.length(0);
+    });
+
+    it('should deal with no author in an entry', () => {
+      const [content, expected] = fixture('missing-author-field');
+      const result = bibtex.parse(content);
+
+      expect(result).to.have.length(1);
+      expect(result.map((e) => e.html).join('\n\n')).to.equal(expected);
+    });
+
+    it('should deal with a single author in an entry', () => {
+      const [content, expected] = fixture('single-author');
+      const result = bibtex.parse(content);
+
+      expect(result).to.have.length(1);
+      expect(result.map((e) => e.html).join('\n\n')).to.equal(expected);
+    });
   });
 
   describe('html.renderReferences()', () => {

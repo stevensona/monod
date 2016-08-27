@@ -137,5 +137,15 @@ As in [@logicreasoning;@another] ...
 .
 <p>As in (Hebert & Lewicki, 2007; Floyd, 1979) ...</p>
 <p class="citation">Hebert, M. & Lewicki, M. (2007). Artificial Intelligence, Logic and Reasoning. </p>
-<p class="citation"> & Floyd, P. (1979). Another Brick In The Wall. </p>
+<p class="citation">Floyd, P. (1979). Another Brick In The Wall. </p>
+.
+
+should render a block no matter its content
+.
+```cite
+@misc{
+```
+.
+<pre><code class="language-cite">@misc{
+</code></pre>
 .
