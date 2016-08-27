@@ -5,6 +5,7 @@ import parser from 'bibtex-parse-js';
 const MAX_AUTHORS_IN_REFS = 2;
 const MAX_AUTHORS_IN_CITATIONS = 6;
 const UNKNOWN_AUTHORS = 'Unknown authors';
+const ET_AL = 'et al.';
 
 // utils
 
@@ -47,9 +48,25 @@ function replaceLaTeXChars(string) {
 
 // first author's latname, then year
 function sortCitations(e1, e2) {
+  if (!e1.authors[0] || !e1.authors[0].lastname) {
+    return 1;
+  }
+
+  if (!e2.authors[0] || !e2.authors[0].lastname) {
+    return -1;
+  }
+
   let r = e1.authors[0].lastname.localeCompare(e2.authors[0].lastname);
 
   if (0 === r) {
+    if (!e1.year) {
+      return 1;
+    }
+
+    if (!e2.year) {
+      return -1;
+    }
+
     r = e1.year < e2.year ? -1 : 1;
   }
 
@@ -119,7 +136,7 @@ function formatAuthors(authors) {
   }
 
   if (truncate) {
-    authorsString += ' et al.';
+    authorsString += ` ${ET_AL}`;
   }
 
   return replaceLaTeXChars(authorsString);
@@ -240,6 +257,8 @@ const bibtex = {
   parse,
   // returns a set of normalized authors
   normalizeAuthors,
+  // sorts an array of citations
+  sortCitations,
   // HTML renderer
   html: {
     // returns well-formatted references given a set of citations

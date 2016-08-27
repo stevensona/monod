@@ -135,7 +135,7 @@ As in [@logicreasoning;@another] ...
 }
 ```
 .
-<p>As in (Hebert & Lewicki, 2007; Floyd, 1979) ...</p>
+<p>As in (Floyd, 1979; Hebert & Lewicki, 2007) ...</p>
 <p class="citation">Hebert, M. & Lewicki, M. (2007). Artificial Intelligence, Logic and Reasoning. </p>
 <p class="citation">Floyd, P. (1979). Another Brick In The Wall. </p>
 .

@@ -193,4 +193,120 @@ describe('bibtex', () => {
       expect(result).to.equal('(Li & Durbin, 2009, 2010)');
     });
   });
+
+  describe('sortCitations()', () => {
+    const fakeCitation = (lastname, year) => {
+      return {
+        authors: [{
+          fullname: 'does not matter',
+          lastname,
+        }],
+        year,
+      };
+    };
+
+    it('should sort citations by first author name', () => {
+      const citations = [
+        fakeCitation('A', 2010),
+        fakeCitation('C', 2010),
+        fakeCitation('B', 2010),
+      ];
+      const sorted = citations.sort(bibtex.sortCitations);
+
+      expect(sorted.length).to.equal(citations.length);
+      expect(sorted[0].authors[0].lastname).to.equal('A');
+      expect(sorted[1].authors[0].lastname).to.equal('B');
+      expect(sorted[2].authors[0].lastname).to.equal('C');
+    });
+
+    it('should sort citations of same authors by year', () => {
+      const citations = [
+        fakeCitation('A', 2010),
+        fakeCitation('A', 2000),
+      ];
+      const sorted = citations.sort(bibtex.sortCitations);
+
+      expect(sorted.length).to.equal(citations.length);
+      expect(sorted[0].authors[0].lastname).to.equal('A');
+      expect(sorted[0].year).to.equal(2000);
+      expect(sorted[1].authors[0].lastname).to.equal('A');
+      expect(sorted[1].year).to.equal(2010);
+    });
+
+    it('should move citations with undefined authors at the end', () => {
+      const citations = [
+        fakeCitation(undefined, 2010),
+        fakeCitation('A', 2000),
+      ];
+      const sorted = citations.sort(bibtex.sortCitations);
+
+      expect(sorted.length).to.equal(citations.length);
+      expect(sorted[0].authors[0].lastname).to.equal('A');
+      expect(sorted[0].year).to.equal(2000);
+      expect(sorted[1].authors[0].lastname).to.equal(undefined);
+      expect(sorted[1].year).to.equal(2010);
+    });
+
+    it('should move citations with undefined authors at the end (2)', () => {
+      const citations = [
+        fakeCitation('A', 2000),
+        fakeCitation(undefined, 2010),
+      ];
+      const sorted = citations.sort(bibtex.sortCitations);
+
+      expect(sorted.length).to.equal(citations.length);
+      expect(sorted[0].authors[0].lastname).to.equal('A');
+      expect(sorted[0].year).to.equal(2000);
+      expect(sorted[1].authors[0].lastname).to.equal(undefined);
+      expect(sorted[1].year).to.equal(2010);
+    });
+
+    it('should move citations with blank authors at the end', () => {
+      const citations = [
+        fakeCitation('', 2010),
+        fakeCitation('A', 2000),
+      ];
+      const sorted = citations.sort(bibtex.sortCitations);
+
+      expect(sorted.length).to.equal(citations.length);
+      expect(sorted[0].authors[0].lastname).to.equal('A');
+      expect(sorted[0].year).to.equal(2000);
+      expect(sorted[1].authors[0].lastname).to.equal('');
+      expect(sorted[1].year).to.equal(2010);
+    });
+
+    it('should move citations with blank authors at the end (2)', () => {
+      const citations = [
+        fakeCitation('A', 2000),
+        fakeCitation('', 2010),
+        fakeCitation('B', 2000),
+      ];
+      const sorted = citations.sort(bibtex.sortCitations);
+
+      expect(sorted.length).to.equal(citations.length);
+      expect(sorted[0].authors[0].lastname).to.equal('A');
+      expect(sorted[0].year).to.equal(2000);
+      expect(sorted[1].authors[0].lastname).to.equal('B');
+      expect(sorted[1].year).to.equal(2000);
+      expect(sorted[2].authors[0].lastname).to.equal('');
+      expect(sorted[2].year).to.equal(2010);
+    });
+
+    it('should move citations with undefined years at the end', () => {
+      const citations = [
+        fakeCitation('A', undefined),
+        fakeCitation('A', 2000),
+        fakeCitation('A', undefined),
+      ];
+      const sorted = citations.sort(bibtex.sortCitations);
+
+      expect(sorted.length).to.equal(citations.length);
+      expect(sorted[0].authors[0].lastname).to.equal('A');
+      expect(sorted[0].year).to.equal(2000);
+      expect(sorted[1].authors[0].lastname).to.equal('A');
+      expect(sorted[1].year).to.equal(undefined);
+      expect(sorted[2].authors[0].lastname).to.equal('A');
+      expect(sorted[2].year).to.equal(undefined);
+    });
+  });
 });
