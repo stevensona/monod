@@ -124,7 +124,7 @@ const common = {
     plugins: [
         // Generate the final HTML5 file, nd include all your webpack bundles
         new HtmlWebpackPlugin({
-            template: 'lib/webpack-template.ejs',
+            template: 'index.ejs',
             // The page's title is read from npm's `package.json` file
             title: pkg.name,
             // Favicon generated with http://realfavicongenerator.net
