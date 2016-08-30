@@ -124,7 +124,6 @@ const common = {
     plugins: [
         // Generate the final HTML5 file, nd include all your webpack bundles
         new HtmlWebpackPlugin({
-            // Here, we use the `html-webpack-template` npm package
             template: 'lib/webpack-template.ejs',
             // The page's title is read from npm's `package.json` file
             title: pkg.name,
