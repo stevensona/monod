@@ -216,9 +216,9 @@ if (TARGET === 'build') {
             new webpack.optimize.OccurrenceOrderPlugin(),
             // Minification with Uglify
             new webpack.optimize.UglifyJsPlugin({
-                minimize: true,
-                sourceMap: false,
                 mangle: false,
+                sourceMap: false,
+                comments: false,
                 compress: {
                     // Ignore warning messages are they are pretty useless
                     warnings: false
