@@ -4,6 +4,8 @@ import parser from 'bibtex-parse-js';
 // constants
 const MAX_AUTHORS_IN_REFS = 2;
 const MAX_AUTHORS_IN_CITATIONS = 6;
+const UNKNOWN_AUTHORS = 'Unknown authors';
+const ET_AL = 'et al.';
 
 // utils
 
@@ -46,9 +48,25 @@ function replaceLaTeXChars(string) {
 
 // first author's latname, then year
 function sortCitations(e1, e2) {
+  if (!e1.authors[0] || !e1.authors[0].lastname) {
+    return 1;
+  }
+
+  if (!e2.authors[0] || !e2.authors[0].lastname) {
+    return -1;
+  }
+
   let r = e1.authors[0].lastname.localeCompare(e2.authors[0].lastname);
 
   if (0 === r) {
+    if (!e1.year) {
+      return 1;
+    }
+
+    if (!e2.year) {
+      return -1;
+    }
+
     r = e1.year < e2.year ? -1 : 1;
   }
 
@@ -58,7 +76,7 @@ function sortCitations(e1, e2) {
 // formatters
 
 function normalizeAuthors(authors) {
-  const parts = authors.split(/\sand\s/);
+  const parts = authors ? authors.split(/\sand\s/) : [];
 
   return parts
     .filter(fullname => '' !== fullname)
@@ -95,7 +113,7 @@ function formatAuthors(authors) {
   const normalizedAuthors = normalizeAuthors(authors);
 
   if (0 === normalizedAuthors.length) {
-    return '';
+    return UNKNOWN_AUTHORS;
   }
 
   const truncate = MAX_AUTHORS_IN_CITATIONS < normalizedAuthors.length;
@@ -108,13 +126,17 @@ function formatAuthors(authors) {
   // because we have to put `author, author, author & last author name`
   const lastAuthorToDisplay = authorsToDisplay.pop();
 
-  let authorsString = authorsToDisplay
-    .map((a) => a.fullname)
-    .join(', ')
-    .concat(` & ${lastAuthorToDisplay.fullname}`);
+  let authorsString = lastAuthorToDisplay.fullname;
+
+  if (0 < authorsToDisplay.length) {
+    authorsString = authorsToDisplay
+      .map((a) => a.fullname)
+      .join(', ')
+      .concat(` & ${lastAuthorToDisplay.fullname}`);
+  }
 
   if (truncate) {
-    authorsString += ' et al.';
+    authorsString += ` ${ET_AL}`;
   }
 
   return replaceLaTeXChars(authorsString);
@@ -164,7 +186,7 @@ function formatHtmlEntry(type, data) {
 
 function formatHtmlKey(authors, year) {
   if (0 === authors.length) {
-    return `Unknown authors, ${year}`;
+    return `${UNKNOWN_AUTHORS}, ${year}`;
   }
 
   if (MAX_AUTHORS_IN_REFS >= authors.length) {
@@ -197,7 +219,13 @@ function formatHtmlInvalidReferences(references) {
 // parsing
 
 function parse(bibtex) {
-  const entries = parser.toJSON(bibtex);
+  let entries = [];
+
+  try {
+    entries = parser.toJSON(bibtex);
+  } catch (e) {
+    // parsing has failed, skipping
+  }
 
   const keys = [];
   const results = [];
@@ -229,6 +257,8 @@ const bibtex = {
   parse,
   // returns a set of normalized authors
   normalizeAuthors,
+  // sorts an array of citations
+  sortCitations,
   // HTML renderer
   html: {
     // returns well-formatted references given a set of citations

@@ -13,7 +13,8 @@ module.exports = (md) => {
     if (-1 !== token.info.indexOf('cite') && token.id) {
       const citations = env.citations[token.id];
 
-      if (undefined !== citations) {
+      // fallback to the default renderer if we cannot display citations
+      if (undefined !== citations && citations.length > 0) {
         return bibtex.html.renderCitations(citations);
       }
     }
