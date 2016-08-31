@@ -92,19 +92,20 @@ $vertical-handler-width: 40px;
 
   .editor {
     display: flex;
-    height: editor-height(small);
     width: 100%;
+    height: editor-height(small);
 
     @include breakpoint(medium) {
       height: editor-height(medium);
     }
 
     .markdown {
+      width: calc(100% - #{$vertical-handler-width / 2});
       height: 100%;
-      width: 100%;
+      flex: 1 1 auto;
 
       @include breakpoint(medium) {
-        flex: 1 1 calc(50% - #{$vertical-handler-width / 2});
+        width: calc(50% - #{$vertical-handler-width / 2});
       }
     }
 
@@ -113,14 +114,13 @@ $vertical-handler-width: 40px;
     }
 
     .preview {
-      @include show-for(medium);
+      width: 0;
       height: 100%;
+      flex: 1 1 auto;
 
       @include breakpoint(medium) {
-        flex: 1 1 calc(50% - #{$vertical-handler-width / 2});
+        width: calc(50% - #{$vertical-handler-width / 2});
       }
-
-
     }
 
     &.focus {
