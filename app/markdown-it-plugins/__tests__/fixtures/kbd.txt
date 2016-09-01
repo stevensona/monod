@@ -1,0 +1,13 @@
+should render a key when found
+.
+No keyboard detected! Press [[F1]] to resume
+.
+<p>No keyboard detected! Press <kbd>F1</kbd> to resume</p>
+.
+
+should not parse empty keys
+.
+[[]]
+.
+<p>[[]]</p>
+.
