@@ -4,7 +4,6 @@ import Dropzone from 'react-dropzone';
 
 import 'codemirror/mode/gfm/gfm';
 import 'codemirror/lib/codemirror.css';
-import 'codemirror/addon/fold/foldgutter.css';
 import 'codemirror/addon/fold/foldcode';
 import 'codemirror/addon/fold/foldgutter';
 import './fold';
