@@ -18,7 +18,7 @@ if ('production' === process.env.NODE_ENV || 'test' === process.env.NODE_ENV) {
   // middlewares
   app.use(compression());
   app.use(express.static(staticPath));
-  app.use(bodyParser.json());
+  app.use(bodyParser.json({limit: '3mb'}));
   app.use(api);
 
   const isValidId = (uuid) => {
