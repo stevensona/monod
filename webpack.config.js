@@ -182,6 +182,8 @@ if (TARGET === 'dev' || !TARGET) {
 // Build for production
 if (TARGET === 'build') {
     module.exports = merge(common, {
+        debug: false,
+        devtool: 'source-map',
         output: {
             path: PATHS.build,
             // Set up caching by adding cache busting hashes to filenames
@@ -210,21 +212,23 @@ if (TARGET === 'build') {
                     'NODE_ENV': JSON.stringify('production')
                 }
             }),
-            // Output extracted CSS to a file
-            new ExtractTextPlugin('[name].[chunkhash].css'),
             new webpack.optimize.DedupePlugin(),
             new webpack.optimize.OccurrenceOrderPlugin(),
             // Minification with Uglify
             new webpack.optimize.UglifyJsPlugin({
-                mangle: false,
-                sourceMap: false,
-                comments: false,
+                output: {
+                    comments: false,
+                },
                 compress: {
                     // Ignore warning messages are they are pretty useless
                     warnings: false
                 }
             }),
-            new WebpackRobots()
+            // Output extracted CSS to a file
+            new ExtractTextPlugin('[name].[chunkhash].css', {
+              allChunks: true,
+            }),
+            new WebpackRobots(),
         ]
     });
 }
