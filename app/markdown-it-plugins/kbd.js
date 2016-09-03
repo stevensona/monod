@@ -18,7 +18,6 @@ module.exports = (md) => {
     if (state.src.charCodeAt(start + 1) !== 0x5B/* [ */) { return false; }
 
     for (pos = start + 2; pos < max; pos++) {
-      if (state.src.charCodeAt(pos) === 0x20) { return false; }
       if (state.src.charCodeAt(pos) === 0x0A) { return false; }
       if (state.src.charCodeAt(pos) === 0x5D && state.src.charCodeAt(pos - 1) === 0x5D /* ] */) {
         break;
