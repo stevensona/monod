@@ -162,7 +162,7 @@ notation below the image:
 
 #### Lists
 
-It is possible to hide the bullets of a list by using the `{no-bullets}` special
+It is possible to hide the bullets of a list by using the `{no-bullet}` special
 notation:
 
 ```markdown
@@ -174,7 +174,7 @@ Isaac Asimov's "Three Laws of Robotics":
   would conflict with the First Law;
 * A robot must protect its own existence as long as such protection does not
   conflict with the First or Second Law.
-{no-bullets}
+{no-bullet}
 ```
 
 #### Paragraphs
