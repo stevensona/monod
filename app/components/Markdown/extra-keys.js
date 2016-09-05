@@ -1,3 +1,6 @@
+import { saveAs } from 'file-saver';
+
+
 export const Tags = {
   STRONG: '**',
   ITALIC: '_',
@@ -27,6 +30,9 @@ const extraKeys = {
   },
   'Cmd-I': (cm) => {
     cm.replaceSelection(addOrRemoveTag(Tags.ITALIC, cm.getSelection()), 'around');
+  },
+  'Cmd-S': (cm) => {
+    saveAs(new Blob([cm.getValue()], { type: 'text/plain' }), 'monod.md');
   },
 };
 
