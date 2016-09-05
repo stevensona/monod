@@ -58,6 +58,10 @@ export default class Slidedeck extends BaseTemplate {
     window.Reveal = Reveal;
   }
 
+  componentWillUnmount() {
+    window.Reveal = null;
+  }
+
   componentDidUpdate() {
     Reveal.layout();
   }
