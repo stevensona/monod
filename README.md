@@ -3,20 +3,33 @@ Monod
 
 [![Circle CI](https://circleci.com/gh/TailorDev/monod.svg?style=svg)](https://circleci.com/gh/TailorDev/monod)
 
-Monod is a (relatively) secure and offline-first Markdown editor we built at
-TailorDev in order to learn [React.js](https://facebook.github.io/react/) (and a
-bunch of JavaScript tools/libraries). We mainly dedicated two **Le lab** sessions
-to this project:
+![Build Status](https://saucelabs.com/browser-matrix/willdurand.svg)
+
+---
+
+## Hi! I am Monod, the Markdown Editor.
+
+<p align="center">
+<img src="doc/images/presentation.gif">
+<p>
+
+**Monod** is a (relatively) **secure** and **offline-first** Markdown editor we
+built at TailorDev in order to learn
+[React.js](https://facebook.github.io/react/) (and a bunch of JavaScript
+tools/libraries). We mainly dedicated two **Le lab** sessions to build the
+foundations of Monod:
 
 * [Introducing Le lab with “Monod”, our Markdown
   Editor](https://tailordev.fr/blog/2016/03/11/introducing-le-lab-with-monod-our-markdown-editor/)
 * [Le lab #2 — Offline-First, Document Sharing, Templates: Monod is Back (not in
   Black)](https://tailordev.fr/blog/2016/04/15/le-lab-2-offline-first-document-sharing-templates-monod-is-back/)
 
+---
+
 ## Usage
 
-Either you use our public instance at: https://monod.lelab.tailordev.fr/, or you
-host Monod at home, on your server, or on Heroku.
+Either use our public instance at: https://monod.lelab.tailordev.fr/, or
+(self-)host Monod at home, on your server, or even on Heroku:
 
 [![Deploy to
 Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
