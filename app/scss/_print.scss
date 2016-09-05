@@ -14,14 +14,19 @@
         widows: 3;
     }
 
+    h1,
     h2,
-    h3 {
+    h3,
+    h4,
+    h5 {
         page-break-after: avoid;
     }
 
     tr,
     blockquote,
-    img {
+    img,
+    table,
+    figure {
         page-break-inside: avoid;
     }
 
@@ -43,6 +48,7 @@
             display: block !important;
 
             .preview {
+                width: 100% !important;
                 overflow: visible;
 
                 .rendered {
@@ -55,6 +61,7 @@
     // Override styles
     a {
         border: 0 !important;
+        text-decoration: none !important;
 
         &:link:after,
         &:visited:after {
@@ -65,6 +72,7 @@
     pre, blockquote {
         border: 0;
         border-left: 3px solid $silver;
+        margin-bottom: 11pt !important;
 
         & > * {
             color: $emperor !important;
@@ -81,6 +89,7 @@
         & > code {
             margin: 0 !important;
             background: transparent !important;
+            white-space: pre-wrap;
         }
     }
 
@@ -90,7 +99,6 @@
     }
 
     span {
-
         &.emojione {
             transform: scale(0.2, 0.2) !important;
             margin: -20px !important;

@@ -278,3 +278,7 @@
 .reveal .no-bullet li {
   list-style-type: none;
 }
+
+.reveal input[type="checkbox"] {
+  zoom: 2;
+}

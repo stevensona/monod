@@ -41,21 +41,6 @@
   display: block; }
 
 /*********************************************
- * GLOBAL STYLES
- *********************************************/
-html,
-body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden; }
-
-html:-webkit-full-screen-ancestor {
-  background-color: inherit; }
-
-html:-moz-full-screen-ancestor {
-  background-color: inherit; }
-
-/*********************************************
  * VIEW FRAGMENTS
  *********************************************/
 .reveal .slides section .fragment {
