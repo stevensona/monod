@@ -49,9 +49,14 @@ export default class Report extends BaseTemplate {
     return (
       <article style={reportStyle}>
         <header>
-          <div style={companyStyle}>
-            <img src={data.company.logo_url} alt={`${data.company.name} logo`} />
-          </div>
+          {'[company/logo_url]' !== data.company.logo_url ?
+            <div style={companyStyle}>
+              <img
+                src={data.company.logo_url}
+                alt={`${data.company.name} logo`}
+              />
+            </div> : null
+          }
           <h1>Activity report</h1>
           <table style={metaStyle}>
             <tbody>
