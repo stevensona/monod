@@ -2,6 +2,7 @@ const path = require('path');
 const merge = require('webpack-merge');
 const webpack = require('webpack');
 const childProcess = require('child_process');
+const autoprefixer = require('autoprefixer');
 
 // Webpack plugins
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -116,6 +117,9 @@ const common = {
             }
         ]
     },
+    postcss: [
+      autoprefixer({ browsers: ['last 2 versions'] }),
+    ],
     node: {
         fs: "empty"
     },
@@ -162,14 +166,9 @@ if (TARGET === 'dev' || !TARGET) {
         module: {
             loaders: [
                 {
-                    test: /\.scss$/,
+                    test: /\.s?css$/,
                     // Loaders are applied from right to left
-                    loaders: ['style', 'css', 'sass'],
-                    include: PATHS.app
-                },
-                {
-                    test: /\.css$/,
-                    loaders: ['style', 'css']
+                    loaders: ['style', 'css', 'postcss', 'sass'],
                 }
             ]
         },
@@ -197,7 +196,7 @@ if (TARGET === 'build') {
                 // Extract CSS during build
                 {
                     test: /\.(css|scss)$/,
-                    loader: ExtractTextPlugin.extract('style', 'css!sass')
+                    loader: ExtractTextPlugin.extract('style', 'css!postcss!sass')
                 }
             ]
         },
