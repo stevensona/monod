@@ -196,7 +196,10 @@ if (TARGET === 'build') {
                 // Extract CSS during build
                 {
                     test: /\.(css|scss)$/,
-                    loader: ExtractTextPlugin.extract('style', 'css!postcss!sass')
+                    loader: ExtractTextPlugin.extract(
+                      'style',
+                      'css?' + JSON.stringify({discardComments: {removeAll: true}}) + '!postcss!sass'
+                    )
                 }
             ]
         },
