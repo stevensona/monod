@@ -98,7 +98,7 @@
     "reveal.js": "^3.3.0",
     "sass-loader": "^4.0.0",
     "sinon": "^1.17.3",
-    "sjcl": "=1.0.3",
+    "sjcl": "1.0.6",
     "style-loader": "^0.13.0",
     "superagent": "^2.0.0-alpha.1",
     "supertest": "^2.0.0",
