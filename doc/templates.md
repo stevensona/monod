@@ -122,6 +122,7 @@ Slide 3.1
 ```
 ---
 transition: zoom # None, Fade, Slide, Convex, Concave, Zoom
+logo: '' # URL to an image that will be displayed on bottom left
 ---
 ```
 

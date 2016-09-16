@@ -104,7 +104,15 @@
         }
 
         .reveal {
-            p {
+
+          .logo {
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            z-index: 30;
+          }
+
+          p {
                 text-align: inherit!important;
 
                 &.justify {
