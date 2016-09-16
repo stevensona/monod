@@ -22,7 +22,7 @@
 .reveal h5,
 .reveal h6 {
   margin: 0 0 20px 0;
-  color: #222;
+  color: #2e354f;
   font-family: "Source Sans Pro", Helvetica, sans-serif;
   font-weight: 600;
   line-height: 1.2;
@@ -32,6 +32,8 @@
   word-wrap: break-word; }
 
 .reveal h1 {
+  color: #222;
+  text-shadow: none;
   font-size: 2.5em; }
 
 .reveal h2 {
@@ -42,9 +44,6 @@
 
 .reveal h4 {
   font-size: 1em; }
-
-.reveal h1 {
-  text-shadow: none; }
 
 /*********************************************
  * OTHER
@@ -187,6 +186,7 @@
 .reveal a {
   color: #1abc9c;
   text-decoration: none;
+  border-bottom: none !important;
   -webkit-transition: color .15s ease;
   -moz-transition: color .15s ease;
   transition: color .15s ease; }
