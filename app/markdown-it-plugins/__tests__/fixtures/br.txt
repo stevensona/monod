@@ -1,0 +1,27 @@
+should render a <br> tag when found
+.
+First line<br>Second line
+.
+<p>First line<br>Second line</p>
+.
+
+should render a <br> tag when found, no matter the case
+.
+First line<BR>Second line
+.
+<p>First line<br>Second line</p>
+.
+
+should render a <br> tag when found, no matter the case (2)
+.
+First line<bR>Second line
+.
+<p>First line<br>Second line</p>
+.
+
+should not render anything else
+.
+First line<rb>Second line
+.
+<p>First line&lt;rb&gt;Second line</p>
+.

@@ -23,6 +23,7 @@ export default () => new Promise(resolve => {
         require('markdown-it-classy'),
         require('../../markdown-it-plugins/cite'),
         require('../../markdown-it-plugins/kbd'),
+        require('../../markdown-it-plugins/br'),
       ],
       markdownItContainer: require('markdown-it-container'),
       markdownItTaskLists: require('markdown-it-task-lists'),
