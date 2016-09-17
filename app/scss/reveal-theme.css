@@ -2,7 +2,6 @@
  * GLOBAL STYLES
  *********************************************/
 .reveal {
-  font-family: "Source Sans Pro", Helvetica, sans-serif;
   font-size: 38px;
   font-weight: normal;
   color: #222; }
@@ -23,7 +22,6 @@
 .reveal h6 {
   margin: 0 0 20px 0;
   color: #222;
-  font-family: "Source Sans Pro", Helvetica, sans-serif;
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: normal;
@@ -43,8 +41,11 @@
 .reveal h4 {
   font-size: 1em; }
 
-.reveal h1 {
-  text-shadow: none; }
+.reveal h1 .fa,
+.reveal h2 .fa,
+.reveal h3 .fa {
+  color: #1abc9c;
+}
 
 /*********************************************
  * OTHER
@@ -187,6 +188,7 @@
 .reveal a {
   color: #1abc9c;
   text-decoration: none;
+  border-bottom: none !important;
   -webkit-transition: color .15s ease;
   -moz-transition: color .15s ease;
   transition: color .15s ease; }

@@ -40,6 +40,7 @@ export default class Slidedeck extends BaseTemplate {
   getDefaultData() {
     return {
       transition: 'default',
+      logo: '',
     };
   }
 
@@ -72,6 +73,9 @@ export default class Slidedeck extends BaseTemplate {
 
     return (
       <div className="reveal">
+        {'' !== data.logo ?
+          <img className="logo" src={data.logo} role="presentation" /> : null
+        }
         <div className="slides">
           {slides.map((section, index) =>
             <Section

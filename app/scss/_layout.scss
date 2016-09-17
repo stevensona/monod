@@ -34,6 +34,11 @@ $vertical-handler-width: 40px;
   background-color: $alabaster;
 
   .reveal {
+    .logo {
+      position: fixed !important;
+      left: 10px !important;
+      bottom: 10px !important;
+    }
 
     .controls {
       bottom: 10px !important;
