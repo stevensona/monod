@@ -28,6 +28,7 @@ extensions.
 * [highlighting](#highlighting)
 * [Icons / FontAwesome](#icons--fontawesome)
 * [Insertions](#insertions)
+* [Line break](#line-break)
 * [Mathematical expressions](#mathematical-expressions)
 * [Small paragraphs](#small-paragraphs)
 * [Strikethrough](#strikethrough)
@@ -146,6 +147,12 @@ Insertions into a document can be highlighted in green by surrounding them with
 ```
 Hello. ++I have added this part++
 ```
+
+### Line break
+
+You can force line breaks in text (carriage return) using `<br>`, which is the
+[HTML element _line
+break_](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/br).
 
 ### Mathematical expressions
 
