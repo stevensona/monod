@@ -11,6 +11,7 @@ describe('Express app', () => {
   const VALID_DOCUMENT_UUID = '9950e80b-f214-45d0-a98c-bffee2582c71';
   const NEW_DOCUMENT_UUID = '0000e80b-f214-45d0-a98c-bffee2581234';
   const EXISTING_DOCUMENT_UUID = '1111e81b-f214-45d1-a98c-bffee2581234';
+  const READONLY_DOCUMENT_UUID = '1e17761d-035a-4eb7-8aa7-48f1bc6e8a48';
 
   const api = request.agent(server);
 
@@ -117,6 +118,20 @@ describe('Express app', () => {
           uuid: EXISTING_DOCUMENT_UUID,
           template: '',
           last_modified: 'date'
+        }, done);
+    });
+
+    it('returns 403 when a document is in readonly mode', (done) => {
+      api
+        .put(`${DOCUMENTS_ENDPOINT}/${READONLY_DOCUMENT_UUID}`)
+        .send({ content: 'something' })
+        .expect('Content-Type', /json/)
+        .expect(403, {
+          content: {
+            ba: "bar"
+          },
+          last_modified: 1459441561629,
+          uuid: "9950e80b-f214-45d0-a98c-bffee2582c71"
         }, done);
     });
   });

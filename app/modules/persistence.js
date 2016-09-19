@@ -2,9 +2,13 @@ import request from 'superagent';
 
 import config from '../config';
 import Document from '../Document';
-import { Errors, encrypt } from '../utils';
+import { Errors, encrypt, decrypt } from '../utils';
 import { isOnline, isOffline } from './monod';
-import { updateCurrentDocument } from './documents';
+import {
+  updateCurrentDocument,
+  forceUpdateCurrentDocument,
+} from './documents';
+import { warning } from './notification';
 
 
 // Actions
@@ -93,6 +97,24 @@ export function serverPersist() {
       .catch((error) => {
         if (!error.response) {
           dispatch(isOffline());
+        }
+
+        if (403 === error.status) {
+          const res = error.response;
+          const current = new Document({
+            uuid: id,
+            content: decrypt(res.body.content, secret),
+            last_modified: res.body.last_modified,
+            last_modified_locally: null,
+            template: res.body.template || '',
+          });
+
+          dispatch(warning(config.READONLY_MESSAGE));
+          dispatch(forceUpdateCurrentDocument(current));
+
+          const encrypted = current.set('content', res.body.content);
+
+          return db.setItem(encrypted.get('uuid'), encrypted.toJS());
         }
 
         // TODO: maybe handle this case
