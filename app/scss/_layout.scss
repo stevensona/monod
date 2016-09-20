@@ -75,6 +75,10 @@ $vertical-handler-width: 40px;
   @include fullscreen;
 }
 
+body {
+  overflow-y: hidden;
+}
+
 .layout {
   display: flex;
   flex-direction: column;
