@@ -46,7 +46,13 @@ if ('production' === process.env.NODE_ENV || 'test' === process.env.NODE_ENV) {
         return res.status(404).json();
       }
 
-      return res.json(JSON.parse(data));
+      const document = JSON.parse(data);
+
+      if (document.readonly) {
+        delete(document.readonly);
+      }
+
+      return res.json(document);
     });
   });
 

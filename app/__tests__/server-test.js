@@ -40,6 +40,17 @@ describe('Express app', () => {
           uuid: '9950e80b-f214-45d0-a98c-bffee2582c71'
         }, done);
     });
+
+    it('returns an existing document in JSON (readonly)', (done) => {
+      api
+        .get(`${DOCUMENTS_ENDPOINT}/${READONLY_DOCUMENT_UUID}`)
+        .expect('Content-Type', /json/)
+        .expect(200, {
+          content: { ba: 'bar' },
+          last_modified: 1459441561629,
+          uuid: READONLY_DOCUMENT_UUID,
+        }, done);
+    });
   });
 
   describe('- PUT /documents/:uuid', () => {
@@ -131,7 +142,7 @@ describe('Express app', () => {
             ba: "bar"
           },
           last_modified: 1459441561629,
-          uuid: "9950e80b-f214-45d0-a98c-bffee2582c71"
+          uuid: READONLY_DOCUMENT_UUID,
         }, done);
     });
   });
