@@ -47,6 +47,12 @@ export default {
     'We have redirected you to a new document.',
   ].join(' '),
 
+  // in app/modules/documents.js
+  READONLY_MESSAGE: [
+    'Unfortunately, the document you are viewing cannot be edited. We have',
+    'reverted your changes.',
+  ].join(' '),
+
   // in app/Document.js
   DEFAULT_CONTENT: [
     '---',

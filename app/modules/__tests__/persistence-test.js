@@ -7,6 +7,7 @@ import Document from '../../Document';
 import * as app from '../monod';
 import * as actions from '../persistence';
 import * as documents from '../documents';
+import * as notification from '../notification';
 import dbMock from './dbMock';
 
 // see: https://github.com/mochajs/mocha/issues/1847
@@ -75,6 +76,45 @@ describe('modules/persistence', () => {
       fauxJax.on('request', (request) => {
         request.respond(
           200, { 'Content-Type': 'application/json' },
+          JSON.stringify({
+            uuid: doc.get('uuid'),
+            content: doc.get('content'),
+            last_modified: Date.now(),
+            template: '',
+          })
+        );
+      });
+
+      return store
+        .dispatch(actions.serverPersist())
+        .then(() => {
+          const triggeredActions = store.getActions();
+
+          expect(triggeredActions).to.have.length(expectedActions.length);
+          expectedActions.forEach((action, index) => {
+            expect(triggeredActions[index].type).to.equal(action.type);
+          });
+        });
+    });
+
+    it('should deal with 403 responses', () => {
+      const doc = new Document();
+      const store = mockStore({
+        documents: {
+          current: doc,
+          secret,
+        },
+      });
+
+      const expectedActions = [
+        { type: actions.SERVER_PERSIST },
+        { type: notification.NOTIFY },
+        { type: documents.UPDATE_CURRENT_DOCUMENT },
+      ];
+
+      fauxJax.on('request', (request) => {
+        request.respond(
+          403, { 'Content-Type': 'application/json' },
           JSON.stringify({
             uuid: doc.get('uuid'),
             content: doc.get('content'),

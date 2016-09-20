@@ -63,6 +63,12 @@ if ('production' === process.env.NODE_ENV || 'test' === process.env.NODE_ENV) {
     return fs.readFile(filename, (readErr, data) => {
       const document = readErr ? {} : JSON.parse(data);
 
+      if (!!document.readonly) {
+        delete(document.readonly);
+
+        return res.status(403).json(document);
+      }
+
       document.uuid = uuid;
       document.content = req.body.content;
       document.last_modified = Date.now();
