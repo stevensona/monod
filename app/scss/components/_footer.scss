@@ -3,28 +3,34 @@
  */
 
 footer.main {
-    padding: 0.5rem 1rem;
-    background-color: $td-blue;
-    color: $white;
-    font-family: $footer-font-family;
-    font-size: $footer-font-size;
+  padding: 0.5rem 1rem;
+  background-color: $td-blue;
+  color: $white;
+  font-family: $footer-font-family;
+  font-size: $footer-font-size;
 
-    .credits {
-        float: left;
+  .credits {
+    float: left;
+  }
+
+  .info-bar {
+    float: right;
+
+    &> div {
+      display: inline-block;
+      margin-top: 0.1rem;
+      margin-left: 0.3rem;
+
+      &> span {
+        padding: 0.3rem 0.5rem 0.3rem;
+        border-radius: $global-radius;
+        background-color: darken($td-blue, 10%);
+        color: $white;
+      }
     }
 
-    .version,
-    .help {
-        float: right;
-        margin-top: 0.1rem;
-        margin-left: 0.1rem;
-        margin-right: 0.1rem;
-
-        &> span {
-            padding: 0.4rem 0.5rem 0.3rem;
-            border-radius: $global-radius;
-            background-color: darken($td-blue, 10%);
-            color: $white;
-        }
+    &> .lock span {
+      color: $alert-color;
     }
+  }
 }

@@ -3,15 +3,7 @@ import React, { PropTypes } from 'react';
 
 const Footer = (props) =>
   <footer className="main">
-    <div className="version">
-      <span className="git-ref">
-        <i className="fa fa-code-fork" />&nbsp;{props.version}
-      </span>
-    </div>
-
-    {props.children ? props.children : null}
-
-    <div className="credits">
+    <div className="credits" title="Well, no there is nothing special here">
       By the good folks at&nbsp;
       <a
         href="https://tailordev.fr"
@@ -21,6 +13,16 @@ const Footer = (props) =>
       >
         TailorDev
       </a>, 2016.
+    </div>
+
+    <div className="info-bar">
+      {props.children ? props.children : null}
+
+      <div className="version">
+        <span className="git-ref" title="This is the current version of Monod">
+          <i className="fa fa-code-fork" />&nbsp;{props.version}
+        </span>
+      </div>
     </div>
   </footer>
 ;
