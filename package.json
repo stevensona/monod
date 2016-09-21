@@ -55,7 +55,7 @@
     "font-awesome": "^4.5.0",
     "foundation-sites": "^6.2.0",
     "gray-matter": "^2.0.2",
-    "highlight.js": "^9.2.0",
+    "highlight.js": "^9.7.0",
     "html-webpack-plugin": "^2.9.0",
     "immutable": "^3.7.6",
     "jsdom": "^9.4.1",
