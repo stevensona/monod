@@ -31,7 +31,7 @@
         kbd {
             padding: 0.1em 0.6em;
             border: 1px solid #ccc;
-            font-size: 1rem;
+            font-size: 1.5rem;
             background-color: #f7f7f7;
             color: #333;
             box-shadow: 0 1px 0px rgba(0, 0, 0, 0.2),0 0 0 2px #ffffff inset;
@@ -40,7 +40,7 @@
             text-shadow: 0 1px 0 #fff;
             display: inline-block;
             vertical-align: middle;
-            line-height: 1.4rem;
+            line-height: 2rem;
         }
 
         mark {
@@ -110,6 +110,12 @@
 
         .reveal {
 
+            h2,
+            h3,
+            h4 {
+                margin-bottom: 3rem;
+            }
+
           .logo {
             position: absolute;
             bottom: 0px;
@@ -163,7 +169,7 @@
         }
 
         .citation {
-          font-size: 1rem;
+          font-size: 90%;
           text-align: justify;
         }
 
