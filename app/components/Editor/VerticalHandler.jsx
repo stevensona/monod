@@ -1,8 +1,9 @@
+/* eslint jsx-a11y/no-static-element-interactions: 0 */
 import React, { PropTypes } from 'react';
 
 const { func } = PropTypes;
 
-const VerticalHandler = (props) => (
+const VerticalHandler = props => (
   <div className="vertical-handler">
     <div
       className="left"

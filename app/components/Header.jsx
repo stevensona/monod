@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 import Toolbar from './Toolbar';
 
 
-const Header = (props) =>
+const Header = props =>
   <header className="main">
     <h1>Monod <small>The Markdown Editor</small></h1>
     <Toolbar {...props} />

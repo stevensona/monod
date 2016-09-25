@@ -12,7 +12,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   onUpdateTemplate: (event) => {
     const template = event.target.value;
 

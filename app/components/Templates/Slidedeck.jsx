@@ -1,4 +1,4 @@
-/* eslint one-var: 0 */
+/* eslint one-var: 0, class-methods-use-this: 0 */
 import React from 'react';
 import Reveal from 'reveal.js';
 import BaseTemplate from './Base';
@@ -111,7 +111,8 @@ const Section = (props) => {
 };
 
 Section.propTypes = {
-  content: array.isRequired,
+  // eslint rule disabled becasue false positive
+  id: number.isRequired, // eslint-disable-line react/no-unused-prop-types
+  content: array.isRequired, // eslint-disable-line react/forbid-prop-types
   transition: string.isRequired,
-  id: number.isRequired,
 };

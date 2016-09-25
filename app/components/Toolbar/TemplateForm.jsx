@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 
 import Templates from '../Templates';
 
-const TemplateForm = (props) =>
+const TemplateForm = props =>
   <form id="templateForm">
     <select
       name="template"

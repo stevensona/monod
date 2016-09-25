@@ -5,7 +5,7 @@ import FullscreenButton from './FullscreenButton';
 import ShareModalButton from './ShareModalButton';
 
 
-const Toolbar = (props) =>
+const Toolbar = props =>
   <div id="toolbar">
     <div className="actions">
       <ShareModalButton

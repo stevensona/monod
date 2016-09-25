@@ -1,4 +1,4 @@
-/* eslint one-var: 0 */
+/* eslint one-var: 0, class-methods-use-this: 0 */
 import React from 'react';
 import BaseTemplate from './Base';
 
@@ -125,7 +125,7 @@ export default class Invoice extends BaseTemplate {
           <h2 style={sectionTitleStyle}>Règlement</h2>
           <p>
             Le règlement est attendu à reception de la facture,
-            par chèque à l'ordre de Clermont'ech ou par virement
+            par chèque à l&apos;ordre de Clermont&apos;ech ou par virement
             aux coordonnées bancaires suivantes :
           </p>
 

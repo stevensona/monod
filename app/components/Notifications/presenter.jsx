@@ -1,8 +1,9 @@
+/* eslint react/no-unused-prop-types: 0 */
 import React, { PropTypes } from 'react';
 import MessageBox from './MessageBox';
 
 
-const Notifications = (props) => (
+const Notifications = props => (
   <div className="message-boxes">
     {props.messages.map((message, index) =>
       <MessageBox
@@ -16,7 +17,14 @@ const Notifications = (props) => (
 );
 
 Notifications.propTypes = {
-  messages: PropTypes.array.isRequired,
+  messages: PropTypes.arrayOf(PropTypes.shape({
+    content: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object,
+    ]).isRequired,
+    level: PropTypes.string,
+    count: PropTypes.number,
+  })).isRequired,
   onMessageBoxClose: PropTypes.func.isRequired,
 };
 

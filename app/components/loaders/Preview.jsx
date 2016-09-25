@@ -1,7 +1,7 @@
 /* eslint global-require: 0 */
 const { Promise } = global;
 
-export default () => new Promise(resolve => {
+export default () => new Promise((resolve) => {
   require.ensure([], () => {
     require('highlight.js/styles/zenburn.css');
     require('katex/dist/katex.min.css');

@@ -1,24 +1,11 @@
-/* eslint no-throw-literal: 0 */
+/* eslint react/forbid-prop-types: 0, react/no-unused-prop-types: 0 */
 import { PropTypes, Component } from 'react';
 import merge from 'deepmerge';
 
 
 export default class Base extends Component {
 
-  getDefaultData() {
-    // Required
-    // Should return Object-serialized data
-    throw 'Not implemented';
-  }
-
-  getData() {
-    return merge(
-      this.getDefaultData(),
-      this.cleanData(this.props.data)
-    );
-  }
-
-  cleanData(data) {
+  static cleanData(data) {
     const cleaned = Object.assign({}, data);
     // Clean input data to avoid undefined or null object properties
     // This avoids preview crash when trying to access null.<property>
@@ -29,6 +16,19 @@ export default class Base extends Component {
     }
 
     return cleaned;
+  }
+
+  getDefaultData() { // eslint-disable-line class-methods-use-this
+    // Required
+    // Should return Object-serialized data
+    throw new Error('Not implemented');
+  }
+
+  getData() {
+    return merge(
+      this.getDefaultData(),
+      Base.cleanData(this.props.data)
+    );
   }
 }
 
