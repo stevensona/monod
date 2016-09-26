@@ -1,3 +1,4 @@
+/* eslint react/no-danger: 0 */
 import React, { PropTypes, Component } from 'react';
 import isEqual from 'lodash.isequal';
 
@@ -47,9 +48,13 @@ PreviewChunk.propTypes = {
     }).isRequired,
     options: PropTypes.any.isRequired,
   }).isRequired,
-  emojione: PropTypes.object.isRequired,
-  chunk: PropTypes.array.isRequired,
-  markdownItEnv: PropTypes.object.isRequired,
+  emojione: PropTypes.shape({
+    toImage: PropTypes.func.isRequired,
+  }).isRequired,
+  chunk: PropTypes.arrayOf(
+    PropTypes.object // eslint-disable-line react/forbid-prop-types
+  ).isRequired,
+  markdownItEnv: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 export default PreviewChunk;

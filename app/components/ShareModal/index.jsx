@@ -4,7 +4,7 @@ import Modal from 'react-modal';
 import CopiableUrlInput from './CopiableUrlInput';
 
 
-const ShareModal = (props) =>
+const ShareModal = props =>
   <Modal
     isOpen={props.isOpen}
     onRequestClose={props.onRequestClose}

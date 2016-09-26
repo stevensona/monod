@@ -3,7 +3,7 @@ import React, { PropTypes } from 'react';
 import DefaultFooter from './presenter';
 import Sync from '../Sync';
 
-const Footer = (props) =>
+const Footer = props =>
   <DefaultFooter version={props.version}>
     <div className="help">
       <span className="help-link">

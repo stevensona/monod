@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 
 
-const FullscreenButton = (props) =>
+const FullscreenButton = props =>
   <button
     className="action fullscreen"
     title="Presentation mode"

@@ -22,7 +22,7 @@ export default function configureStore(initialState) {
   return createStoreWithMiddleware(
     rootReducer,
     initialState,
-    'production' !== process.env.NODE_ENV && typeof 'undefined' !== window &&
+    'production' !== process.env.NODE_ENV && 'undefined' !== typeof window &&
     window.devToolsExtension ? window.devToolsExtension() : f => f
   );
 }

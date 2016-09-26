@@ -10,7 +10,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = dispatch => ({
   onMessageBoxClose: (index) => {
     dispatch(close(index));
   },

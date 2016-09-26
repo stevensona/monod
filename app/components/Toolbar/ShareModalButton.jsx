@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 
 
-const ShareModalButton = (props) =>
+const ShareModalButton = props =>
   <button
     className={`action share${props.enableShareModalButton ? '' : ' disabled'}`}
     title="Share this document"

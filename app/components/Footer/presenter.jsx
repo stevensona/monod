@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
 
 
-const Footer = (props) =>
+const Footer = props =>
   <footer className="main">
     <div className="version">
       <span className="git-ref">
@@ -27,7 +27,7 @@ const Footer = (props) =>
 
 Footer.propTypes = {
   version: PropTypes.string.isRequired,
-  children: PropTypes.any,
+  children: PropTypes.node,
 };
 
 export default Footer;

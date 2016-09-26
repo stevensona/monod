@@ -8,18 +8,8 @@ import ShareModal from './ShareModal';
 
 
 export default class App extends Component {
-  constructor(props, context) {
-    super(props, context);
 
-    this.state = {
-      messages: [],
-      displayShareModal: false,
-    };
-
-    this.toggleShareModal = this.toggleShareModal.bind(this);
-  }
-
-  togglePresentationMode() {
+  static togglePresentationMode() {
     if (
       (!document.fullscreenElement) &&
       (!document.webkitFullscreenElement) &&
@@ -41,6 +31,17 @@ export default class App extends Component {
     }
   }
 
+  constructor(props, context) {
+    super(props, context);
+
+    this.state = {
+      messages: [],
+      displayShareModal: false,
+    };
+
+    this.toggleShareModal = this.toggleShareModal.bind(this);
+  }
+
   toggleShareModal() {
     this.setState({ displayShareModal: !this.state.displayShareModal });
   }
@@ -50,7 +51,7 @@ export default class App extends Component {
       <div className="layout">
         <Header
           onToggleShareModal={this.toggleShareModal}
-          onTogglePresentationMode={this.togglePresentationMode}
+          onTogglePresentationMode={App.togglePresentationMode}
         />
 
         <ShareModal

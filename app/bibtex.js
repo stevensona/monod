@@ -96,8 +96,8 @@ function normalizeAuthors(authors) {
       otherNames = otherNames
         .trim()
         .split(/\s/)
-        .filter((p) => '' !== p)
-        .map((p) =>
+        .filter(p => '' !== p)
+        .map(p =>
           `${p.charAt(0).toUpperCase()}.`
         )
         .join(' ');
@@ -130,7 +130,7 @@ function formatAuthors(authors) {
 
   if (0 < authorsToDisplay.length) {
     authorsString = authorsToDisplay
-      .map((a) => a.fullname)
+      .map(a => a.fullname)
       .join(', ')
       .concat(` & ${lastAuthorToDisplay.fullname}`);
   }
@@ -190,14 +190,14 @@ function formatHtmlKey(authors, year) {
   }
 
   if (MAX_AUTHORS_IN_REFS >= authors.length) {
-    return `${authors.map((a) => a.lastname).join(' & ')}, ${year}`;
+    return `${authors.map(a => a.lastname).join(' & ')}, ${year}`;
   }
 
   return `${authors[0].lastname} <em>et al.</em>, ${year}`;
 }
 
 function formatHtmlReferences(citations) {
-  return `(${citations.map((c) => c.htmlKey).join('; ')})`;
+  return `(${citations.map(c => c.htmlKey).join('; ')})`;
 }
 
 function formatHtmlCitations(citations) {
@@ -236,7 +236,7 @@ function parse(bibtex) {
     const authors = normalizeAuthors(e.entryTags.author);
     const year = parseInt(e.entryTags.year, 10);
 
-    if (undefined === keys.find((k) => key === k)) {
+    if (undefined === keys.find(k => key === k)) {
       keys.push(key);
 
       results.push({

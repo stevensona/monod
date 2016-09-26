@@ -1,4 +1,4 @@
-/* eslint one-var: 0 */
+/* eslint one-var: 0, class-methods-use-this: 0 */
 import React from 'react';
 import BaseTemplate from './Base';
 

@@ -93,5 +93,6 @@ Markdown.propTypes = {
   content: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   onUpdatePosition: PropTypes.func.isRequired,
-  forceUpdate: PropTypes.bool.isRequired,
+  // eslint rule disabled becasue false positive
+  forceUpdate: PropTypes.bool.isRequired, // eslint-disable-line react/no-unused-prop-types
 };
