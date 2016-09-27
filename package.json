@@ -39,7 +39,7 @@
     "clipboard": "^1.5.12",
     "codemirror": "^5.12.0",
     "css-loader": "^0.25.0",
-    "deepmerge": "^0.2.10",
+    "deepmerge": "^1.0.2",
     "emojione": "^2.1.2",
     "enzyme": "^2.4.1",
     "eslint": "^3.6.0",
