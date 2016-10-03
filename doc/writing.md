@@ -1,23 +1,23 @@
 Writing Monod documents
 =======================
 
-Hi! Thanks for visiting the Monod documentation. In this part, you will learn
-how to write awesome Monod documents by leveraging the
-[Markdown](http://commonmark.org/help/) language, a text-based language used to
-write content without polluting it too much with presentation, and many more
-features!
+Hi! Thanks for reading the Monod documentation. Here you will learn how to write
+awesome Monod documents by leveraging [Markdown](http://commonmark.org/help/), a
+plain text syntax used to layout content without the clutter of too many
+formatting instructions.
 
 * [Monod syntax](#monod-syntax)
-* [YAML Front-Matter](#yaml-front-matter)
+* [YAML Front Matter](#yaml-front-matter)
 * [Templates](templates.md)
 
 
 ## Monod syntax
 
-If you are new to Markdown, you should give [this 10-minute Markdown
-tutorial](http://commonmark.org/help/tutorial/) a try. Monod supports CommonMark,
-a strongly defined, and a highly compatible specification of Markdown which does not 
-support HTML for security reasons. Syntax extensions available in Monod:
+If you are new to Markdown, you should follow [this 10-minute Markdown
+tutorial](http://commonmark.org/help/tutorial/). Monod supports CommonMark (a
+strongly defined, highly compatible specification of Markdown). While CommonMark
+does not support HTML for security reasons, Monod provides various syntax
+extensions to provide HTML-like functionality (and more!).
 
 * [Abbreviations](#abbreviations)
 * [Autolinks](#autolinks)
@@ -39,35 +39,47 @@ support HTML for security reasons. Syntax extensions available in Monod:
 
 ### Abbreviations
 
-Abbreviations are used to enrich the content of your Monod documents thanks to
-the [`<abbr>` HTML
-tag](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/abbr):
+The abbreviations syntax extension allows you to provide a description for an
+abbreviation or acronym, similar to the
+[`<abbr>` HTML tag](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/abbr):
 
 ```
-*[ABBR]: The description of ABBR
+*[USA]: United States of America
 
-Some content where ABBR is mentioned.
+Some content where USA is mentioned.
 ```
 
-Pay attention to the syntax: there is no space between `*` and `[`.
+Note: there is no space between the `*` and the `[` when defining an
+abbreviation.
 
 ### Autolinks
 
 In regular Markdown, links are usually written with the `[link
-description](url)` syntax. In Monod, you can directly paste an URL in your
-document, and it will be automatically transformed into a link.
+description](url)` syntax. In Monod, you can directly paste a URL into your
+document, and it will automatically be converted into a clickable link.
+
+### Code
+
+Code can be rendered with fenced code blocks (three backticks). For example:
+
+    A Go interface looks like this:
+
+    ```
+    interface {}
+    ```
 
 ### BibTeX support
 
-Using [fenced code blocks](#code) (see the next section) à la GitHub, you can
-add scientific references and citations into your Monod documents and Monod will
-render them nicely:
+Using fenced code blocks (see [the previous section](#code)), you can add
+scientific references and citations to your documents and Monod will render them
+nicely:
 
 ![](images/bibtex.png)
 
-Use as many fenced `cite` code blocks as you wish to add citations, and use the
-Pandoc `[@citation_ref]` syntax to add references to these citations (using the
-citation "keys" or "references"):
+Add citations by adding the keyword `cite` after your fenced code block (see
+example below). You can add as many `cite` fenced code blocks as you like, and
+then use Pandoc `[@citation_ref]` syntax to add references to these citations
+(using the citation "keys" or "references"):
 
     According to [@citation_ref], this is not accurate.
 
@@ -78,46 +90,37 @@ citation "keys" or "references"):
     ```
 
 In the screenshot above, the `[@logicreasoning]` reference points to the
-citation in the fenced `cite` code block at the bottom of the document. A thing 
-of note here is that you can put multiple `cite` blocks, and there is no specific 
-position to place them. They will be rendered where ever your them in the preview.
-(place them wherever you wish, but do not forget that they will be rendered
-where you put them in the preview). It is recommended to put all your citations
-in one single `cite` code block though (as you probably already do in your
-`.bib` file).
+citation in the fenced `cite` code block at the bottom of the document. Something
+to note here, however, is that while you can add multiple `cite` blocks anywhere
+in the document, they will be rendered in the preview in the same place you
+have placed them in your document. It is recommended to place all of them in one
+single `cite` code block (as you probably do in your `.bib` file anyway).
 
-The `[@li_fast_2009;@li_fast_2010]` reference contains two references, and it is
-marked as invalid because Monod does not find any citation that corresponds to
-any of the given references. An important point to note here is that even if one
-reference is not found, the whole set of references will be marked as invalid.
-
-### Code
-
-Code can be rendered with fenced code blocks:
-
-    A Go interface looks like:
-
-    ```
-    interface {}
-    ```
+In the screenshot the `[@li_fast_2009;@li_fast_2010]` reference contains two
+references and is marked as invalid because Monod can not find a citation that
+corresponds to any of the given references. An important point to note here is
+that even if one reference is not found the whole set of references will be
+marked as invalid.
 
 ### Emoji
 
 We support **emoji** too! :tada:
 
 The syntax is similar to FontAwesome icons (as well as many emoji-friendly
-applications like Slack or GitHub):
+applications like Slack or GitHub), whereby you insert an emoji code between two
+colons. For example:
 
 ```
 :tada:
 ```
 
-Refer to [this](http://www.emoji-cheat-sheet.com/) emoji cheat sheet.
+You can find the emoji code for your favorite emoji on
+[this cheat sheet](http://www.emoji-cheat-sheet.com/).
 
 ### Highlighting
 
-You can highlight text in yellow (à la [Stabilo Boss
-Highlighter](https://en.wikipedia.org/wiki/Schwan-Stabilo) by surrounding your
+You can highlight text in yellow (like a [Stabilo Boss
+Highlighter](https://en.wikipedia.org/wiki/Schwan-Stabilo)) by surrounding your
 content with `==`:
 
 ```
@@ -127,15 +130,16 @@ This is ==very important==
 ### Icons / FontAwesome
 
 You can use [FontAwesome](http://fontawesome.io/) icons with the following
-syntax, where `<icon name>` should be replaced with an actual icon name (_e.g._,
+syntax, where `<icon name>` is replaced with an actual icon name (_e.g._,
 `check`):
 
 ```
 :fa-<icon name>:
 ```
 
-For icon names refer to [this](http://fontawesome.io/icons/). These are scalable
-icons which will be rendered nicely irrespective of the size icon you use.
+For icon names refer to [this page](http://fontawesome.io/icons/). These are
+scalable icons which will be rendered nicely irrespective of the size icon you
+use.
 
 ### Insertions
 
@@ -148,32 +152,33 @@ Hello. ++I have added this part++
 
 ### Line break
 
-You can force line breaks in text (carriage return) using `<br>`, the
+You can force line breaks in text (carriage returns) using `<br>`, the
 [HTML element _line
 break_](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/br).
 
 ### Mathematical expressions
 
 Thanks to [KaTeX](https://khan.github.io/KaTeX/), Monod supports mathematical
-expressions. Write LaTeX symbols enclosed within `$`:
+expressions. Write LaTeX symbols enclosed within `$` symbols:
 
 ```
-A LTS is a 4-tuple $<Q,L,T,q_0>$.
+An LTS is a 4-tuple $<Q,L,T,q_0>$.
 ```
 
 ### Small paragraphs
 
-It is possible to write smaller content with the following syntax:
+It is possible to display content in a smaller font by using the following
+syntax:
 
 ```
 ::: small
-This is a smaller content than the rest of the document.
+This content is smaller than the content in the rest of the document.
 :::
 ```
 
 ### Strikethrough
 
-You can strike through some content by enclosing it within `~~`:
+You can strikethrough some content by enclosing it within `~~`:
 
 ```
 This is ~~not~~ good.
@@ -183,7 +188,7 @@ This is ~~not~~ good.
 
 You can write
 [subscripts](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/sub) by
-surrounding your content by `~`:
+surrounding your content with `~` symbols:
 
 ```
 H~2~O
@@ -193,7 +198,7 @@ H~2~O
 
 You can write
 [superscripts](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/sup)
-by surrounding your content by `^`:
+by surrounding your content with `^` symbols:
 
 ```
 ^This is a superscript^ and this is not.
@@ -201,7 +206,7 @@ by surrounding your content by `^`:
 
 ### Tables
 
-Monod supports (data) tables:
+Monod supports tables, which are useful for displaying data:
 
 ```
 | Tables   |      Are      |  Cool |
@@ -211,8 +216,9 @@ Monod supports (data) tables:
 | col 3 is | right-aligned |    $1 |
 ```
 
-Column alignment can be changed by specifying `:` on the right, left or 
-both sides of the horizontal separators.
+Columns are aligned to the left by default, but alignment can be changed by
+specifying `:` on the right, left or both sides of the horizontal separators
+(the series of dashes under the header).
 
 ### Task Lists
 
@@ -221,7 +227,7 @@ complete). For example:
 
 ```
 - [ ] a task list item
-  - [ ] a sub item
+  - [ ] a sub item
 - [x] a task list item that is completed
 ```
 
@@ -232,12 +238,12 @@ preview panel, and the text will automatically update:
 ![](images/task-lists.gif)
 
 
-## YAML Front-Matter
+## YAML Front Matter
 
-[YAML](http://yaml.org/) front-matter allows addition of metadata to the documents,
-such as variables for different templates. Monod expects
-a unique (optional) YAML front-matter section at the beginning of the
-document and surrounded by three dashes (`---`):
+[YAML](http://yaml.org/) front matter allows the addition of metadata to documents,
+such as variables for different templates. Monod expects a unique (but optional)
+YAML front matter section at the beginning of the document, surrounded by three
+dashes (`---`):
 
 ```yaml
 ---

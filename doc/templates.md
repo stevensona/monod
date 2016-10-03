@@ -9,10 +9,10 @@ Templates
 
 ## Letter
 
-The "Letter" template helps you write (formal) letters, usually to print and
-send my mail.
+The "Letter" template helps you write (formal) letters, which you would usually
+print and send by mail.
 
-### YAML Front-Matter
+### YAML Front Matter
 
 ```yaml
 ---
@@ -36,7 +36,7 @@ signature:
 
 The "Invoice" template helps you write invoices.
 
-### YAML Front-Matter
+### YAML Front Matter
 
 ```yaml
 ---
@@ -64,7 +64,7 @@ customerAddress:
 
 The "Report" template helps you write reports.
 
-### YAML Front-Matter
+### YAML Front Matter
 
 ```yaml
 ---
@@ -82,13 +82,14 @@ version:
 
 ## Slide deck
 
-The "Slide deck" template helps you write awesome
-[Reveal.js](https://github.com/hakimel/reveal.js)-based slides. In your Markdown
-content, use a separator `---` (3 dashes) to split your content into different
-**sections** (horizontally, like regular slide decks).
+The "Slide deck" template helps you write awesome slides backed by
+[Reveal.js](https://github.com/hakimel/reveal.js). Use a Markdown separator
+`---` (3 dashes) in your content to split your content into different
+**sections** (which are displayed horizontally, as you would expect in a regular
+slide deck).
 
-Thanks to Reveal.js, it is also possible to group slides into **sub-sections**
-that are displayed vertically. Use `----` (4 dashes) to create sub-sections.
+Thanks to Reveal.js, it is also possible to group slides into **sub-sections**,
+which are displayed vertically. Use `----` (4 dashes) to create sub-sections.
 
 **Example:**
 
@@ -117,12 +118,12 @@ Slide 3.1
 ```
 
 
-### YAML Front-Matter
+### YAML Front Matter
 
 ```
 ---
 transition: zoom # None, Fade, Slide, Convex, Concave, Zoom
-logo: '' # URL to an image that will be displayed on bottom left
+logo: '' # URL of an image which will be displayed in the bottom left
 ---
 ```
 
@@ -130,7 +131,7 @@ logo: '' # URL to an image that will be displayed on bottom left
 
 [Fragments](https://github.com/hakimel/reveal.js#fragments) are used to
 highlight individual elements on a slide. You can use the `{fragment}` special
-notation below any sentence or paragraph, and it will become a fragment.
+notation underneath any sentence or paragraph, and it will become a fragment.
 
 ``` markdown
 ---
@@ -154,7 +155,7 @@ transition: default
 #### Images
 
 It is possible to hide the border of an image by using the `{no-border}` special
-notation below the image:
+notation underneath the image:
 
 ```markdown
 ![](https://example.org/foobar.png)
@@ -164,7 +165,7 @@ notation below the image:
 #### Lists
 
 It is possible to hide the bullets of a list by using the `{no-bullet}` special
-notation:
+notation underneath the last element of the list:
 
 ```markdown
 Isaac Asimov's "Three Laws of Robotics":
@@ -180,8 +181,8 @@ Isaac Asimov's "Three Laws of Robotics":
 
 #### Paragraphs
 
-You can choose the paragraph alignment using the following special notations
-on paragraphs (default being centered):
+You can set the paragraph alignment by using the following special notations on
+paragraphs (centered being the default):
 
 * `{left}`
 * `{right}`

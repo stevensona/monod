@@ -7,16 +7,16 @@ Monod
 
 ---
 
-## Hi! I am Monod, the Markdown Editor.
+## Hi! I'm Monod, the Markdown Editor!
 
 <p align="center">
 <img src="doc/images/presentation.gif">
 <p>
 
 **Monod** is a (relatively) **secure** and **offline-first** Markdown editor we
-built at TailorDev in order to learn
-[React.js](https://facebook.github.io/react/) (and a bunch of JavaScript
-tools/libraries). We mainly dedicated two **Le lab** sessions to build the
+have built at TailorDev in order to learn
+[React.js](https://facebook.github.io/react/) (and a bunch of other JavaScript
+tools and libraries). We dedicated two **Le lab** sessions to build the
 foundations of Monod:
 
 * [Introducing Le lab with “Monod”, our Markdown
@@ -29,17 +29,16 @@ foundations of Monod:
 ## Usage
 
 Either use our public instance at: https://monod.lelab.tailordev.fr/, or
-(self-)host Monod at home, on your server, or even on Heroku:
+self-host Monod at home, on your server, or even on Heroku:
 
 [![Deploy to
 Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
 ## Documentation
 
-Documentation can be found in the [`doc/`](doc/writing.md) folder.
+Documentation can be found in the [`doc/`](doc/writing.md) directory.
 
 ## Installation
-
 
 ### Production
 
@@ -49,7 +48,7 @@ Documentation can be found in the [`doc/`](doc/writing.md) folder.
 
 We use this
 [Dockerfile](https://github.com/TailorDev/dockerfiles/blob/master/node/Dockerfile)
-to run Monod in production (which runs `npm run start` from Monod root
+to run Monod in production (which runs `npm run start` from the Monod root
 directory).
 
 ### Development
@@ -59,17 +58,17 @@ directory).
     $ npm run dev
 
 The last command runs the development server at
-[`http://localhost:8080`](http://127.0.0.1:8080), and use Hot Module
-Replacement. You can override the default host and port through env (`HOST`,
-`PORT`).
+[`http://localhost:8080`](http://127.0.0.1:8080), and uses Hot Module
+Replacement. You can override the default host and port through the env
+variables `HOST` and `PORT`.
 
-You should also start the server by running:
+You can also start the server by running:
 
     $ MONOD_DATA_DIR=/path/to/data npm run start
 
 `MONOD_DATA_DIR` is an environment variable that configures where the server
-is supposed to read/write Monod's data. It defaults to `./data/` (so be sure
-to create this directory if you run `npm run start`).
+reads and writes Monod's data. It defaults to `./data/` (so be sure
+to create that directory if you start the server with just `npm run start`).
 
 You are all set!
 
@@ -81,8 +80,8 @@ Builds the client-side application in `build/` (production ready)
 
 #### `npm run stats`
 
-Webpack build + generate a JSON file with metrics. [We blogged on why it can be
-useful](https://tailordev.fr/blog/2016/03/17/loading-dependencies-asynchronously-in-react-components/).
+Webpack build + generate a JSON file with metrics. [We blogged about why this
+can be useful](https://tailordev.fr/blog/2016/03/17/loading-dependencies-asynchronously-in-react-components/).
 
 #### `npm run lint`
 
@@ -100,7 +99,7 @@ We use `node` 5.8+ and `npm` 3.7+.
 
 ## Contributing
 
-Please, see [CONTRIBUTING](CONTRIBUTING.md) file.
+Please, see the [CONTRIBUTING](CONTRIBUTING.md) file.
 
 ## Running the Tests
 
