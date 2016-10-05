@@ -1,12 +1,12 @@
 /* Core Team */
-	William Durand
-	Twitter: @TailorDev
+  William Durand
+  Twitter: @TailorDev
   Email: will [at] drnd.me
   Web: http://williamdurand.fr/
   Github: https://github.com/willdurand
   
-	Julien Maupetit
-	Twitter: @jmaupetit
+  Julien Maupetit
+  Twitter: @jmaupetit
   Email: julien [at] maupetit.net
   Web: http://julien.maupetit.me
   Github: https://github.com/jmaupetit
