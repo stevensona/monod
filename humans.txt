@@ -1,17 +1,11 @@
 /* Core Team */
   William Durand
   Twitter: @TailorDev
-  Email: will [at] drnd.me
-  Web: http://williamdurand.fr/
   Github: https://github.com/willdurand
   
   Julien Maupetit
   Twitter: @jmaupetit
-  Email: julien [at] maupetit.net
-  Web: http://julien.maupetit.me
   Github: https://github.com/jmaupetit
 
-/* Contributors */
-  lodelestra (https://github.com/lodelestra)
-  Gar Morley (https://github.com/gar)
-  codeahead14 (https://github.com/codeahead14)
+/* THANKS */
+Contributors: https://github.com/TailorDev/monod/graphs/contributors
