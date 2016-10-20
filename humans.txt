@@ -1,4 +1,4 @@
-/* Core Team */
+/* TEAM */
   William Durand
   Twitter: @TailorDev
   Github: https://github.com/willdurand
